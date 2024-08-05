@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="SimpleFuzzy.Service">
-      <HintPath>..\SimpleFuzzy.Service\bin\Debug\net6.0\SimpleFuzzy.Service.dll</HintPath>
-    </Reference>
     <PackageReference Include="Autofac" Version="8.0.0" />
     <PackageReference Include="Autofac.Mvc5" Version="6.1.0" />
     <PackageReference Include="ModernUI" Version="2.0.0" />
@@ -27,12 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleFuzzy.Abstract\SimpleFuzzy.Abstract.csproj" />
     <ProjectReference Include="..\SimpleFuzzy.Service\SimpleFuzzy.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="SimpleFuzzy.Service">
-      <HintPath>..\SimpleFuzzy.Service\bin\Debug\net6.0\SimpleFuzzy.Service.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

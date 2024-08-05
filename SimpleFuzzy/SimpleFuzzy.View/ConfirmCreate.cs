@@ -1,4 +1,5 @@
-﻿using SimpleFuzzy.Service;
+﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,13 +14,11 @@ namespace SimpleFuzzy.View
 {
     public partial class ConfirmCreate : UserControl
     {
-        ProjectListService projectList;
-        MainWindow window;
-        public ConfirmCreate(MainWindow mainWindow, ProjectListService project)
+        IProjectListService projectList;
+        public ConfirmCreate()
         {
             InitializeComponent();
-            window = mainWindow;
-            projectList = project;
+            projectList = AutofacIntegration.GetInstance<IProjectListService>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -45,14 +44,17 @@ namespace SimpleFuzzy.View
 
         private void button3_Click(object sender, EventArgs e) 
         {
-            window.OpenButtons(sender, e);
-            window.Locked(sender, e);
-            window.Controls.Remove(this);
+            if (Parent is MainWindow parent)
+            {
+                parent.OpenButtons();
+                parent.Locked();
+            }
+            Parent.Controls.Remove(this);
         }
 
         private void ConfirmCreate_Load(object sender, EventArgs e) 
-        { 
-            window.BlockButtons(sender, e);
+        {
+            if (Parent is MainWindow parent) { parent.BlockButtons(); }
         }
     }
 }

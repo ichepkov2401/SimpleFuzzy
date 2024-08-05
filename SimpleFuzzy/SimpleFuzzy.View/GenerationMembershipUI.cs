@@ -16,7 +16,7 @@ namespace SimpleFuzzy.View
     public partial class GenerationMembershipUI : UserControl
     {
         private List<(TextBox Condition, TextBox Value)> conditionControls = new List<(TextBox, TextBox)>();
-        private GenerationMembershipFunctionService generator = new GenerationMembershipFunctionService();
+        private GenerationMembershipFunction generator = new GenerationMembershipFunction();
  
         public GenerationMembershipUI()
         {
@@ -140,6 +140,7 @@ namespace SimpleFuzzy.View
                 double yMin = double.MaxValue;
                 double yMax = double.MinValue;
 
+                // Увеличим количество точек для более гладкого графика
                 int pointCount = 1000;
                 double step = (max - min) / pointCount;
 

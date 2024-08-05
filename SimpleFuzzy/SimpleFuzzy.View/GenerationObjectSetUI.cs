@@ -6,8 +6,6 @@ namespace SimpleFuzzy.View
 {
     public partial class GenerationObjectSetUI : UserControl
     {
-        GenerationObjectSetService service = new GenerationObjectSetService();
-
         public GenerationObjectSetUI()
         {
             InitializeComponent();
@@ -41,7 +39,7 @@ namespace SimpleFuzzy.View
 
             try
             {
-                string generatedCode = service.ReturnObjectSet(first, step, last);
+                string generatedCode = GenerationObjectSet.ReturnObjectSet(first, step, last);
                 txtGeneratedCode.Text = generatedCode;
             }
             catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); }

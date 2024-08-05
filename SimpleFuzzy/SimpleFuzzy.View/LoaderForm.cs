@@ -11,10 +11,12 @@ namespace SimpleFuzzy.View
     public partial class LoaderForm : MetroUserControl
     {
         private IAssemblyLoaderService moduleLoaderService;
+        private IRepositoryService repositoryService;
         public LoaderForm()
         {
             InitializeComponent();
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -50,7 +52,7 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 AssemblyLoadContext assemblyContext = moduleLoaderService.LoadAssembly(filePath);
-
+                repositoryService.AddAssemblyElements(assemblyContext);
                 messageTextBox.Text = $"Модуль успешно загружен: {assemblyContext.Assemblies.ElementAt(0).FullName}";
                 TreeViewShow();
             }

@@ -14,14 +14,17 @@ namespace SimpleFuzzy.Service
         private readonly List<IObjectSet> _objectSets;
         private readonly List<IMembershipFunction> _membershipFunctions;
         private readonly List<ISimulator> _simulators;
-        private readonly List<LinguisticVariable> _linguisticVariables;
 
         public RepositoryService()
         {
             _objectSets = new List<IObjectSet>();
             _membershipFunctions = new List<IMembershipFunction>();
             _simulators = new List<ISimulator>();
-            _linguisticVariables = new List<LinguisticVariable>();
+        }
+        // Метод добавления элементов в коллекции
+        public void AddAssemblyElements(AssemblyLoaderService assembly) 
+        {
+
         }
 
         // Универсальный метод для получения коллекций
@@ -38,10 +41,6 @@ namespace SimpleFuzzy.Service
             if (typeof(T) == typeof(ISimulator))
             {
                 return (List<T>)(object)_simulators;
-            }
-            if (typeof(T) == typeof(LinguisticVariable))
-            {
-                return (List<T>)(object)_linguisticVariables;
             }
 
             throw new InvalidOperationException($"Collection for type {typeof(T).Name} is not supported.");

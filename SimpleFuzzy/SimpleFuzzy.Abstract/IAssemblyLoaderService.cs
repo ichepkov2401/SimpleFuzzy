@@ -6,7 +6,7 @@ namespace SimpleFuzzy.Abstract
     {
         public AssemblyLoadContext AssemblyContextList { get; }
         public (List<IMembershipFunction>, List<IObjectSet>, List<ISimulator>) AddElements(AssemblyLoadContext context);
-        string GetInfo(string filePath);
+        AssemblyLoadContext LoadAssembly(string filePath);
         void UnloadAssembly(string assemblyName);
     }
 }

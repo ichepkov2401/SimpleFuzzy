@@ -44,7 +44,7 @@ namespace SimpleFuzzy.Service
             } 
             return (memberFList, objectSetList, simulatorList);
         }
-        public string GetInfo(string filePath)
+        public AssemblyLoadContext LoadAssembly(string filePath)
         {
             foreach (var assemblyContextfromList in assemblyContextList)
             {
@@ -63,10 +63,7 @@ namespace SimpleFuzzy.Service
                 throw new InvalidOperationException("Абсолютный путь файла введен неправильно.");
             }
             assemblyContextList.Add(assemblyContext);
-            Assembly assembly = assemblyContext.Assemblies.ElementAt(0);
-            string ans = "";
-            ans = assembly.FullName;
-            return ans;
+            return assemblyContext;
         }
         public void UnloadAssembly(string assemblyName)
         {

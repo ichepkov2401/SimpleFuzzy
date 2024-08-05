@@ -49,10 +49,10 @@ namespace SimpleFuzzy.View
                 {
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
+                AssemblyLoadContext assemblyContext = moduleLoaderService.LoadAssembly(filePath);
 
-                string assemblyName = moduleLoaderService.GetInfo(filePath);
+                messageTextBox.Text = $"Модуль успешно загружен: {assemblyContext.Assemblies.ElementAt(0).FullName}";
                 TreeViewShow();
-                messageTextBox.Text = $"Модуль успешно загружен: {assemblyName}";
             }
             catch (FileNotFoundException ex)
             {

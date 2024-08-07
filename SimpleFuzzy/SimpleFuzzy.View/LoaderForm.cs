@@ -70,10 +70,18 @@ namespace SimpleFuzzy.View
         }
         private void TreeViewShow()
         {
-            var treeinfo = moduleLoaderService.AddElements(moduleLoaderService.AssemblyContextList);
-            for (int i = 0; i < treeinfo.Item1.Count; i++) { treeView1.Nodes[0].Nodes.Add(treeinfo.Item1[i].Name); }
-            for (int i = 0; i < treeinfo.Item2.Count; i++) { treeView1.Nodes[1].Nodes.Add(treeinfo.Item2[i].Name); }
-            for (int i = 0; i < treeinfo.Item3.Count; i++) { treeView1.Nodes[2].Nodes.Add(treeinfo.Item3[i].Name); }
+            var (membershipFunctions, objectSets, simulators) = moduleLoaderService.AddElements(moduleLoaderService.AssemblyContextList);
+            treeView1.Nodes.Clear();
+
+            TreeNode termsNode = treeView1.Nodes.Add("Термы");
+            TreeNode setsNode = treeView1.Nodes.Add("Базовые множества");
+            TreeNode simulationsNode = treeView1.Nodes.Add("Симуляции");
+
+            foreach (var term in membershipFunctions) { termsNode.Nodes.Add(term.GetType().Name); }
+            foreach (var set in objectSets) { setsNode.Nodes.Add(set.GetType().Name); }
+            foreach (var simulation in simulators) { simulationsNode.Nodes.Add(simulation.GetType().Name); }
+
+            treeView1.ExpandAll(); // Для лучшей видимости
         }
     }
 }

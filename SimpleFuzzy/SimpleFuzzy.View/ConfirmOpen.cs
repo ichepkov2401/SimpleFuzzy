@@ -11,16 +11,31 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using MetroFramework.Controls;
+using MetroFramework.Forms;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmOpen : UserControl
+    public partial class ConfirmOpen : MetroUserControl
     {
         IProjectListService projectList;
         public ConfirmOpen()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            label2.Visible = false;
+            string[] list = projectList.GiveList();
+            for (int i = 1; i < list.Length; i += 3)
+            {
+                if (Directory.Exists(list[i])) { listBox1.Items.Add(list[i - 1]); }
+                else { projectList.DeleteOnlyInList(list[i - 1]); }
+            }
+            if (listBox1.Items.Count == 0)
+            {
+                label2.Text = "Проектов пока нет, перейдите к созданию проекта";
+                label2.Visible = true;
+            }
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -58,23 +73,6 @@ namespace SimpleFuzzy.View
                 parent.Locked();
             }
             Parent.Controls.Remove(this);
-        }
-
-        private void ConfirmOpen_Load(object sender, EventArgs e)
-        {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
-            label2.Visible = false;
-            string[] list = projectList.GiveList();
-            for (int i = 1; i < list.Length; i += 3) 
-            {
-                if (Directory.Exists(list[i])) { listBox1.Items.Add(list[i - 1]); }
-                else {projectList.DeleteOnlyInList(list[i - 1]); }
-            }
-            if (listBox1.Items.Count == 0)
-            {
-                label2.Text = "Проектов пока нет, перейдите к созданию проекта";
-                label2.Visible = true;
-            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

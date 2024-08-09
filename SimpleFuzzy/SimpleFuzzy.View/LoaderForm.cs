@@ -13,7 +13,6 @@ namespace SimpleFuzzy.View
         public IAssemblyLoaderService moduleLoaderService;
         public IRepositoryService repositoryService;
         Dictionary<string, IModulable> modules = new Dictionary<string, IModulable>();
-        string activeSimulatorName;
         public LoaderForm()
         {
             InitializeComponent();
@@ -182,41 +181,50 @@ namespace SimpleFuzzy.View
                 }
             }
         }
-        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+
+        private void ParentChecked(TreeViewEventArgs e)
         {
-            if (MethodBase.GetCurrentMethod == FirstDisActive) return;
-            if (MethodBase.GetCurrentMethod == FirstActive) return;
-            if (MethodBase.GetCurrentMethod == SecondDisActive) return;
-            if (MethodBase.GetCurrentMethod == SecondActive) return;
-            if (MethodBase.GetCurrentMethod == CheckedMainNodes) return;
-            if (e.Node == treeView1.Nodes[2] && e.Node.Checked) 
+            // Костыль для отключения симуляции
+            if (e.Node == treeView1.Nodes[2] && e.Node.Checked)
             {
                 e.Node.Checked = false;
                 return;
             }
+
+            // Общий случай включения всех детей
             foreach (TreeNode node in treeView1.Nodes)
             {
-                if (node == e.Node) 
+                if (node == e.Node)
                 {
-                    if (e.Node == treeView1.Nodes[2]) return;
-                    foreach (TreeNode child in node.Nodes) { child.Checked = e.Node.Checked; }
+                    if (e.Node == treeView1.Nodes[2])
+                    {
+                        return;
+                    }
+                    foreach (TreeNode child in node.Nodes) 
+                    {
+                        if (child.Checked != e.Node.Checked) child.Checked = e.Node.Checked; 
+                    }
                     return;
                 }
             }
+        }
+
+        private void ChildChecked(TreeViewEventArgs e)
+        {
             foreach (TreeNode node in treeView1.Nodes[2].Nodes)
             {
                 if (node == e.Node)
                 {
                     if (e.Node.Checked)
                     {
-                        if (Parent is MainWindow parent) 
+                        if (Parent is MainWindow parent)
                         {
                             parent.isContainSimulator = true;
                             parent.EnableSimulationsButton(true);
                         }
-                        if (repositoryService.GetCollection<ISimulator>().Any(v => v.Active) && node.Text != activeSimulatorName)
+                        if (repositoryService.GetCollection<ISimulator>().Any(v => v.Active) && !modules[e.Node.Text].Active)
                         {
-                            DialogResult result = MessageBox.Show (
+                            DialogResult result = MessageBox.Show(
                             "Изменить симуляцию?",
                             "Симуляцию можно загрузить только одну",
                             MessageBoxButtons.YesNo,
@@ -225,9 +233,9 @@ namespace SimpleFuzzy.View
 
                             if (result == DialogResult.Yes)
                             {
-                                foreach (TreeNode node1 in treeView1.Nodes[2].Nodes) 
+                                foreach (TreeNode node1 in treeView1.Nodes[2].Nodes)
                                 {
-                                    if (node1.Checked) { node1.Checked = false; } 
+                                    if (node1.Checked) { node1.Checked = false; }
                                 }
                                 node.Checked = true;
                             }
@@ -235,9 +243,9 @@ namespace SimpleFuzzy.View
                             return;
                         }
                     }
-                    else 
+                    else
                     {
-                        if (Parent is MainWindow parent) 
+                        if (Parent is MainWindow parent)
                         {
                             parent.isContainSimulator = false;
                             parent.EnableSimulationsButton(false);
@@ -246,14 +254,18 @@ namespace SimpleFuzzy.View
                 }
             }
             modules[e.Node.Text].Active = e.Node.Checked;
-            foreach (TreeNode node in treeView1.Nodes[2].Nodes)
+        }
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node == treeView1.Nodes[0] || e.Node == treeView1.Nodes[1] || e.Node == treeView1.Nodes[2] )
             {
-                if (node == e.Node && e.Node.Checked) { activeSimulatorName = node.Text; }
+                ParentChecked(e);
             }
-            FirstDisActive();
-            SecondDisActive();
-            FirstActive();
-            SecondActive();
+            else
+            {
+                ChildChecked(e);
+            }
         }
     }
 }

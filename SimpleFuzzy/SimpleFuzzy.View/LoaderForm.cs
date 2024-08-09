@@ -124,7 +124,6 @@ namespace SimpleFuzzy.View
                 treeView1.Nodes[2].Nodes[^1].ToolTipText = list3[i].GetType().Assembly.Location;
             }
             treeView1.ExpandAll();
-            if (treeView1.Nodes[2].Nodes.Count > 0 && Parent is MainWindow parent) parent.isContainSimulator = true;
         }
 
 

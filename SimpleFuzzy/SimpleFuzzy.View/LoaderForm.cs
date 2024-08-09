@@ -127,23 +127,6 @@ namespace SimpleFuzzy.View
             if (treeView1.Nodes[2].Nodes.Count > 0 && Parent is MainWindow parent) parent.isContainSimulator = true;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked)
-            {
-                if (Parent is MainWindow parent)
-                {
-                    parent.isDisableSimulator = true;
-                }
-            }
-            else
-            {
-                if (Parent is MainWindow parent)
-                {
-                    parent.isDisableSimulator = false;
-                }
-            }
-        }
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {

@@ -56,8 +56,8 @@ namespace SimpleFuzzy.View
                 }
 
                 moduleLoaderService.AssemblyLoader(filePath);
+                CheckedMainNodes();
                 TreeViewShow();
-                //CheckedMainNodes();
             }
             catch (FileNotFoundException ex)
             {
@@ -72,7 +72,7 @@ namespace SimpleFuzzy.View
                 messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
             }
         }
-        private void CheckedMainNodes() // под вопросом
+        private void CheckedMainNodes() 
         {
             if (!treeView1.Nodes[0].Checked) { treeView1.Nodes[0].Checked = true; }
             if (!treeView1.Nodes[1].Checked) { treeView1.Nodes[1].Checked = true; }
@@ -134,26 +134,55 @@ namespace SimpleFuzzy.View
             treeView1.ExpandAll();
         }
 
-        private void IsFirstActive()
+        private void FirstDisActive()
         {
             if (treeView1.Nodes[0].Nodes.Count == 0) return;
             foreach (TreeNode node in treeView1.Nodes[0].Nodes)
             {
                 if (node.Checked) { return; }
             }
-            treeView1.Nodes[0].Checked = false;
+            if (treeView1.Nodes[0].Checked) treeView1.Nodes[0].Checked = false;
         }
-        private void IsSecondActive()
+        private void FirstActive()
+        {
+            if (treeView1.Nodes[0].Nodes.Count == 0) return;
+            foreach (TreeNode node in treeView1.Nodes[0].Nodes)
+            {
+                if (node.Checked) 
+                {
+                    if (!treeView1.Nodes[0].Checked) treeView1.Nodes[0].Checked = true;
+                    return; 
+                }
+            }
+        }
+        private void SecondDisActive()
         {
             if (treeView1.Nodes[1].Nodes.Count == 0) return;
             foreach (TreeNode node in treeView1.Nodes[1].Nodes)
             {
                 if (node.Checked) { return; }
             }
-            treeView1.Nodes[1].Checked = false;
+            if (treeView1.Nodes[1].Checked) treeView1.Nodes[1].Checked = false;
+        }
+        private void SecondActive()
+        {
+            if (treeView1.Nodes[1].Nodes.Count == 0) return;
+            foreach (TreeNode node in treeView1.Nodes[1].Nodes)
+            {
+                if (node.Checked)
+                {
+                    if (!treeView1.Nodes[1].Checked) treeView1.Nodes[1].Checked = true;
+                    return;
+                }
+            }
         }
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            if (MethodBase.GetCurrentMethod == FirstDisActive) return;
+            if (MethodBase.GetCurrentMethod == FirstActive) return;
+            if (MethodBase.GetCurrentMethod == SecondDisActive) return;
+            if (MethodBase.GetCurrentMethod == SecondActive) return;
+            if (MethodBase.GetCurrentMethod == CheckedMainNodes) return;
             if (e.Node == treeView1.Nodes[2] && e.Node.Checked) 
             {
                 e.Node.Checked = false;
@@ -215,8 +244,10 @@ namespace SimpleFuzzy.View
             {
                 if (node == e.Node && e.Node.Checked) { activeSimulatorName = node.Text; }
             }
-            IsFirstActive();
-            IsSecondActive();
+            FirstDisActive();
+            SecondDisActive();
+            FirstActive();
+            SecondActive();
         }
     }
 }

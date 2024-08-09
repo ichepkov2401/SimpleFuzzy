@@ -109,13 +109,11 @@ namespace SimpleFuzzy.Service
         }
         public void UnloadAllAssemblies()
         {
-            if (repositoryService.GetCollection<AssemblyLoadContext>().Count != 0)
+            foreach (var context in repositoryService.GetCollection<AssemblyLoadContext>().ToList())
             {
-                foreach (var context in repositoryService.GetCollection<AssemblyLoadContext>().ToList())
-                {
-                    UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
-                }
+                UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
             }
+            
         }
     }
 }

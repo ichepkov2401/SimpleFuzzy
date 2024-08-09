@@ -19,12 +19,10 @@ namespace SimpleFuzzy.View
     public partial class ConfirmCreate : MetroUserControl
     {
         IProjectListService projectList;
-        IAssemblyLoaderService assemblyLoader;
         public ConfirmCreate()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
-            assemblyLoader = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -40,7 +38,6 @@ namespace SimpleFuzzy.View
                 parent.OpenButtons();
                 parent.Locked();
                 parent.OpenLoader();
-                assemblyLoader.UnloadAllAssemblies();
             }
         }
 

@@ -7,6 +7,11 @@ namespace SimpleFuzzy.Service
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public IRepositoryService repositoryService;
+        public ProjectListService(IRepositoryService repositoryService)
+        {
+            this.repositoryService = repositoryService;
+        }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
         {
@@ -23,8 +28,37 @@ namespace SimpleFuzzy.Service
                 file.Close();
                 DirectoryInfo directory = new DirectoryInfo(path);
                 directory.Create();
+                var service = new AssemblyLoaderService(repositoryService);
+                service.UnloadAllAssemblies();
             }
             else { throw new InvalidOperationException("Проект с таким именем уже существует"); }
+        }
+        public void OpenProjectfromName(string name)
+        {
+            if (IsContainsName(name))
+            {
+                CurrentProjectName = name;
+                // открываетие проекта
+                var service = new AssemblyLoaderService(repositoryService);
+                service.UnloadAllAssemblies();
+            }
+            else
+            {
+                throw new InvalidOperationException("Проекта с таким именем не существует");
+            }
+        }
+        public void OpenProjectfromPath(string path)
+        {
+            if (IsContainsPath(path))
+            {
+                // открытие проекта
+                var service = new AssemblyLoaderService(repositoryService);
+                service.UnloadAllAssemblies();
+            }
+            else
+            {
+                throw new InvalidOperationException("Проекта по данному пути не существует"); 
+            }
         }
         public void CopyProject(string name, string path)
         {

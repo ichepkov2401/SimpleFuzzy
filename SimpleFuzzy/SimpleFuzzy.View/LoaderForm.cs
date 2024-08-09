@@ -19,6 +19,7 @@ namespace SimpleFuzzy.View
             InitializeComponent();
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            TreeViewShow();
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -56,6 +57,7 @@ namespace SimpleFuzzy.View
 
                 moduleLoaderService.AssemblyLoader(filePath);
                 TreeViewShow();
+                //CheckedMainNodes();
             }
             catch (FileNotFoundException ex)
             {
@@ -70,6 +72,12 @@ namespace SimpleFuzzy.View
                 messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
             }
         }
+        private void CheckedMainNodes() // под вопросом
+        {
+            if (!treeView1.Nodes[0].Checked) { treeView1.Nodes[0].Checked = true; }
+            if (!treeView1.Nodes[1].Checked) { treeView1.Nodes[1].Checked = true; }
+        }
+
         private void TreeViewShow()
         {
             foreach (TreeNode node in treeView1.Nodes) { node.Nodes.Clear(); }
@@ -126,6 +134,24 @@ namespace SimpleFuzzy.View
             treeView1.ExpandAll();
         }
 
+        private void IsFirstActive()
+        {
+            if (treeView1.Nodes[0].Nodes.Count == 0) return;
+            foreach (TreeNode node in treeView1.Nodes[0].Nodes)
+            {
+                if (node.Checked) { return; }
+            }
+            treeView1.Nodes[0].Checked = false;
+        }
+        private void IsSecondActive()
+        {
+            if (treeView1.Nodes[1].Nodes.Count == 0) return;
+            foreach (TreeNode node in treeView1.Nodes[1].Nodes)
+            {
+                if (node.Checked) { return; }
+            }
+            treeView1.Nodes[1].Checked = false;
+        }
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             if (e.Node == treeView1.Nodes[2] && e.Node.Checked) 
@@ -189,6 +215,8 @@ namespace SimpleFuzzy.View
             {
                 if (node == e.Node && e.Node.Checked) { activeSimulatorName = node.Text; }
             }
+            IsFirstActive();
+            IsSecondActive();
         }
     }
 }

@@ -19,10 +19,12 @@ namespace SimpleFuzzy.View
     public partial class ConfirmOpen : MetroUserControl
     {
         IProjectListService projectList;
+        IAssemblyLoaderService assemblyLoader;
         public ConfirmOpen()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            assemblyLoader = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -41,6 +43,7 @@ namespace SimpleFuzzy.View
                         parent.OpenButtons();
                         parent.Locked();
                         parent.OpenLoader();
+                        assemblyLoader.UnloadAllAssemblies();
                     }
                 }
                 else { throw new InvalidOperationException("Проекта по этому адресу не существует"); }
@@ -120,6 +123,7 @@ namespace SimpleFuzzy.View
                     parent.OpenButtons();
                     parent.Locked();
                     parent.OpenLoader();
+                    assemblyLoader.UnloadAllAssemblies();
                 }
                 // запуск проекта
             }

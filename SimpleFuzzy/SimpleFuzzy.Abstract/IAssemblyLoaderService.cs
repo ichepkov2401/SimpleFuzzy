@@ -5,5 +5,6 @@ namespace SimpleFuzzy.Abstract
     {
         public void AssemblyLoader(string filePath);
         void UnloadAssembly(string assemblyName);
+        public void UnloadAllAssemblies();
     }
 }

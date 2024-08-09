@@ -107,5 +107,15 @@ namespace SimpleFuzzy.Service
                 throw new InvalidOperationException("Удаляемой сборки нет в домене.");
             }
         }
+        public void UnloadAllAssemblies()
+        {
+            if (repositoryService.GetCollection<AssemblyLoadContext>().Count != 0)
+            {
+                foreach (var context in repositoryService.GetCollection<AssemblyLoadContext>().ToList())
+                {
+                    UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
+                }
+            }
+        }
     }
 }

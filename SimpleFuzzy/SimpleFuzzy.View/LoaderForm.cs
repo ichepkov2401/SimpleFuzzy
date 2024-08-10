@@ -133,6 +133,7 @@ namespace SimpleFuzzy.View
             treeView1.ExpandAll();
         }
 
+
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             if (e.Node == treeView1.Nodes[2] && e.Node.Checked) 

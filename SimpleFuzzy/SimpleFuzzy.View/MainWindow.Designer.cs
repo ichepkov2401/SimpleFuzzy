@@ -279,6 +279,7 @@ namespace SimpleFuzzy.View
             Margin = new Padding(3, 4, 3, 4);
             Name = "MainWindow";
             Padding = new Padding(23, 80, 23, 27);
+            MouseMove += MainWindow_MouseMove;
             ((System.ComponentModel.ISupportInitialize)logoBox).EndInit();
             ResumeLayout(false);
         }

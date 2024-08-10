@@ -30,6 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Location = new Point(0, 160);
         }
 
         #endregion

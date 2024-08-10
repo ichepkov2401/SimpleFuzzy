@@ -28,12 +28,10 @@ namespace SimpleFuzzy.View
             loadButton = new MetroFramework.Controls.MetroButton();
             messageTextBox = new MetroFramework.Controls.MetroTextBox();
             treeView1 = new TreeView();
-
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxLoader.SuspendLayout();
             groupBoxModules.SuspendLayout();
-
             SuspendLayout();
             // 
             // filePathTextBox
@@ -82,7 +80,6 @@ namespace SimpleFuzzy.View
             messageTextBox.Enabled = false;
             messageTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
             messageTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-
             messageTextBox.Location = new Point(8, 78);
             messageTextBox.Multiline = true;
             messageTextBox.Name = "messageTextBox";
@@ -99,19 +96,19 @@ namespace SimpleFuzzy.View
             treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Checked = true;
+            treeNode1.Checked = false;
             treeNode1.Name = "";
             treeNode1.Text = "Термы";
-            treeNode2.Checked = true;
+            treeNode2.Checked = false;
             treeNode2.Name = "";
             treeNode2.Text = "Базовые множества";
             treeNode3.Name = "";
             treeNode3.Text = "Симуляции";
             treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
             treeView1.ShowNodeToolTips = true;
-
             treeView1.Size = new Size(398, 280);
             treeView1.TabIndex = 0;
+            treeView1.AfterCheck += treeView1_AfterCheck;
             // 
             // groupBoxLoader
             // 
@@ -119,7 +116,7 @@ namespace SimpleFuzzy.View
             groupBoxLoader.Controls.Add(browseButton);
             groupBoxLoader.Controls.Add(loadButton);
             groupBoxLoader.Controls.Add(messageTextBox);
-            groupBoxLoader.Location = new Point(430, 161);
+            groupBoxLoader.Location = new Point(430, 3);
             groupBoxLoader.Name = "groupBoxLoader";
             groupBoxLoader.Size = new Size(483, 306);
             groupBoxLoader.TabIndex = 0;
@@ -129,7 +126,7 @@ namespace SimpleFuzzy.View
             // groupBoxModules
             // 
             groupBoxModules.Controls.Add(treeView1);
-            groupBoxModules.Location = new Point(10, 161);
+            groupBoxModules.Location = new Point(10, 3);
             groupBoxModules.Name = "groupBoxModules";
             groupBoxModules.Size = new Size(414, 306);
             groupBoxModules.TabIndex = 1;
@@ -141,6 +138,7 @@ namespace SimpleFuzzy.View
             BackColor = Color.White;
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
+            Location = new Point(0, 160);
             Name = "LoaderForm";
             Size = new Size(916, 470);
             groupBoxLoader.ResumeLayout(false);

@@ -83,7 +83,7 @@ namespace SimpleFuzzy.View
             foreach (TreeNode node in treeView1.Nodes) { node.Nodes.Clear(); }
             modules.Clear();
             List<IMembershipFunction> list1 = repositoryService.GetCollection<IMembershipFunction>();
-            for (int i = 0; i < list1.Count; i++) 
+            for (int i = 0; i < list1.Count; i++)
             {
 
                 if (list1.Count(v => v.Name == list1[i].Name) > 1)
@@ -102,7 +102,7 @@ namespace SimpleFuzzy.View
             treeView1.Nodes[0].Checked = list1.Any(t => t.Active);
 
             List<IObjectSet> list2 = repositoryService.GetCollection<IObjectSet>();
-            for (int i = 0; i < list2.Count; i++) 
+            for (int i = 0; i < list2.Count; i++)
             {
                 if (list2.Count(v => v.Name == list2[i].Name) > 1)
                 {
@@ -156,14 +156,14 @@ namespace SimpleFuzzy.View
                     {
                         return;
                     }
-                    foreach (TreeNode child in node.Nodes) 
+                    foreach (TreeNode child in node.Nodes)
                     {
-                        child.Checked = e.Node.Checked; 
+                        child.Checked = e.Node.Checked;
                     }
                     return;
                 }
             }
-            
+
         }
 
         private void ChildChecked(TreeViewEventArgs e)
@@ -176,6 +176,7 @@ namespace SimpleFuzzy.View
                     {
                         if (Parent is MainWindow parent)
                         {
+                            parent.isContainSimulator = true;
                             parent.EnableSimulationsButton(true);
                         }
                         if (repositoryService.GetCollection<ISimulator>().Any(v => v.Active) && !modules[e.Node.Text].Active)
@@ -203,6 +204,7 @@ namespace SimpleFuzzy.View
                     {
                         if (Parent is MainWindow parent)
                         {
+                            parent.isContainSimulator = false;
                             parent.EnableSimulationsButton(false);
                         }
                     }

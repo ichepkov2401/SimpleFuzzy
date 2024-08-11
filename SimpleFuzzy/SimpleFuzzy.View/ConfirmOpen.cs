@@ -52,7 +52,7 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) 
+            if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();
                 parent.Locked();
@@ -65,10 +65,10 @@ namespace SimpleFuzzy.View
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
             label2.Visible = false;
             string[] list = projectList.GiveList();
-            for (int i = 1; i < list.Length; i += 3) 
+            for (int i = 1; i < list.Length; i += 3)
             {
                 if (Directory.Exists(list[i])) { listBox1.Items.Add(list[i - 1]); }
-                else {projectList.DeleteOnlyInList(list[i - 1]); }
+                else { projectList.DeleteOnlyInList(list[i - 1]); }
             }
             if (listBox1.Items.Count == 0)
             {

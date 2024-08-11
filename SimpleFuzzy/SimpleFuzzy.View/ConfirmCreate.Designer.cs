@@ -28,105 +28,137 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            label1 = new Label();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            button2 = new Button();
-            label2 = new Label();
-            button3 = new Button();
-            SuspendLayout();
+            button1 = new MetroFramework.Controls.MetroButton();
+            groupBox1 = new GroupBox();
+            button3 = new MetroFramework.Controls.MetroButton();
+            textBox1 = new MetroFramework.Controls.MetroTextBox();
+            textBox2 = new MetroFramework.Controls.MetroTextBox();
+            button2 = new MetroFramework.Controls.MetroButton();
+            groupBox2 = new GroupBox();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(298, 92);
+            button1.Highlight = false;
+            button1.Location = new Point(653, 24);
             button1.Name = "button1";
-            button1.Size = new Size(94, 29);
+            button1.Size = new Size(202, 29);
+            button1.Style = MetroFramework.MetroColorStyle.Blue;
+            button1.StyleManager = null;
             button1.TabIndex = 0;
             button1.Text = "Готово";
+            button1.Theme = MetroFramework.MetroThemeStyle.Light;
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // label1
+            // groupBox1
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(3, 95);
-            label1.Name = "label1";
-            label1.Size = new Size(50, 20);
-            label1.TabIndex = 2;
-            label1.Text = "Введите имя проекта";
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(167, 92);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(125, 27);
-            textBox1.TabIndex = 3;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(122, 59);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(345, 27);
-            textBox2.TabIndex = 4;
-            textBox2.Text = Directory.GetCurrentDirectory() + "\\Projects";
-            // 
-            // button2
-            // 
-            button2.Location = new Point(473, 59);
-            button2.Name = "button2";
-            button2.Size = new Size(202, 29);
-            button2.TabIndex = 5;
-            button2.Text = "Открыть проводник";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(3, 62);
-            label2.Name = "label2";
-            label2.Size = new Size(50, 20);
-            label2.TabIndex = 6;
-            label2.Text = "Расположение";
+            groupBox1.BackColor = Color.Transparent;
+            groupBox1.Controls.Add(button3);
+            groupBox1.Controls.Add(textBox1);
+            groupBox1.Controls.Add(button1);
+            groupBox1.Location = new Point(23, 198);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(867, 68);
+            groupBox1.TabIndex = 8;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Введите имя проекта";
             // 
             // button3
             // 
-            button3.Location = new Point(582, 95);
+            button3.Highlight = false;
+            button3.Location = new Point(445, 24);
             button3.Name = "button3";
-            button3.Size = new Size(94, 29);
+            button3.Size = new Size(202, 29);
+            button3.Style = MetroFramework.MetroColorStyle.Blue;
+            button3.StyleManager = null;
             button3.TabIndex = 7;
             button3.Text = "Отмена";
+            button3.Theme = MetroFramework.MetroThemeStyle.Light;
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
+            // 
+            // textBox1
+            // 
+            textBox1.FontSize = MetroFramework.MetroTextBoxSize.Small;
+            textBox1.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
+            textBox1.Location = new Point(6, 26);
+            textBox1.Multiline = false;
+            textBox1.Name = "textBox1";
+            textBox1.SelectedText = "";
+            textBox1.Size = new Size(433, 27);
+            textBox1.Style = MetroFramework.MetroColorStyle.Blue;
+            textBox1.StyleManager = null;
+            textBox1.TabIndex = 3;
+            textBox1.Theme = MetroFramework.MetroThemeStyle.Light;
+            textBox1.UseStyleColors = false;
+            // 
+            // textBox2
+            // 
+            textBox2.FontSize = MetroFramework.MetroTextBoxSize.Small;
+            textBox2.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
+            textBox2.Location = new Point(12, 26);
+            textBox2.Multiline = false;
+            textBox2.Name = "textBox2";
+            textBox2.SelectedText = "";
+            textBox2.Size = new Size(635, 27);
+            textBox2.Style = MetroFramework.MetroColorStyle.Blue;
+            textBox2.StyleManager = null;
+            textBox2.TabIndex = 4;
+            textBox2.Text = Directory.GetCurrentDirectory() + "\\Projects";
+            textBox2.Theme = MetroFramework.MetroThemeStyle.Light;
+            textBox2.UseStyleColors = false;
+            // 
+            // button2
+            // 
+            button2.Highlight = false;
+            button2.Location = new Point(653, 26);
+            button2.Name = "button2";
+            button2.Size = new Size(202, 29);
+            button2.Style = MetroFramework.MetroColorStyle.Blue;
+            button2.StyleManager = null;
+            button2.TabIndex = 5;
+            button2.Text = "Открыть проводник";
+            button2.Theme = MetroFramework.MetroThemeStyle.Light;
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.BackColor = Color.Transparent;
+            groupBox2.Controls.Add(textBox2);
+            groupBox2.Controls.Add(button2);
+            groupBox2.Location = new Point(23, 127);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(867, 65);
+            groupBox2.TabIndex = 9;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Расположение";
             // 
             // ConfirmCreate
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            Controls.Add(button3);
-            Controls.Add(label2);
-            Controls.Add(button2);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(label1);
-            Controls.Add(button1);
+            Controls.Add(groupBox1);
+            Controls.Add(groupBox2);
             Name = "ConfirmCreate";
             Size = new Size(1434, 559);
             Load += ConfirmCreate_Load;
+            groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Button button1;
-        private Label label1;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private Button button2;
-        private Label label2;
-        private Button button3;
+        private MetroFramework.Controls.MetroButton button1;
+        private GroupBox groupBox1;
+        private MetroFramework.Controls.MetroTextBox textBox1;
+        private MetroFramework.Controls.MetroTextBox textBox2;
+        private MetroFramework.Controls.MetroButton button2;
+        private GroupBox groupBox2;
+        private MetroFramework.Controls.MetroButton button3;
     }
 }

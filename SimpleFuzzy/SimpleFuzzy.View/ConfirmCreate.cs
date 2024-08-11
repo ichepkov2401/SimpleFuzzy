@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Web.Mvc.Html;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using MetroFramework.Controls;
+using MetroFramework;
 
 namespace SimpleFuzzy.View
 {

@@ -96,7 +96,6 @@
             // 
             // ConfirmRename
             // 
-            Location = new Point(0, 160);
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(button2);

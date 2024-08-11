@@ -138,7 +138,6 @@ namespace SimpleFuzzy.View
             BackColor = Color.White;
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
-            Location = new Point(0, 160);
             Name = "LoaderForm";
             Size = new Size(916, 470);
             groupBoxLoader.ResumeLayout(false);

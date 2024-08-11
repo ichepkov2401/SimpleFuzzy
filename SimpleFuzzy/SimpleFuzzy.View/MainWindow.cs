@@ -190,7 +190,7 @@ namespace SimpleFuzzy.View
             {
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
-                //currentControl.Dock = DockStyle.Fill;
+                currentControl.Location = new Point(0, 160);
             }
         }
 

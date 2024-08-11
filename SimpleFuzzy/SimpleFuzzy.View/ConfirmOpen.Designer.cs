@@ -135,7 +135,6 @@
             Controls.Add(listBox1);
             Controls.Add(button2);
             Controls.Add(button1);
-            Location = new Point(0, 160);
             Name = "ConfirmOpen";
             Size = new Size(823, 461);
             ResumeLayout(false);

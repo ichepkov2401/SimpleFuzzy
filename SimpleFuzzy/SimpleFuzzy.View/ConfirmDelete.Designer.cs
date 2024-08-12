@@ -56,6 +56,24 @@
             label1.Size = new Size(465, 20);
             label1.TabIndex = 2;
             label1.Text = "Вы действительно хотите безвозвратно удалить текущий проект?";
+
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.CustomBackground = false;
+            label1.FontSize = MetroFramework.MetroLabelSize.Medium;
+            label1.FontWeight = MetroFramework.MetroLabelWeight.Light;
+            label1.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
+            label1.Location = new Point(14, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(436, 20);
+            label1.Style = MetroFramework.MetroColorStyle.Blue;
+            label1.StyleManager = null;
+            label1.TabIndex = 2;
+            label1.Text = "Вы действительно хотите безвозвратно удалить текущий проект?";
+            label1.Theme = MetroFramework.MetroThemeStyle.Light;
+            label1.UseStyleColors = false;
             // 
             // button2
             // 
@@ -84,6 +102,7 @@
             button1.Theme = MetroFramework.MetroThemeStyle.Light;
             button1.Click += button1_Click;
             // 
+
             // ConfirmDelete
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -91,6 +110,7 @@
             Controls.Add(groupBox1);
             Name = "ConfirmDelete";
             Size = new Size(871, 377);
+
             Load += ConfirmDelete_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -102,5 +122,6 @@
         private MetroFramework.Controls.MetroButton button1;
         private MetroFramework.Controls.MetroButton button2;
         private Label label1;
+
     }
 }

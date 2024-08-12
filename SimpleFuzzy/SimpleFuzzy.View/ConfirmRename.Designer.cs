@@ -48,6 +48,7 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Переименование проекта";
+
             // 
             // button2
             // 
@@ -61,6 +62,7 @@
             button2.Text = "Отмена";
             button2.Theme = MetroFramework.MetroThemeStyle.Light;
             button2.Click += button2_Click;
+
             // 
             // button1
             // 
@@ -73,6 +75,7 @@
             button1.TabIndex = 2;
             button1.Text = "Готово";
             button1.Theme = MetroFramework.MetroThemeStyle.Light;
+            button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // label1
@@ -106,6 +109,17 @@
             textBox1.TabIndex = 0;
             textBox1.Theme = MetroFramework.MetroThemeStyle.Light;
             textBox1.UseStyleColors = false;
+            button2.Highlight = false;
+            button2.Location = new Point(383, 7);
+            button2.Name = "button2";
+            button2.Size = new Size(94, 29);
+            button2.Style = MetroFramework.MetroColorStyle.Blue;
+            button2.StyleManager = null;
+            button2.TabIndex = 3;
+            button2.Text = "Отмена";
+            button2.Theme = MetroFramework.MetroThemeStyle.Light;
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // ConfirmRename
             // 

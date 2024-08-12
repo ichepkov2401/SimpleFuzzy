@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+
             button1 = new MetroFramework.Controls.MetroButton();
             textBox1 = new MetroFramework.Controls.MetroTextBox();
             button2 = new MetroFramework.Controls.MetroButton();
@@ -49,7 +50,7 @@
             button1.TabIndex = 1;
             button1.Text = "Открыть проводник";
             button1.Theme = MetroFramework.MetroThemeStyle.Light;
-            button1.UseVisualStyleBackColor = false;
+            button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // textBox1
@@ -85,6 +86,7 @@
             button2.TabIndex = 3;
             button2.Text = "Готово";
             button2.Theme = MetroFramework.MetroThemeStyle.Light;
+            button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
             // button3
@@ -100,6 +102,7 @@
             button3.TabIndex = 4;
             button3.Text = "Отмена";
             button3.Theme = MetroFramework.MetroThemeStyle.Light;
+            button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
             // groupBox1
@@ -134,6 +137,7 @@
         }
 
         #endregion
+
         private MetroFramework.Controls.MetroButton button1;
         private MetroFramework.Controls.MetroTextBox textBox1;
         private MetroFramework.Controls.MetroButton button2;

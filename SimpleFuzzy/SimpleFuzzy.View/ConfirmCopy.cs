@@ -16,7 +16,7 @@ using MetroFramework.Forms;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmCopy : UserControl
+    public partial class ConfirmCopy : MetroUserControl
     {
         IProjectListService projectList;
         public ConfirmCopy() 

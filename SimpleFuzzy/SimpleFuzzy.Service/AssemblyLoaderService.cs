@@ -1,5 +1,4 @@
 ﻿using SimpleFuzzy.Abstract;
-using System.Reflection;
 using System.Runtime.Loader;
 
 namespace SimpleFuzzy.Service
@@ -7,8 +6,10 @@ namespace SimpleFuzzy.Service
     public class AssemblyLoaderService : IAssemblyLoaderService
     {
         public IRepositoryService repositoryService;
+        public event EventHandler? UseAssembly;
         public AssemblyLoaderService(IRepositoryService repositoryService)
         {
+            UseAssembly += repositoryService.AssemblyHandler;
             this.repositoryService = repositoryService;
         }
         public void AssemblyLoader(string filePath)
@@ -85,6 +86,8 @@ namespace SimpleFuzzy.Service
             {
                 if (assemblyContext.Assemblies.ElementAt(0).FullName == assemblyName)
                 {
+                    var e = new EventArgs();
+                    UseAssembly(assemblyContext, e);
                     loaded = true;
                     try
                     {
@@ -104,6 +107,14 @@ namespace SimpleFuzzy.Service
             {
                 throw new InvalidOperationException("Удаляемой сборки нет в домене.");
             }
+        }
+        public void UnloadAllAssemblies()
+        {
+            foreach (var context in repositoryService.GetCollection<AssemblyLoadContext>().ToList())
+            {
+                UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
+            }
+            
         }
     }
 }

@@ -78,7 +78,6 @@
             button3.Theme = MetroFramework.MetroThemeStyle.Light;
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
-            // 
             // textBox1
             // 
             textBox1.FontSize = MetroFramework.MetroTextBoxSize.Small;

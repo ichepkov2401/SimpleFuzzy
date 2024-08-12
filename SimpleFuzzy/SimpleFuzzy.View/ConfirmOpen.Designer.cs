@@ -36,6 +36,7 @@
             button2 = new MetroFramework.Controls.MetroButton();
             button1 = new MetroFramework.Controls.MetroButton();
             groupBox1.SuspendLayout();
+
             SuspendLayout();
             // 
             // groupBox1
@@ -52,6 +53,7 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Открытие проекта";
+
             // 
             // label2
             // 
@@ -69,6 +71,7 @@
             label2.Text = "label2";
             label2.Theme = MetroFramework.MetroThemeStyle.Light;
             label2.UseStyleColors = false;
+
             // 
             // label1
             // 
@@ -86,6 +89,7 @@
             label1.Text = "Введите имя проекта";
             label1.Theme = MetroFramework.MetroThemeStyle.Light;
             label1.UseStyleColors = false;
+
             // 
             // textBox1
             // 
@@ -111,6 +115,7 @@
             listBox1.Size = new Size(347, 344);
             listBox1.TabIndex = 7;
             listBox1.DoubleClick += listBox1_DoubleClick;
+
             // 
             // button2
             // 
@@ -148,10 +153,12 @@
             Load += ConfirmOpen_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+
             ResumeLayout(false);
         }
 
         #endregion
+
 
         private GroupBox groupBox1;
         private MetroFramework.Controls.MetroButton button1;

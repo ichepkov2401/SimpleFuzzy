@@ -60,7 +60,6 @@ namespace SimpleFuzzy.View
                 {
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
-
                 moduleLoaderService.AssemblyLoader(filePath);
                 TreeViewShow();
             }

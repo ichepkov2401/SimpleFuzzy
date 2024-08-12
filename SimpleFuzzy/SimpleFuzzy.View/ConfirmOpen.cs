@@ -45,18 +45,15 @@ namespace SimpleFuzzy.View
             if (dialog.ShowDialog() == DialogResult.Cancel) { return; }
             if (dialog.SelectedPath == "") { return; }
             try
-            {
-                if (projectList.IsContainsPath(dialog.SelectedPath))
+            { 
+                // дальше по выбранной папке открывается проект
+                projectList.OpenProjectfromPath(dialog.SelectedPath);
+                if (Parent is MainWindow parent)
                 {
-                    // дальше по выбранной папке открывается проект
-                    if (Parent is MainWindow parent)
-                    {
-                        parent.OpenButtons();
-                        parent.Locked();
-                        parent.OpenLoader();
-                    }
+                    parent.OpenButtons();
+                    parent.Locked();
+                    parent.OpenLoader();
                 }
-                else { throw new InvalidOperationException("Проекта по этому адресу не существует"); }
             }
             catch (Exception ex)
             {
@@ -110,14 +107,24 @@ namespace SimpleFuzzy.View
         {
             if (listBox1.SelectedItem != null)
             {
-                projectList.CurrentProjectName = listBox1.SelectedItem.ToString(); // Устанавливаем имя текущего проекта
-                if (Parent is MainWindow parent)
+                string projectname = listBox1.SelectedItem.ToString();
+                try
                 {
-                    parent.OpenButtons();
-                    parent.Locked();
-                    parent.OpenLoader();
+                    // открытие проекта
+                    projectList.OpenProjectfromName(projectname);
+                    if (Parent is MainWindow parent)
+                    {
+                        parent.OpenButtons();
+                        parent.Locked();
+                        parent.OpenLoader();
+                    }
+                    // запуск проекта
                 }
-                // запуск проекта
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
         }
     }

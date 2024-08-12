@@ -171,12 +171,6 @@ namespace SimpleFuzzy.View
             if (isContainSimulator) button11.Enabled = true;
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         public void EnableSimulationsButton(bool enable)
         {
             this.button11.Enabled = enable;
@@ -235,31 +229,31 @@ namespace SimpleFuzzy.View
                 StreamWriter writer = new StreamWriter(file);
                 for (int i = 0; i < repositoryService.GetCollection<IMembershipFunction>().Count; i++)
                 {
-                    string moduleName = repositoryService.GetCollection<IMembershipFunction>()[i].Name;
                     string active;
                     if (repositoryService.GetCollection<IMembershipFunction>()[i].Active) active = "true";
                     else active = "false";
-                    string assemblyName = repositoryService.GetCollection<IMembershipFunction>()[i].GetType().Name;
+                    string moduleName = repositoryService.GetCollection<IMembershipFunction>()[i].GetType().Name;
+                    string assemblyName = repositoryService.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName;
                     string answer = assemblyName + " , " + moduleName + " - " + active;
                     writer.WriteLine(answer);
                 }
                 for (int i = 0; i < repositoryService.GetCollection<IObjectSet>().Count; i++)
                 {
-                    string moduleName = repositoryService.GetCollection<IObjectSet>()[i].Name;
                     string active;
                     if (repositoryService.GetCollection<IObjectSet>()[i].Active) active = "true";
                     else active = "false";
-                    string assemblyName = repositoryService.GetCollection<IObjectSet>()[i].GetType().Name; ;
+                    string moduleName = repositoryService.GetCollection<IObjectSet>()[i].GetType().Name;
+                    string assemblyName = repositoryService.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName;
                     string answer = assemblyName + " , " + moduleName + " - " + active;
                     writer.WriteLine(answer);
                 }
                 for (int i = 0; i < repositoryService.GetCollection<ISimulator>().Count; i++)
                 {
-                    string moduleName = repositoryService.GetCollection<ISimulator>()[i].Name;
                     string active;
                     if (repositoryService.GetCollection<ISimulator>()[i].Active) active = "true";
                     else active = "false";
-                    string assemblyName = repositoryService.GetCollection<ISimulator>()[i].GetType().Name; ;
+                    string moduleName = repositoryService.GetCollection<ISimulator>()[i].GetType().Name;
+                    string assemblyName = repositoryService.GetCollection<ISimulator>()[i].GetType().Assembly.FullName;
                     string answer = assemblyName + " , " + moduleName + " - " + active;
                     writer.WriteLine(answer);
                 }

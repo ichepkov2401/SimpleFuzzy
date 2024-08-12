@@ -24,6 +24,7 @@ namespace SimpleFuzzy.View
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();
             RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
             TreeViewShow();
+
             moduleLoaderService.UseAssembly += AssemblyHandler;
         }
 
@@ -65,8 +66,7 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 moduleLoaderService.AssemblyLoader(filePath);
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\DllFiles");
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\DllFiles\\" + projectListService.GiveName(filePath));
+                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + projectListService.GiveName(filePath));
                 RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
                 TreeViewShow();
             }

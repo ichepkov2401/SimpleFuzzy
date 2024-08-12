@@ -82,19 +82,29 @@ namespace SimpleFuzzy.Service
         public void UnloadAssembly(string assemblyName)
         {
             bool loaded = false;
-            foreach (var assemblyContext in repositoryService.GetCollection<AssemblyLoadContext>())
+            List<AssemblyLoadContext> list = repositoryService.GetCollection<AssemblyLoadContext>();
+            for (int i = 0; i < list.Count; i++)
             {
-                if (assemblyContext.Assemblies.ElementAt(0).FullName == assemblyName)
+                
+                if (list[i].Assemblies.ElementAt(0).FullName == assemblyName)
                 {
                     var e = new EventArgs();
-                    UseAssembly(assemblyContext, e);
+                    UseAssembly(list[i], e);
                     loaded = true;
                     try
                     {
-                        assemblyContext.Unload();
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        repositoryService.GetCollection<AssemblyLoadContext>().Remove(assemblyContext);
+                        var alcWeakRef = new WeakReference(list[i], trackResurrection: true);
+                        list.RemoveAt(i);
+                        (alcWeakRef.Target as AssemblyLoadContext).Unload();
+                        (alcWeakRef.Target as AssemblyLoadContext).Unloading += v => 
+                        {
+                            throw new InvalidOperationException("!!!");
+                        };
+                        for (int j = 0; alcWeakRef.IsAlive && (j < 10); j++)
+                        {
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                        }
                         break;
                     }
                     catch

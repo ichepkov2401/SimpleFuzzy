@@ -18,11 +18,13 @@ namespace SimpleFuzzy.View
 {
     public partial class ConfirmCreate : MetroUserControl
     {
+        IRepositoryService repositoryService;
         IProjectListService projectList;
         public ConfirmCreate()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -33,6 +35,7 @@ namespace SimpleFuzzy.View
                 return;
             }
             // Дальше открывается проект
+            repositoryService.ClearAll();
             if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();

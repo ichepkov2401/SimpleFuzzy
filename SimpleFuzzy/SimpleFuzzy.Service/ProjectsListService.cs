@@ -36,17 +36,13 @@ namespace SimpleFuzzy.Service
 
         private void AddAssemblies(string path)
         {
-            if (File.Exists(path + "\\DllFiles\\"))
+            if (Directory.Exists(path))
             {
-                foreach (string fileName in Directory.GetFiles(path + "\\DllFiles\\"))
+                foreach (string fileName in Directory.GetFiles(path))
                 {
                     loaderService.AssemblyLoader(fileName);
                 }
             }
-        }
-        private void ChooseActive()
-        {
-
         }
 
         public void OpenProjectfromName(string name)
@@ -67,9 +63,7 @@ namespace SimpleFuzzy.Service
                 // открытие проекта
                 CurrentProjectName = GiveName(path);
                 loaderService.UnloadAllAssemblies();
-
                 AddAssemblies(path); // подключение сборок
-                ChooseActive(); // подключение активных сборок
 
             }
             else
@@ -91,6 +85,7 @@ namespace SimpleFuzzy.Service
         {
             if (IsContainsName(name))
             {
+                loaderService.UnloadAllAssemblies();
                 DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
                 foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
                 Directory.Delete(GivePath(name, true), true);

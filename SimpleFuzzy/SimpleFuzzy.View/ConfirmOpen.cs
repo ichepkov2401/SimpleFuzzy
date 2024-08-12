@@ -19,10 +19,12 @@ namespace SimpleFuzzy.View
     public partial class ConfirmOpen : MetroUserControl
     {
         IProjectListService projectList;
+        IRepositoryService repositoryService;
         public ConfirmOpen()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
             label2.Visible = false;
             string[] list = projectList.GiveList();
@@ -45,8 +47,9 @@ namespace SimpleFuzzy.View
             if (dialog.ShowDialog() == DialogResult.Cancel) { return; }
             if (dialog.SelectedPath == "") { return; }
             try
-            { 
+            {
                 // дальше по выбранной папке открывается проект
+                repositoryService.ClearAll();
                 projectList.OpenProjectfromPath(dialog.SelectedPath);
                 if (Parent is MainWindow parent)
                 {
@@ -111,6 +114,7 @@ namespace SimpleFuzzy.View
                 try
                 {
                     // открытие проекта
+                    repositoryService.ClearAll();
                     projectList.OpenProjectfromName(projectName);
                     if (Parent is MainWindow parent)
                     {

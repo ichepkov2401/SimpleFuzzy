@@ -28,12 +28,10 @@ namespace SimpleFuzzy.View
             loadButton = new MetroFramework.Controls.MetroButton();
             messageTextBox = new MetroFramework.Controls.MetroTextBox();
             treeView1 = new TreeView();
-
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxLoader.SuspendLayout();
             groupBoxModules.SuspendLayout();
-
             SuspendLayout();
             // 
             // filePathTextBox
@@ -82,7 +80,6 @@ namespace SimpleFuzzy.View
             messageTextBox.Enabled = false;
             messageTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
             messageTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-
             messageTextBox.Location = new Point(8, 78);
             messageTextBox.Multiline = true;
             messageTextBox.Name = "messageTextBox";
@@ -109,9 +106,9 @@ namespace SimpleFuzzy.View
             treeNode3.Text = "Симуляции";
             treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
             treeView1.ShowNodeToolTips = true;
-
             treeView1.Size = new Size(398, 280);
             treeView1.TabIndex = 0;
+            treeView1.AfterCheck += treeView1_AfterCheck;
             // 
             // groupBoxLoader
             // 

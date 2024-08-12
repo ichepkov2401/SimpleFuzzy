@@ -4,6 +4,7 @@ using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Service;
 using System.Runtime.Loader;
+using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -19,6 +20,7 @@ namespace SimpleFuzzy.View
             InitializeComponent();
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
             TreeViewShow();
             moduleLoaderService.UseAssembly += AssemblyHandler;
         }
@@ -61,6 +63,7 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 moduleLoaderService.AssemblyLoader(filePath);
+                RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
                 TreeViewShow();
             }
             catch (FileNotFoundException ex)
@@ -240,5 +243,93 @@ namespace SimpleFuzzy.View
                 }
             }
         }
+        //----------------------------------------------------------------------------------------
+
+
+        public void RefreshDllList(List<AssemblyLoadContext> dllList)
+        {
+            dllListView.Clear();
+            foreach (var dll in dllList)
+            {
+                ListViewItem item = dllListView.Items.Add(dll.Name);
+                item.SubItems.Add("X");
+
+                string dllInfo = "Полное имя файла:\n" + dll.GetType().Assembly.Location + "\n" + "\n";
+
+                Type[] array = dll.Assemblies.ElementAt(0).GetTypes();
+                //--------------------------------------------------------------------------------------
+                dllInfo += "Термы:\n";
+                List<IMembershipFunction> MembershipList = repositoryService.GetCollection<IMembershipFunction>();
+                foreach (Type type in array)
+                {
+                    foreach (var type2 in MembershipList)
+                    {
+                        if (type == type2.GetType())
+                        {
+                            dllInfo += "    " + type2.Name + "\n";
+                        }
+                    }
+                }
+                //----------------------------------------------------------------------------------
+                dllInfo += "Симуляции:\n";
+                List<ISimulator> SimulationshipList = repositoryService.GetCollection<ISimulator>();
+                foreach (Type type in array)
+                {
+                    foreach (var type2 in SimulationshipList)
+                    {
+                        if (type == type2.GetType())
+                        {
+                            dllInfo += "    " + type2.Name + "\n";
+                        }
+                    }
+                }
+                //-----------------------------------------------------------------------------------
+                dllInfo += "Базовые множества:\n";
+                List<IObjectSet> ObjectSetList = repositoryService.GetCollection<IObjectSet>();
+                foreach (Type type in array)
+                {
+                    foreach (var type2 in ObjectSetList)
+                    {
+                        if (type == type2.GetType())
+                        {
+                            dllInfo += "    " + type2.Name + "\n";
+                        }
+                    }
+                }
+                //----------------------------------------------------------------------------------
+                item.ToolTipText = dllInfo;
+            }
+        }
+        //----------------------------------------------------------------------------------------
+        private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
+        {
+            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string caption = "Удаление элемента";
+            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                dllListView.Items.Remove(sender as ListViewItem);
+            }
+        }
+
+        //----------------------------------------------------------------------------------------
+        /*принудительное закрытие окна 
+        static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+
+        [DllImport("user32.Dll")]
+        static extern int PostMessage(IntPtr hWnd, UInt32 msg, int wParam, int lParam);
+
+        const UInt32 WM_CLOSE = 0x0010;
+
+        Thread thread;
+        void CloseMessageBox()
+        {
+            IntPtr hWnd = FindWindowByCaption(IntPtr.Zero, "Удаление элемента");
+            if (hWnd != IntPtr.Zero)
+                PostMessage(hWnd, WM_CLOSE, 0, 0);
+
+            if (thread.IsAlive)
+                thread.Abort();
+        }*/
     }
 }

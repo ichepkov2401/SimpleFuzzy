@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
-using SimpleFuzzy.Service;
-using NCalc;
-using OxyPlot;
-using OxyPlot.Series;
+﻿using OxyPlot;
 using OxyPlot.Axes;
-using OxyPlot.WindowsForms;
 using OxyPlot.Legends;
+using OxyPlot.Series;
+using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
@@ -17,7 +10,7 @@ namespace SimpleFuzzy.View
     {
         private List<(TextBox Condition, TextBox Value)> conditionControls = new List<(TextBox, TextBox)>();
         private GenerationMembershipFunctionService generator = new GenerationMembershipFunctionService();
- 
+
         public GenerationMembershipUI()
         {
             InitializeComponent();
@@ -28,7 +21,7 @@ namespace SimpleFuzzy.View
             splitContainer.Panel2.Controls.Clear();
             splitContainer.Panel2.Controls.Add(plotView);
 
-            plotView.Model = new PlotModel{};
+            plotView.Model = new PlotModel { };
         }
 
 

@@ -28,16 +28,17 @@ namespace SimpleFuzzy.Service
 
                     if (array[j].GetInterface(nameof(IMembershipFunction)) != null)
                     {
-                        try 
+                        try
                         {
                             var module = array[j].GetConstructor(new Type[] { }).Invoke(null) as IMembershipFunction;
                             module.Active = true;
-                            repositoryService.GetCollection<IMembershipFunction>().Add(module); }
+                            repositoryService.GetCollection<IMembershipFunction>().Add(module);
+                        }
                         catch { }
                     }
                     else if (array[j].GetInterface(nameof(IObjectSet)) != null)
                     {
-                        try 
+                        try
                         {
                             var module = array[j].GetConstructor(new Type[] { }).Invoke(null) as IObjectSet;
                             module.Active = true;
@@ -47,7 +48,7 @@ namespace SimpleFuzzy.Service
                     }
                     else if (array[j].GetInterface(nameof(ISimulator)) != null)
                     {
-                        try 
+                        try
                         {
                             var module = array[j].GetConstructor(new Type[] { }).Invoke(null) as ISimulator;
                             module.Active = false;
@@ -68,7 +69,6 @@ namespace SimpleFuzzy.Service
                 }
             }
             var assemblyContext = new AssemblyLoadContext(name: $"{filePath}", isCollectible: true);
-
             try
             {
                 assemblyContext.LoadFromAssemblyPath(filePath);
@@ -115,7 +115,7 @@ namespace SimpleFuzzy.Service
             {
                 UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
             }
-            
+
         }
     }
 }

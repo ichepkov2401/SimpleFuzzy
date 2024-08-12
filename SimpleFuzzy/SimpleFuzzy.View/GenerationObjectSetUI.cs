@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using SimpleFuzzy.Service;
+﻿using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
@@ -32,7 +30,7 @@ namespace SimpleFuzzy.View
             lblError.MaximumSize = new Size(lblError.Parent.ClientSize.Width - 20, 0);
         }
 
-            private void ButtonGenerate_Click(object sender, EventArgs e)
+        private void ButtonGenerate_Click(object sender, EventArgs e)
         {
             double first = double.Parse(txtFirst.Text);
             double step = double.Parse(txtStep.Text);

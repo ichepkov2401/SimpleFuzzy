@@ -1,5 +1,8 @@
-﻿public interface IRepositoryService
+﻿namespace SimpleFuzzy.Abstract
 {
-    public void AssemblyHandler(object sender, EventArgs e);
-    List<T> GetCollection<T>();
+    public interface IRepositoryService
+    {
+        public void AssemblyHandler(object sender, EventArgs e);
+        List<T> GetCollection<T>();
+    }
 }

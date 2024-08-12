@@ -1,7 +1,8 @@
 ﻿namespace SimpleFuzzy.View
 {
 
-    public enum UserControlsEnum {
+    public enum UserControlsEnum
+    {
         Loader,
         Fasification,
         Inference,

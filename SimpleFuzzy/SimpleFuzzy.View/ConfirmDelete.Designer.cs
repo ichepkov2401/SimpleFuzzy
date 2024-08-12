@@ -36,7 +36,7 @@
             // button1
             // 
             button1.Highlight = false;
-            button1.Location = new Point(16, 184);
+            button1.Location = new Point(14, 23);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.Style = MetroFramework.MetroColorStyle.Blue;
@@ -54,7 +54,7 @@
             label1.FontSize = MetroFramework.MetroLabelSize.Medium;
             label1.FontWeight = MetroFramework.MetroLabelWeight.Light;
             label1.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
-            label1.Location = new Point(16, 161);
+            label1.Location = new Point(14, 0);
             label1.Name = "label1";
             label1.Size = new Size(436, 20);
             label1.Style = MetroFramework.MetroColorStyle.Blue;
@@ -67,7 +67,7 @@
             // button2
             // 
             button2.Highlight = false;
-            button2.Location = new Point(358, 184);
+            button2.Location = new Point(356, 23);
             button2.Name = "button2";
             button2.Size = new Size(94, 29);
             button2.Style = MetroFramework.MetroColorStyle.Blue;

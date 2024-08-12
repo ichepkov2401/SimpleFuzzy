@@ -96,10 +96,10 @@ namespace SimpleFuzzy.View
             treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Checked = true;
+            treeNode1.Checked = false;
             treeNode1.Name = "";
             treeNode1.Text = "Термы";
-            treeNode2.Checked = true;
+            treeNode2.Checked = false;
             treeNode2.Name = "";
             treeNode2.Text = "Базовые множества";
             treeNode3.Name = "";
@@ -116,7 +116,7 @@ namespace SimpleFuzzy.View
             groupBoxLoader.Controls.Add(browseButton);
             groupBoxLoader.Controls.Add(loadButton);
             groupBoxLoader.Controls.Add(messageTextBox);
-            groupBoxLoader.Location = new Point(430, 161);
+            groupBoxLoader.Location = new Point(430, 3);
             groupBoxLoader.Name = "groupBoxLoader";
             groupBoxLoader.Size = new Size(483, 306);
             groupBoxLoader.TabIndex = 0;
@@ -126,7 +126,7 @@ namespace SimpleFuzzy.View
             // groupBoxModules
             // 
             groupBoxModules.Controls.Add(treeView1);
-            groupBoxModules.Location = new Point(10, 161);
+            groupBoxModules.Location = new Point(10, 3);
             groupBoxModules.Name = "groupBoxModules";
             groupBoxModules.Size = new Size(414, 306);
             groupBoxModules.TabIndex = 1;

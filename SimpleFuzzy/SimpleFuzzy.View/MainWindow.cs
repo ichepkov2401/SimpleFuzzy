@@ -17,8 +17,8 @@ namespace SimpleFuzzy.View
         IRepositoryService repositoryService;
         IProjectListService projectList;
         private Button[] workspaceButtons;
-        public bool isContainSimulator = false;
         bool IsShownToolTip1 = true;
+        public bool isContainSimulator = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -139,12 +139,11 @@ namespace SimpleFuzzy.View
 
         private void button11_Click(object sender, EventArgs e)
         {
-            if (isContainSimulator) SwitchWorkspace(UserControlsEnum.Simulation, button11);
+            SwitchWorkspace(UserControlsEnum.Simulation, button11);
         }
         public void OpenLoader()
         {
             SwitchWorkspace(UserControlsEnum.Loader, button7);
-            button11.Enabled = false;
         }
         private void button12_Click(object sender, EventArgs e)
         {
@@ -156,6 +155,7 @@ namespace SimpleFuzzy.View
         {
             foreach (Button button in workspaceButtons) { button.Enabled = true; }
             clickedButton.Enabled = false;
+            if (!isContainSimulator) button11.Enabled = false;
             SwichUserControl(workspace);
         }
         public void Locked()
@@ -182,7 +182,7 @@ namespace SimpleFuzzy.View
                 button8.Enabled = true;
                 button9.Enabled = true;
                 button10.Enabled = true;
-                button11.Enabled = true;
+                if (isContainSimulator) button11.Enabled = true;
             }
         }
         public void BlockButtons()
@@ -211,7 +211,7 @@ namespace SimpleFuzzy.View
             button8.Enabled = true;
             button9.Enabled = true;
             button10.Enabled = true;
-            button11.Enabled = true;
+            if (isContainSimulator) button11.Enabled = true;
         }
 
         public void Dispose()
@@ -237,6 +237,7 @@ namespace SimpleFuzzy.View
             {
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
+                currentControl.Location = new Point(0, 160);
             }
         }
 
@@ -253,7 +254,7 @@ namespace SimpleFuzzy.View
 
             if (ctrl != null)
             {
-                if (ctrl == this.button11 && !IsShownToolTip1 && !isContainSimulator)
+                if (ctrl == this.button11 && !IsShownToolTip1 && projectList.CurrentProjectName != null && !isContainSimulator)
                 {
                     toolTip1.SetToolTip(this.button11, "Симуляция не загружена в проект или отключена в окне загрузчика");
                     string tipstring = this.toolTip1.GetToolTip(this.button11);

@@ -60,7 +60,6 @@ namespace SimpleFuzzy.View
                 {
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
-
                 moduleLoaderService.AssemblyLoader(filePath);
                 TreeViewShow();
             }
@@ -176,6 +175,7 @@ namespace SimpleFuzzy.View
                     {
                         if (Parent is MainWindow parent)
                         {
+                            parent.isContainSimulator = true;
                             parent.EnableSimulationsButton(true);
                         }
                         if (repositoryService.GetCollection<ISimulator>().Any(v => v.Active) && !modules[e.Node.Text].Active)
@@ -203,6 +203,7 @@ namespace SimpleFuzzy.View
                     {
                         if (Parent is MainWindow parent)
                         {
+                            parent.isContainSimulator = false;
                             parent.EnableSimulationsButton(false);
                         }
                     }

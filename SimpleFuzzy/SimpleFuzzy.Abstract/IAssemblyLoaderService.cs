@@ -6,5 +6,6 @@ namespace SimpleFuzzy.Abstract
         event EventHandler? UseAssembly;
         public void AssemblyLoader(string filePath);
         void UnloadAssembly(string assemblyName);
+        public void UnloadAllAssemblies();
     }
 }

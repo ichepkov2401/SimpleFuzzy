@@ -32,13 +32,22 @@ namespace SimpleFuzzy.Service
             }
             else { throw new InvalidOperationException("Проект с таким именем уже существует"); }
         }
+
+        private void AddAssemblies(string path)
+        {
+
+        }
+        private void ChooseActive()
+        {
+
+        }
+
         public void OpenProjectfromName(string name)
         {
             if (IsContainsName(name))
             {
-                CurrentProjectName = name;
-                // открываетие проекта
-                loaderService.UnloadAllAssemblies();
+                string path = Directory.GetCurrentDirectory() + "\\Projects\\" + name;
+                OpenProjectfromPath(path);
             }
             else
             {
@@ -50,7 +59,12 @@ namespace SimpleFuzzy.Service
             if (IsContainsPath(path))
             {
                 // открытие проекта
+                CurrentProjectName = GiveName(path);
                 loaderService.UnloadAllAssemblies();
+
+                AddAssemblies(path); // подключение сборок
+                ChooseActive(); // подключение активных сборок
+
             }
             else
             {
@@ -198,6 +212,18 @@ namespace SimpleFuzzy.Service
                 text[i] = list.ElementAt(i);
             }
             return text; 
+        }
+        public string GiveName(string path)
+        {
+            string name = "";
+            for (int i = path.Length - 1; i > 0; i--)
+            {
+                if (path[i] == '\\') break;
+                name += path[i];
+            }
+            string name1 = "";
+            for (int i = name.Length - 1; i >= 0; i--) { name1 += name[i]; }
+            return name1;
         }
     }
 }

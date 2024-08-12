@@ -107,18 +107,17 @@ namespace SimpleFuzzy.View
         {
             if (listBox1.SelectedItem != null)
             {
-                string projectname = listBox1.SelectedItem.ToString();
+                string projectName = listBox1.SelectedItem.ToString();
                 try
                 {
                     // открытие проекта
-                    projectList.OpenProjectfromName(projectname);
+                    projectList.OpenProjectfromName(projectName);
                     if (Parent is MainWindow parent)
                     {
                         parent.OpenButtons();
                         parent.Locked();
                         parent.OpenLoader();
                     }
-                    // запуск проекта
                 }
                 catch (Exception ex)
                 {

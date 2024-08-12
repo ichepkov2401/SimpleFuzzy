@@ -65,7 +65,8 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 moduleLoaderService.AssemblyLoader(filePath);
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + GiveName(filePath));
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\DllFiles");
+                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\DllFiles\\" + projectListService.GiveName(filePath));
                 RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
                 TreeViewShow();
             }
@@ -81,19 +82,6 @@ namespace SimpleFuzzy.View
             {
                 messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
             }
-        }
-
-        private string GiveName(string path)
-        {
-            string name = "";
-            for (int i = path.Length - 1; i > 0; i--)
-            {
-                if (path[i] == '\\') break;
-                name += path[i];
-            }
-            string name1 = "";
-            for (int i = name.Length - 1; i >= 0; i--) { name1 += name[i]; }
-            return name1;
         }
 
         private void TreeViewShow()

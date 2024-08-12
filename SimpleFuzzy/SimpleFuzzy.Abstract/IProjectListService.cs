@@ -20,5 +20,6 @@ namespace SimpleFuzzy.Abstract
         public bool IsContainsPath(string path);
         public string GivePath(string name, bool isFull);
         public string[]? GiveList();
+        public string GiveName(string name);
     }
 }

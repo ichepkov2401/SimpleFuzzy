@@ -1,9 +1,5 @@
-using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
-using System;
-using System.Windows.Forms;
-using MetroFramework.Controls;
 using MetroFramework.Forms;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {

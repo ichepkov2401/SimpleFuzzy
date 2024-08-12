@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using SimpleFuzzy.Model;
-using SimpleFuzzy.Abstract;
-using OxyPlot;
+﻿using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
+using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
     public partial class LinguisticVariableUI : UserControl
-    { 
+    {
         public LinguisticVariableUI()
         {
             InitializeComponent();
@@ -18,7 +15,7 @@ namespace SimpleFuzzy.View
 
             // Добавляем несколько примеров базовых множеств
             baseSets = new List<IObjectSet>
-            {};
+            { };
 
             InitializeControls();
         }

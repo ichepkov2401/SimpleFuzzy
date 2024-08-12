@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.Service
 {
@@ -54,7 +52,7 @@ namespace SimpleFuzzy.Service
             }
             else
             {
-                throw new InvalidOperationException("Проекта по данному пути не существует"); 
+                throw new InvalidOperationException("Проекта по данному пути не существует");
             }
         }
         public void CopyProject(string name, string path)
@@ -175,7 +173,7 @@ namespace SimpleFuzzy.Service
             }
             else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
-        public string[] GiveList() 
+        public string[] GiveList()
         {
             FileStream file = new FileStream(pathPL, FileMode.OpenOrCreate);
             StreamReader reader = new StreamReader(file);
@@ -184,7 +182,7 @@ namespace SimpleFuzzy.Service
             {
                 string line = reader.ReadLine();
                 if (line == null) { break; }
-                else 
+                else
                 {
                     list.Add(line);
                 }
@@ -196,7 +194,7 @@ namespace SimpleFuzzy.Service
             {
                 text[i] = list.ElementAt(i);
             }
-            return text; 
+            return text;
         }
     }
 }

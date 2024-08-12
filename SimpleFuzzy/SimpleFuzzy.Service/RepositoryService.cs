@@ -32,33 +32,33 @@ namespace SimpleFuzzy.Service
             AssemblyLoadContext context = sender as AssemblyLoadContext;
             for (int i = 0; i < context.Assemblies.Count(); i++)
             {
-                Type[] array = context.Assemblies.ElementAt(i).GetTypes();
+                Type[] array = context.Assemblies.ElementAt(i).GetTypes();                                                                                                                                   
                 for (int j = 0; j < array.Length; j++)
                 {
                     bool isBreak = false;
                     for (int k = 0; k < _membershipFunctions.Count; k++)
                     {
-                        if (_membershipFunctions[k] == array[j] as IMembershipFunction) 
+                        if (_membershipFunctions[k].GetType() == array[j]) 
                         {
                             _membershipFunctions.RemoveAt(k);
                             isBreak = true;
                             break;
                         }
                     }
-                    if (isBreak) break;
+                    if (isBreak) continue;
                     for (int k = 0; k < _objectSets.Count; k++)
                     {
-                        if (_objectSets[k] == array[j] as IObjectSet)
+                        if (_objectSets[k].GetType() == array[j])
                         {
                             _objectSets.RemoveAt(k);
                             isBreak = true;
                             break;
                         }
                     }
-                    if (isBreak) break;
+                    if (isBreak) continue;
                     for (int k = 0; k < _simulators.Count; k++)
                     {
-                        if (_simulators[k] == array[j] as ISimulator)
+                        if (_simulators[k].GetType() == array[j])
                         {
                             _simulators.RemoveAt(k);
                             break;

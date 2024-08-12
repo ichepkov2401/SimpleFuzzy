@@ -1,5 +1,6 @@
 ﻿
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SimpleFuzzy.View 
 { 
@@ -30,6 +31,9 @@ namespace SimpleFuzzy.View
             treeView1 = new TreeView();
             dllListView = new ListView();
             FileName = new ColumnHeader();
+            FileName.Text = "Имя";
+            CloseButton = new ColumnHeader();
+            CloseButton.Text = "";
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxLoader.SuspendLayout();
@@ -98,10 +102,8 @@ namespace SimpleFuzzy.View
             treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Checked = false;
             treeNode1.Name = "";
             treeNode1.Text = "Термы";
-            treeNode2.Checked = false;
             treeNode2.Name = "";
             treeNode2.Text = "Базовые множества";
             treeNode3.Name = "";
@@ -112,23 +114,27 @@ namespace SimpleFuzzy.View
             treeView1.TabIndex = 0;
             treeView1.AfterCheck += treeView1_AfterCheck;
             // 
-            //  dllListView
+            // dllListView
             // 
-            dllListView.Columns.AddRange(new ColumnHeader[] { FileName });
-            dllListView.Location = new Point(647, 148);
-            dllListView.Name = "listView1";
-            dllListView.Size = new Size(222, 332);
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
+            dllListView.FullRowSelect = true;
+            dllListView.Location = new Point(239, 315);
+            dllListView.Name = "dllListView";
+            dllListView.Size = new Size(903, 318);
             dllListView.TabIndex = 6;
             dllListView.View = System.Windows.Forms.View.Details;
             dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.FullRowSelect = true;
             dllListView.Scrollable = true;
+            dllListView.ShowItemToolTips = true;
             ListViewExtender extender = new ListViewExtender(dllListView);
             ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
             buttonAction.Click += OnButtonActionClick;
             buttonAction.FixedWidth = true;
             extender.AddColumn(buttonAction);
+
             //
+            // 
             // groupBoxLoader
             // 
             groupBoxLoader.Controls.Add(filePathTextBox);
@@ -154,12 +160,12 @@ namespace SimpleFuzzy.View
             // 
             // LoaderForm
             // 
-            Controls.Add(dllListView);
             BackColor = Color.White;
+            Controls.Add(dllListView);
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
             Name = "LoaderForm";
-            Size = new Size(916, 470);
+            Size = new Size(1420, 754);
             groupBoxLoader.ResumeLayout(false);
             groupBoxModules.ResumeLayout(false);
             ResumeLayout(false);
@@ -173,6 +179,7 @@ namespace SimpleFuzzy.View
         private TreeView treeView1;
         public ListView dllListView;
         private ColumnHeader FileName;
+        private ColumnHeader CloseButton;
         private GroupBox groupBoxLoader;
         private GroupBox groupBoxModules;
     }

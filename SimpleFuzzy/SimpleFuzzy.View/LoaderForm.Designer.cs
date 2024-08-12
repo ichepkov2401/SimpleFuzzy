@@ -28,6 +28,8 @@ namespace SimpleFuzzy.View
             loadButton = new MetroFramework.Controls.MetroButton();
             messageTextBox = new MetroFramework.Controls.MetroTextBox();
             treeView1 = new TreeView();
+            dllListView = new ListView();
+            FileName = new ColumnHeader();
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxLoader.SuspendLayout();
@@ -110,6 +112,22 @@ namespace SimpleFuzzy.View
             treeView1.TabIndex = 0;
             treeView1.AfterCheck += treeView1_AfterCheck;
             // 
+            //  dllListView
+            // 
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName });
+            dllListView.Location = new Point(647, 148);
+            dllListView.Name = "listView1";
+            dllListView.Size = new Size(222, 332);
+            dllListView.TabIndex = 6;
+            dllListView.UseCompatibleStateImageBehavior = false;
+            dllListView.FullRowSelect = true;
+            dllListView.Scrollable = true;
+            ListViewExtender extender = new ListViewExtender(dllListView);
+            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
+            buttonAction.Click += OnButtonActionClick;
+            buttonAction.FixedWidth = true;
+            extender.AddColumn(buttonAction);
+            //
             // groupBoxLoader
             // 
             groupBoxLoader.Controls.Add(filePathTextBox);
@@ -135,6 +153,7 @@ namespace SimpleFuzzy.View
             // 
             // LoaderForm
             // 
+            Controls.Add(dllListView);
             BackColor = Color.White;
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
@@ -151,6 +170,8 @@ namespace SimpleFuzzy.View
         private MetroFramework.Controls.MetroButton loadButton;
         private MetroFramework.Controls.MetroTextBox messageTextBox;
         private TreeView treeView1;
+        public ListView dllListView;
+        private ColumnHeader FileName;
         private GroupBox groupBoxLoader;
         private GroupBox groupBoxModules;
     }

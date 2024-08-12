@@ -26,7 +26,7 @@ namespace SimpleFuzzy.View
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "\\Projects";
+            string path = Directory.GetCurrentDirectory() + "\\Projects\\";
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.RootFolder = Environment.SpecialFolder.Desktop;
             dialog.SelectedPath = path;

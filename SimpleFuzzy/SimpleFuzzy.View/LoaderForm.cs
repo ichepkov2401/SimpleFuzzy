@@ -158,6 +158,7 @@ namespace SimpleFuzzy.View
                     foreach (TreeNode child in node.Nodes)
                     {
                         child.Checked = e.Node.Checked;
+                        modules[child.Text].Active = e.Node.Checked;
                     }
                     return;
                 }

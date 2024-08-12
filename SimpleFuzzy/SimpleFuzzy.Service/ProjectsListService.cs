@@ -59,11 +59,12 @@ namespace SimpleFuzzy.Service
         }
         public void CopyProject(string name, string path)
         {
+            string lastName = CurrentProjectName;
             AddProject(name, path);
             DirectoryInfo directory = new DirectoryInfo(path);
             directory.Create();
-            DirectoryInfo source = new DirectoryInfo(GivePath(CurrentProjectName, true));
-            DirectoryInfo destin = new DirectoryInfo(path);
+            DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
+            DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
             foreach (var item in source.GetFiles()) { item.CopyTo(destin + item.Name, true); }
         }
         public void DeleteProject(string name)
@@ -163,14 +164,14 @@ namespace SimpleFuzzy.Service
                         break;
                     }
                 }
-                if (isFull) return path;
+                if (isFull) return path + "\\";
                 else
                 {
                     string newPath = "";
                     int count = 0;
                     for (int i = path.Length - 1, j = 0; i != 0; i--, j++) { if (path[i] == '\\') { count = j + 1; break; } }
                     for (int i = 0; i < path.Length - count; i++) { newPath += path[i]; }
-                    return newPath;
+                    return newPath + "\\";
                 }
             }
             else { throw new InvalidOperationException("Проекта с таким именем не существует"); }

@@ -4,9 +4,9 @@ namespace SimpleFuzzy.Abstract
 {
     public interface IAssemblyLoaderService
     {
-        public AssemblyLoadContext AssemblyContextList { get; }
-        public (List<IMembershipFunction>, List<IObjectSet>, List<ISimulator>) AddElements(AssemblyLoadContext context);
-        string GetInfo(string filePath);
+        event EventHandler? UseAssembly;
+        public void AssemblyLoader(string filePath);
         void UnloadAssembly(string assemblyName);
+        public void UnloadAllAssemblies();
     }
 }

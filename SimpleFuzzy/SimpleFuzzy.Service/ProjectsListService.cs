@@ -7,6 +7,11 @@ namespace SimpleFuzzy.Service
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public IAssemblyLoaderService loaderService;
+        public ProjectListService(IRepositoryService repositoryService)
+        {
+            loaderService = new AssemblyLoaderService(repositoryService);
+        }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
         {
@@ -23,8 +28,34 @@ namespace SimpleFuzzy.Service
                 file.Close();
                 DirectoryInfo directory = new DirectoryInfo(path);
                 directory.Create();
+                loaderService.UnloadAllAssemblies();
             }
             else { throw new InvalidOperationException("Проект с таким именем уже существует"); }
+        }
+        public void OpenProjectfromName(string name)
+        {
+            if (IsContainsName(name))
+            {
+                CurrentProjectName = name;
+                // открываетие проекта
+                loaderService.UnloadAllAssemblies();
+            }
+            else
+            {
+                throw new InvalidOperationException("Проекта с таким именем не существует");
+            }
+        }
+        public void OpenProjectfromPath(string path)
+        {
+            if (IsContainsPath(path))
+            {
+                // открытие проекта
+                loaderService.UnloadAllAssemblies();
+            }
+            else
+            {
+                throw new InvalidOperationException("Проекта по данному пути не существует"); 
+            }
         }
         public void CopyProject(string name, string path)
         {
@@ -54,6 +85,20 @@ namespace SimpleFuzzy.Service
                 CurrentProjectName = null;
             }
             else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
+        }
+        public void DeleteOnlyInList(string name)
+        {
+            if (CurrentProjectName == name) { CurrentProjectName = null; }
+            string[] text = GiveList();
+            FileStream file = new FileStream(pathPL, FileMode.Truncate);
+            StreamWriter writer = new StreamWriter(file);
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] != name) { writer.WriteLine(text[i]); }
+                else { i += 2; }
+            }
+            writer.Close();
+            file.Close();
         }
         public void RenameProject(string name)
         {

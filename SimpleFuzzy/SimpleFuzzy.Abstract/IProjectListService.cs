@@ -10,8 +10,11 @@ namespace SimpleFuzzy.Abstract
     {
         string CurrentProjectName { get; set; }
         public void AddProject(string name, string path);
+        public void OpenProjectfromName(string name);
+        public void OpenProjectfromPath(string path);
         public void CopyProject(string name, string path);
         public void RenameProject(string name);
+        public void DeleteOnlyInList(string name);
         public void DeleteProject(string name);
         public bool IsContainsName(string name);
         public bool IsContainsPath(string path);

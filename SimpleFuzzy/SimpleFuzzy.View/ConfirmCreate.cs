@@ -9,10 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
+using MetroFramework.Controls;
+using MetroFramework.Forms;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmCreate : UserControl
+    public partial class ConfirmCreate : MetroUserControl
     {
         IProjectListService projectList;
         public ConfirmCreate()
@@ -47,7 +50,7 @@ namespace SimpleFuzzy.View
             else { textBox2.Text = dialog.SelectedPath; }
         }
 
-        private void button3_Click(object sender, EventArgs e) 
+        private void button3_Click(object sender, EventArgs e)
         {
             if (Parent is MainWindow parent)
             {
@@ -57,9 +60,14 @@ namespace SimpleFuzzy.View
             Parent.Controls.Remove(this);
         }
 
-        private void ConfirmCreate_Load(object sender, EventArgs e) 
+        private void ConfirmCreate_Load(object sender, EventArgs e)
         {
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

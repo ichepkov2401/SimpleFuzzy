@@ -87,6 +87,7 @@ namespace SimpleFuzzy.Service
             {
                 if (assemblyContext.Assemblies.ElementAt(0).FullName == assemblyName)
                 {
+                    
                     var e = new EventArgs();
                     UseAssembly(assemblyContext, e);
                     loaded = true;

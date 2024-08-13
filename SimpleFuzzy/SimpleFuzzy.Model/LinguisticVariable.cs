@@ -8,6 +8,15 @@ namespace SimpleFuzzy.Model
         public IObjectSet baseSet; // Базовое множество
         public List<IMembershipFunction> func = new List<IMembershipFunction>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
+        public double? height; // Высота нечеткого множества
+        public string type; // Тип нечеткого множества
+        public List<object> areaOfInfluence; // Область влияния
+        public object core; // Ядро нечеткого множества
+        public List<object> section; // Сечение нечеткого множества
+        private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
+        private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
+        private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
+        private Dictionary<IMembershipFunction, object> coreCache = new Dictionary<IMembershipFunction, object>();
 
         public LinguisticVariable(bool isRedact)
         {
@@ -112,6 +121,135 @@ namespace SimpleFuzzy.Model
                 result = result.Insert(lastIndex, and);
             }
             return result;
+        }
+        //Расчет свойств нечеткого множества
+        public void CalculationFuzzySetProperties(IMembershipFunction term,IObjectSet set, double sectionHeight) {
+
+            if (!heightCache.ContainsKey(term))
+            {
+                heightCache[term] = CalculateHeight(term, set);
+            }
+            height = heightCache[term];
+
+            if (!typeCache.ContainsKey(term))
+            {
+                typeCache[term] = CalculateType(term, set);
+            }
+            type = typeCache[term];
+
+            if (!areaOfInfluenceCache.ContainsKey(term))
+            {
+                areaOfInfluenceCache[term] = CalculateAreaOfInfluence(term, set);
+            }
+            areaOfInfluence = areaOfInfluenceCache[term];
+
+            if (!coreCache.ContainsKey(term))
+            {
+                coreCache[term] = CalculateCore(term, set);
+            }
+            core = coreCache[term];
+
+
+            section = CalculateSection(term, sectionHeight, set);
+        }
+        private double CalculateHeight(IMembershipFunction term, IObjectSet set) {
+            double maxHeight = 0;
+            set.ToFirst();
+            while (!set.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(set.Extraction());
+                if (membershipValue > maxHeight)
+                {
+                    maxHeight = membershipValue;
+                }
+                set.MoveNext();
+            }
+            return maxHeight;
+        }
+
+        private string CalculateType(IMembershipFunction term, IObjectSet set)
+        {
+            if (height == 1)
+            {
+                return "Нормальное";
+            }
+            else
+            {
+                bool allZero = true;
+                bool allOne = true;
+                set.ToFirst();
+                while (!set.IsEnd())
+                {
+                    double membershipValue = term.MembershipFunction(set.Extraction());
+                    if (membershipValue != 0)
+                    {
+                        allZero = false;
+                    }
+                    if (membershipValue != 1)
+                    {
+                        allOne = false;
+                    }
+                    set.MoveNext();
+                }
+                if (allZero)
+                {
+                    return "Пустое";
+                }
+                else if (allOne)
+                {
+                    return "Универсальное";
+                }
+                else
+                {
+                    return "Субнормальное";
+                }
+            }
+        }
+
+        private List<object> CalculateAreaOfInfluence(IMembershipFunction term, IObjectSet set)
+        {
+            var areaOfInfluence = new List<object>();
+            set.ToFirst();
+            while (!set.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(set.Extraction());
+                if (membershipValue > 0)
+                {
+                    areaOfInfluence.Add(set.Extraction());
+                }
+                set.MoveNext();
+            }
+            return areaOfInfluence;
+        }
+
+        private object CalculateCore(IMembershipFunction term, IObjectSet set)
+        {
+            set.ToFirst();
+            while (!set.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(set.Extraction());
+                if (membershipValue == 1)
+                {
+                    return set.Extraction();
+                }
+                set.MoveNext();
+            }
+            return null; // Отсутствие ядра
+        }
+        private List<object> CalculateSection(IMembershipFunction term, double sectionHeight, IObjectSet set)
+        {
+            var section = new List<object>();
+            set.ToFirst();
+            while (!set.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(set.Extraction());
+                if (membershipValue > sectionHeight)
+                {
+                    section.Add(set.Extraction());
+                }
+                set.MoveNext();
+            }
+            return section;
         }
     }
 }

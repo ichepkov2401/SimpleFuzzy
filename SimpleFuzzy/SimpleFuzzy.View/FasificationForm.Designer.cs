@@ -1,4 +1,6 @@
-﻿namespace SimpleFuzzy.View
+﻿using System.Windows.Forms;
+
+namespace SimpleFuzzy.View
 {
     partial class FasificationForm
     {
@@ -28,10 +30,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            TreeNode treeNode1 = new TreeNode("Термы");
+            TreeNode treeNode2 = new TreeNode("Базовые множества");
+            treeView1 = new TreeView();
+            SuspendLayout();
+            // 
+            // treeView1
+            // 
+            treeView1.Location = new Point(3, 3);
+            treeView1.Name = "treeView1";
+            treeView1.Size = new Size(187, 223);
+            treeView1.TabIndex = 0;
+            treeNode1.Name = "";
+            treeNode1.Text = "Термы";
+            treeNode2.Name = "";
+            treeNode2.Text = "Базовые множества";
+            treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2 });
+            // 
+            // FasificationForm
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(treeView1);
+            Name = "FasificationForm";
+            Size = new Size(952, 477);
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private TreeView treeView1;
     }
 }

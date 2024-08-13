@@ -8,10 +8,12 @@ namespace SimpleFuzzy.Service
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
         public ProjectListService(IRepositoryService repositoryService)
         {
             loaderService = new AssemblyLoaderService(repositoryService);
+            repository = repositoryService;
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -36,12 +38,87 @@ namespace SimpleFuzzy.Service
 
         private void AddAssemblies(string path)
         {
-            if (Directory.Exists(path))
-            {
                 foreach (string fileName in Directory.GetFiles(path))
                 {
-                    loaderService.AssemblyLoader(fileName);
+                    if (GiveName(fileName) != "ActiveAssemblies.tt") loaderService.AssemblyLoader(fileName);
                 }
+        }
+
+        private void ChooseActive()
+        {
+            if (File.Exists(GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt"))
+            {
+                FileStream file = new FileStream(GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt", FileMode.Open);
+                StreamReader reader = new StreamReader(file);
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null) { break; }
+                    bool status = true;
+                    string active = "";
+                    string moduleName = "";
+                    string assemblyName = "";
+                    int index = 0;
+                    for (int i = index; i < line.Length; i++)
+                    {
+                        if (line[i] != ' ') moduleName += line[i];
+                        else
+                        {
+                            index = i + 3;
+                            break;
+                        }
+                    }
+                    for (int i = index; i < line.Length; i++)
+                    {
+                        if (line[i] != ' ') active += line[i];
+                        else
+                        {
+                            if (active == "true") status = true;
+                            else status = false;
+                            index = i + 2;
+                            break;
+                        }
+                    }
+                    for (int i = index; i < line.Length; i++)
+                    {
+                        if (line[i] != ')') assemblyName += line[i];
+                        else break;
+                    }
+                    bool isContinue = false;
+                    for (int i = 0; i < repository.GetCollection<IMembershipFunction>().Count; i++)
+                    {
+                        if (repository.GetCollection<IMembershipFunction>()[i].GetType().Name == moduleName &&
+                            repository.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName == assemblyName)
+                        {
+                            repository.GetCollection<IMembershipFunction>()[i].Active = status;
+                            isContinue = true;
+                            break;
+                        }
+                    }
+                    if (isContinue) continue;
+                    for (int i = 0; i < repository.GetCollection<IObjectSet>().Count; i++)
+                    {
+                        if (repository.GetCollection<IObjectSet>()[i].GetType().Name == moduleName &&
+                            repository.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName == assemblyName)
+                        {
+                            repository.GetCollection<IObjectSet>()[i].Active = status;
+                            isContinue = true;
+                            break;
+                        }
+                    }
+                    if (isContinue) continue;
+                    for (int i = 0; i < repository.GetCollection<ISimulator>().Count; i++)
+                    {
+                        if (repository.GetCollection<ISimulator>()[i].GetType().Name == moduleName &&
+                            repository.GetCollection<ISimulator>()[i].GetType().Assembly.FullName == assemblyName)
+                        {
+                            repository.GetCollection<ISimulator>()[i].Active = status;
+                            break;
+                        }
+                    }
+                }
+                reader.Close();
+                file.Close();
             }
         }
 
@@ -64,7 +141,7 @@ namespace SimpleFuzzy.Service
                 CurrentProjectName = GiveName(path);
                 loaderService.UnloadAllAssemblies();
                 AddAssemblies(path); // подключение сборок
-
+                ChooseActive(); // подключение активности сборок
             }
             else
             {

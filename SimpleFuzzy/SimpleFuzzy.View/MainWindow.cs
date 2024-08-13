@@ -234,7 +234,7 @@ namespace SimpleFuzzy.View
                     else active = "false";
                     string moduleName = repositoryService.GetCollection<IMembershipFunction>()[i].GetType().Name;
                     string assemblyName = repositoryService.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName;
-                    string answer = assemblyName + " , " + moduleName + " - " + active;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
                     writer.WriteLine(answer);
                 }
                 for (int i = 0; i < repositoryService.GetCollection<IObjectSet>().Count; i++)
@@ -244,7 +244,7 @@ namespace SimpleFuzzy.View
                     else active = "false";
                     string moduleName = repositoryService.GetCollection<IObjectSet>()[i].GetType().Name;
                     string assemblyName = repositoryService.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName;
-                    string answer = assemblyName + " , " + moduleName + " - " + active;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
                     writer.WriteLine(answer);
                 }
                 for (int i = 0; i < repositoryService.GetCollection<ISimulator>().Count; i++)
@@ -254,7 +254,7 @@ namespace SimpleFuzzy.View
                     else active = "false";
                     string moduleName = repositoryService.GetCollection<ISimulator>()[i].GetType().Name;
                     string assemblyName = repositoryService.GetCollection<ISimulator>()[i].GetType().Assembly.FullName;
-                    string answer = assemblyName + " , " + moduleName + " - " + active;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
                     writer.WriteLine(answer);
                 }
                 writer.Close();

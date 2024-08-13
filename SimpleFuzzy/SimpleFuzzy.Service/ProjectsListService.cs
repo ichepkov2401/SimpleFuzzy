@@ -10,7 +10,7 @@ namespace SimpleFuzzy.Service
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
-        public ProjectListService(IAssemblyLoaderService loaderService)
+        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
         {
             loaderService = new AssemblyLoaderService(repositoryService);
             repository = repositoryService;

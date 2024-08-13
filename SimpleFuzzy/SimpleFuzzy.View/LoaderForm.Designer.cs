@@ -1,5 +1,6 @@
 ﻿
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SimpleFuzzy.View 
 { 
@@ -30,6 +31,9 @@ namespace SimpleFuzzy.View
             treeView1 = new TreeView();
             dllListView = new ListView();
             FileName = new ColumnHeader();
+            FileName.Text = "Имя";
+            CloseButton = new ColumnHeader();
+            CloseButton.Text = "";
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxDLL = new GroupBox();
@@ -120,8 +124,15 @@ namespace SimpleFuzzy.View
             dllListView.Name = "dllListView";
             dllListView.Size = new Size(885, 186);
             dllListView.TabIndex = 6;
-            dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.View = System.Windows.Forms.View.Details;
+            dllListView.UseCompatibleStateImageBehavior = false;
+            dllListView.Scrollable = true;
+            dllListView.ShowItemToolTips = true;
+            ListViewExtender extender = new ListViewExtender(dllListView);
+            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
+            buttonAction.Click += OnButtonActionClick;
+            buttonAction.FixedWidth = true;
+            extender.AddColumn(buttonAction);
             // 
             // groupBoxLoader
             // 
@@ -159,6 +170,7 @@ namespace SimpleFuzzy.View
             // LoaderForm
             // 
             BackColor = Color.White;
+            Controls.Add(dllListView);
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
             Controls.Add(groupBoxDLL);
@@ -178,6 +190,7 @@ namespace SimpleFuzzy.View
         private TreeView treeView1;
         public ListView dllListView;
         private ColumnHeader FileName;
+        private ColumnHeader CloseButton;
         private GroupBox groupBoxLoader;
         private GroupBox groupBoxModules;
         private GroupBox groupBoxDLL;

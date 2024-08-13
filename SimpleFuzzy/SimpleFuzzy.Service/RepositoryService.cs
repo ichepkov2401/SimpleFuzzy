@@ -31,35 +31,36 @@ public class RepositoryService : IRepositoryService
                 bool isBreak = false;
                 for (int k = 0; k < _membershipFunctions.Count; k++)
                 {
-                    if (_membershipFunctions[k] == array[j] as IMembershipFunction)
+                    if (_membershipFunctions[k].GetType() == array[j]) 
                     {
                         _membershipFunctions.RemoveAt(k);
                         isBreak = true;
                         break;
                     }
+                 }
+                 if (isBreak) continue;
+                 for (int k = 0; k < _objectSets.Count; k++)
+                 {
+                     if (_objectSets[k].GetType() == array[j])
+                     {
+                         _objectSets.RemoveAt(k);
+                         isBreak = true;
+                         break;
+                      }
+                  }
+                  if (isBreak) continue;
+                  for (int k = 0; k < _simulators.Count; k++)
+                  {
+                     if (_simulators[k].GetType() == array[j])
+                     {
+                         _simulators.RemoveAt(k);
+                         break;
+                     }
+                   }
                 }
-                if (isBreak) break;
-                for (int k = 0; k < _objectSets.Count; k++)
-                {
-                    if (_objectSets[k] == array[j] as IObjectSet)
-                    {
-                        _objectSets.RemoveAt(k);
-                        isBreak = true;
-                        break;
-                    }
-                }
-                if (isBreak) break;
-                for (int k = 0; k < _simulators.Count; k++)
-                {
-                    if (_simulators[k] == array[j] as ISimulator)
-                    {
-                        _simulators.RemoveAt(k);
-                        break;
-                    }
-                }
+               
             }
         }
-    }
 
     // Универсальный метод для получения коллекций
     public List<T> GetCollection<T>()

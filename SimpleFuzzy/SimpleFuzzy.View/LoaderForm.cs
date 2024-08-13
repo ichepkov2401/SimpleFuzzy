@@ -251,15 +251,24 @@ namespace SimpleFuzzy.View
             dllListView.Items.Clear();
             foreach (var dll in dllList)
             {
-                ListViewItem item = dllListView.Items.Add(dll.Name);
+                string s = dll.Name;
+                string dllInfo = "";
+                for (int i = s.Length - 1; i >= 0; i--)
+                {
+                    if (s[i] == 92) break;
+                    else
+                    {
+                        dllInfo = s[i] + dllInfo;
+                    }
+                }
+                ListViewItem item = dllListView.Items.Add(dllInfo);
+                dllInfo = dll.Name + "\n" + "\n";
                 LoadedAssembies[item] = dll;
                 item.SubItems.Add("X");
-
-                string dllInfo = "Полное имя файла:\n" + dll.GetType().Assembly.Location + "\n" + "\n";
-
+                FileName.Width = -1;
                 Type[] array = dll.Assemblies.ElementAt(0).GetTypes();
                 //--------------------------------------------------------------------------------------
-                string s = "Термы:\n";
+                s = "Термы:\n";
                 bool checker = false;
                 List<IMembershipFunction> MembershipList = repositoryService.GetCollection<IMembershipFunction>();
                 foreach (Type type in array)

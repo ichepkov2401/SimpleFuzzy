@@ -100,7 +100,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "HelpWindow";
-            Padding = new Padding(23, 80, 23, 27);
+            Padding = new Padding(0, 60, 0, 0);
             Text = "Справка";
             ResumeLayout(false);
         }

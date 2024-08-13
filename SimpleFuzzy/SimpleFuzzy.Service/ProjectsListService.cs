@@ -6,9 +6,9 @@ namespace SimpleFuzzy.Service
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
         public IAssemblyLoaderService loaderService;
-        public ProjectListService(IRepositoryService repositoryService)
+        public ProjectListService(IAssemblyLoaderService loaderService)
         {
-            loaderService = new AssemblyLoaderService(repositoryService);
+            this.loaderService = loaderService;
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)

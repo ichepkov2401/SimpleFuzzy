@@ -124,7 +124,6 @@ namespace SimpleFuzzy.View
             dllListView.TabIndex = 6;
             dllListView.View = System.Windows.Forms.View.Details;
             dllListView.UseCompatibleStateImageBehavior = false;
-            dllListView.FullRowSelect = true;
             dllListView.Scrollable = true;
             dllListView.ShowItemToolTips = true;
             ListViewExtender extender = new ListViewExtender(dllListView);

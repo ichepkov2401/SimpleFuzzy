@@ -48,5 +48,25 @@ namespace SimpleFuzzy.View
             }
             treeView1.ExpandAll();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // добавление лингвистической переменной
+            // Пока что добавляется только запись о создании переменной
+            ListViewItem item = listView1.Items.Add("Name");
+            item.SubItems.Add("X");
+        }
+
+        private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
+        {
+            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string caption = "Удаление элемента";
+            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                listView1.Items.Remove(e.Item);
+                // Дальше удаление лингвистической переменной
+            }
+        }
     }
 }

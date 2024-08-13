@@ -1,12 +1,6 @@
-﻿using MetroFramework.Forms;
-using MetroFramework;
-using MetroFramework.Controls;
+﻿using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
 using System.Runtime.Loader;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace SimpleFuzzy.View
 {

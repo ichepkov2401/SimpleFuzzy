@@ -1,18 +1,5 @@
-﻿using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc.Html;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
-using MetroFramework.Controls;
-using MetroFramework.Forms;
+﻿using MetroFramework.Controls;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {

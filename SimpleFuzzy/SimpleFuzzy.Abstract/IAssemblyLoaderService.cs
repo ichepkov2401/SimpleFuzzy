@@ -1,4 +1,3 @@
-﻿
 namespace SimpleFuzzy.Abstract
 {
     public interface IAssemblyLoaderService

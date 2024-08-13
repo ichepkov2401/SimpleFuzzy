@@ -1,12 +1,6 @@
-﻿using MetroFramework.Forms;
-using MetroFramework;
-using MetroFramework.Controls;
+﻿using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
 using System.Runtime.Loader;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace SimpleFuzzy.View
 {
@@ -16,6 +10,7 @@ namespace SimpleFuzzy.View
         public IRepositoryService repositoryService;
         public IProjectListService projectListService;
         Dictionary<string, IModulable> modules = new Dictionary<string, IModulable>();
+        Dictionary<ListViewItem, AssemblyLoadContext> LoadedAssembies = new Dictionary<ListViewItem, AssemblyLoadContext>();
         public LoaderForm()
         {
             InitializeComponent();
@@ -252,17 +247,19 @@ namespace SimpleFuzzy.View
 
         public void RefreshDllList(List<AssemblyLoadContext> dllList)
         {
-            dllListView.Clear();
+            dllListView.Items.Clear();
             foreach (var dll in dllList)
             {
                 ListViewItem item = dllListView.Items.Add(dll.Name);
+                LoadedAssembies[item] = dll;
                 item.SubItems.Add("X");
 
                 string dllInfo = "Полное имя файла:\n" + dll.GetType().Assembly.Location + "\n" + "\n";
 
                 Type[] array = dll.Assemblies.ElementAt(0).GetTypes();
                 //--------------------------------------------------------------------------------------
-                dllInfo += "Термы:\n";
+                string s = "Термы:\n";
+                bool checker = false;
                 List<IMembershipFunction> MembershipList = repositoryService.GetCollection<IMembershipFunction>();
                 foreach (Type type in array)
                 {
@@ -270,12 +267,15 @@ namespace SimpleFuzzy.View
                     {
                         if (type == type2.GetType())
                         {
-                            dllInfo += "    " + type2.Name + "\n";
+                            checker = true;
+                            s += "    " + type2.Name + "\n";
                         }
                     }
                 }
+                if (checker) dllInfo += s;
                 //----------------------------------------------------------------------------------
-                dllInfo += "Симуляции:\n";
+                s = "Симуляции:\n";
+                checker = false;
                 List<ISimulator> SimulationshipList = repositoryService.GetCollection<ISimulator>();
                 foreach (Type type in array)
                 {
@@ -283,12 +283,15 @@ namespace SimpleFuzzy.View
                     {
                         if (type == type2.GetType())
                         {
-                            dllInfo += "    " + type2.Name + "\n";
+                            checker = true;
+                            s += "    " + type2.Name + "\n";
                         }
                     }
                 }
+                if (checker) dllInfo += s;
                 //-----------------------------------------------------------------------------------
-                dllInfo += "Базовые множества:\n";
+                s = "Базовые множества:\n";
+                checker = false;
                 List<IObjectSet> ObjectSetList = repositoryService.GetCollection<IObjectSet>();
                 foreach (Type type in array)
                 {
@@ -296,10 +299,12 @@ namespace SimpleFuzzy.View
                     {
                         if (type == type2.GetType())
                         {
-                            dllInfo += "    " + type2.Name + "\n";
+                            checker = true;
+                            s += "    " + type2.Name + "\n";
                         }
                     }
                 }
+                if (checker) dllInfo += s;
                 //----------------------------------------------------------------------------------
                 item.ToolTipText = dllInfo;
             }
@@ -312,7 +317,10 @@ namespace SimpleFuzzy.View
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                dllListView.Items.Remove(sender as ListViewItem);
+                dllListView.Items.Remove(e.Item);
+                moduleLoaderService.UnloadAssembly(LoadedAssembies[e.Item].Assemblies.ElementAt(0).FullName);
+                LoadedAssembies.Remove(e.Item);
+                TreeViewShow();
             }
         }
 

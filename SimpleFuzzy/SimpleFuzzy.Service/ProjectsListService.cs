@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Runtime.Loader;
 using System.Text;
 using SimpleFuzzy.Abstract;
@@ -10,10 +10,11 @@ namespace SimpleFuzzy.Service
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
-        public ProjectListService(IRepositoryService repositoryService)
+        public ProjectListService(IAssemblyLoaderService loaderService)
         {
             loaderService = new AssemblyLoaderService(repositoryService);
             repository = repositoryService;
+            this.loaderService = loaderService;
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -145,7 +146,7 @@ namespace SimpleFuzzy.Service
             }
             else
             {
-                throw new InvalidOperationException("Проекта по данному пути не существует"); 
+                throw new InvalidOperationException("Проекта по данному пути не существует");
             }
         }
         public void CopyProject(string name, string path)
@@ -268,7 +269,7 @@ namespace SimpleFuzzy.Service
             }
             else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
-        public string[] GiveList() 
+        public string[] GiveList()
         {
             FileStream file = new FileStream(pathPL, FileMode.OpenOrCreate);
             StreamReader reader = new StreamReader(file);
@@ -277,7 +278,7 @@ namespace SimpleFuzzy.Service
             {
                 string line = reader.ReadLine();
                 if (line == null) { break; }
-                else 
+                else
                 {
                     list.Add(line);
                 }
@@ -289,7 +290,7 @@ namespace SimpleFuzzy.Service
             {
                 text[i] = list.ElementAt(i);
             }
-            return text; 
+            return text;
         }
         public string GiveName(string path)
         {

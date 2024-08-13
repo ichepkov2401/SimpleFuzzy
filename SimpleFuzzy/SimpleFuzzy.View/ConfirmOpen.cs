@@ -1,18 +1,5 @@
-﻿using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-using MetroFramework.Controls;
-using MetroFramework.Forms;
+﻿using MetroFramework.Controls;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
@@ -67,7 +54,7 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) 
+            if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();
                 parent.Locked();

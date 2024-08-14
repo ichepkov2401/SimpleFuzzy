@@ -246,7 +246,7 @@ namespace SimpleFuzzy.View
             foreach (var dll in dllList)
             {
                 string s = dll.Name;
-                ListViewItem item = dllListView.Items.Add(s.Split('\\')[s.Split('\\').Length - 1]);
+                ListViewItem item = dllListView.Items.Add(s.Split('\\')[^1]);
                 string dllInfo = dll.Name + "\n" + "\n";
                 LoadedAssembies[item] = dll;
                 item.SubItems.Add("X");

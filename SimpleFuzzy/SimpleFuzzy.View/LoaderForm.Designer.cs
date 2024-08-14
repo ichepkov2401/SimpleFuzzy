@@ -31,9 +31,7 @@ namespace SimpleFuzzy.View
             treeView1 = new TreeView();
             dllListView = new ListView();
             FileName = new ColumnHeader();
-            FileName.Text = "Имя";
             CloseButton = new ColumnHeader();
-            CloseButton.Text = "";
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
             groupBoxLoader.SuspendLayout();
@@ -131,6 +129,8 @@ namespace SimpleFuzzy.View
             buttonAction.Click += OnButtonActionClick;
             buttonAction.FixedWidth = true;
             extender.AddColumn(buttonAction);
+            FileName.Text = "Имя";
+            CloseButton.Text = "";
 
             //
             // 

@@ -61,7 +61,7 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 moduleLoaderService.AssemblyLoader(filePath);
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + projectListService.GiveName(filePath));
+                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1]);
                 RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
                 TreeViewShow();
             }
@@ -317,6 +317,12 @@ namespace SimpleFuzzy.View
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
+                try { File.Delete(projectListService.GivePath(projectListService.CurrentProjectName, true) + "\\" + e.Item.Name); }
+                catch
+                {
+                    MessageBox.Show("Разработчики уже решают эту проблему)", "Ошибка удаления");
+                    return;
+                }
                 dllListView.Items.Remove(e.Item);
                 moduleLoaderService.UnloadAssembly(LoadedAssembies[e.Item].Assemblies.ElementAt(0).FullName);
                 LoadedAssembies.Remove(e.Item);

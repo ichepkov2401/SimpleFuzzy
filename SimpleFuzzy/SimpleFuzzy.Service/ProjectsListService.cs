@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.Loader;
 using System.Text;
+using System.Xml;
 using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.Service
@@ -12,7 +13,6 @@ namespace SimpleFuzzy.Service
         public IAssemblyLoaderService loaderService;
         public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
         {
-            loaderService = new AssemblyLoaderService(repositoryService);
             repository = repositoryService;
             this.loaderService = loaderService;
         }
@@ -36,55 +36,29 @@ namespace SimpleFuzzy.Service
             }
             else { throw new InvalidOperationException("Проект с таким именем уже существует"); }
         }
-
-        private void AddAssemblies(string path)
+        private void AddAssemblies(string path) 
         {
                 foreach (string fileName in Directory.GetFiles(path))
                 {
-                    if (GiveName(fileName) != "ActiveAssemblies.tt") loaderService.AssemblyLoader(fileName);
+                    if (fileName.Split('\\')[^1] != "Save.xml") loaderService.AssemblyLoader(fileName);
                 }
         }
-
         private void ChooseActive()
         {
-            if (File.Exists(GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt"))
+            if (File.Exists(GivePath(CurrentProjectName, true) + "\\Save.xml"))
             {
-                FileStream file = new FileStream(GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt", FileMode.Open);
-                StreamReader reader = new StreamReader(file);
-                while (true)
+                XmlDocument doc = new XmlDocument();
+                doc.Load(GivePath(CurrentProjectName, true) + "\\Save.xml");
+                XmlNodeList list = doc.ChildNodes[0].ChildNodes[0].ChildNodes;
+                foreach (XmlNode moduleNode in list)
                 {
-                    string line = reader.ReadLine();
-                    if (line == null) { break; }
-                    bool status = true;
-                    string active = "";
-                    string moduleName = "";
-                    string assemblyName = "";
-                    int index = 0;
-                    for (int i = index; i < line.Length; i++)
-                    {
-                        if (line[i] != ' ') moduleName += line[i];
-                        else
-                        {
-                            index = i + 3;
-                            break;
-                        }
-                    }
-                    for (int i = index; i < line.Length; i++)
-                    {
-                        if (line[i] != ' ') active += line[i];
-                        else
-                        {
-                            if (active == "true") status = true;
-                            else status = false;
-                            index = i + 2;
-                            break;
-                        }
-                    }
-                    for (int i = index; i < line.Length; i++)
-                    {
-                        if (line[i] != ')') assemblyName += line[i];
-                        else break;
-                    }
+                    XmlNodeList moduleList = moduleNode.ChildNodes;
+                    string moduleName = moduleList[0].InnerText;
+                    string assemblyName = moduleList[1].InnerText;
+                    string active = moduleList[2].InnerText;
+                    bool status;
+                    if (active == "true") status = true;
+                    else status = false;
                     bool isContinue = false;
                     for (int i = 0; i < repository.GetCollection<IMembershipFunction>().Count; i++)
                     {
@@ -118,11 +92,8 @@ namespace SimpleFuzzy.Service
                         }
                     }
                 }
-                reader.Close();
-                file.Close();
             }
         }
-
         public void OpenProjectfromName(string name)
         {
             if (IsContainsName(name))
@@ -134,13 +105,13 @@ namespace SimpleFuzzy.Service
                 throw new InvalidOperationException("Проекта с таким именем не существует");
             }
         }
-        public void OpenProjectfromPath(string path)
+        public void OpenProjectfromPath(string path) 
         {
             if (IsContainsPath(path))
             {
                 // открытие проекта
                 repository.ClearAll();
-                CurrentProjectName = GiveName(path);
+                CurrentProjectName = path.Split('\\')[^1];
                 loaderService.UnloadAllAssemblies();
                 AddAssemblies(path); // подключение сборок
                 ChooseActive(); // подключение активности сборок
@@ -164,10 +135,10 @@ namespace SimpleFuzzy.Service
         {
             if (IsContainsName(name))
             {
-                loaderService.UnloadAllAssemblies();
                 DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
                 foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
                 Directory.Delete(GivePath(name, true), true);
+                loaderService.UnloadAllAssemblies();
                 string[] text = GiveList();
                 FileStream file = new FileStream(pathPL, FileMode.Truncate);
                 StreamWriter writer = new StreamWriter(file);
@@ -244,7 +215,7 @@ namespace SimpleFuzzy.Service
             }
             return false;
         }
-        public string GivePath(string name, bool isFull)
+        public string GivePath(string name, bool isFull) 
         {
             if (IsContainsName(name))
             {
@@ -293,65 +264,71 @@ namespace SimpleFuzzy.Service
             }
             return text;
         }
-        public string GiveName(string path)
+        public void SaveActiveModulesXML()
         {
-            string name = "";
-            for (int i = path.Length - 1; i > 0; i--)
+            XmlDocument doc = new XmlDocument();
+            XmlElement root = doc.CreateElement("saves");
+            doc.AppendChild(root);
+            XmlElement activeModules = doc.CreateElement("activeModules");
+            root.AppendChild(activeModules);
+            for (int i = 0; i < repository.GetCollection<IMembershipFunction>().Count; i++)
             {
-                if (path[i] == '\\') break;
-                name += path[i];
+                XmlElement module = doc.CreateElement("module");
+                activeModules.AppendChild(module);
+                string moduleName = repository.GetCollection<IMembershipFunction>()[i].GetType().Name;
+                string assemblyName = repository.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName;
+                string active;
+                if (repository.GetCollection<IMembershipFunction>()[i].Active) active = "true";
+                else active = "false";
+                XmlElement moduleNameXML = doc.CreateElement("moduleName");
+                moduleNameXML.InnerText = moduleName;
+                module.AppendChild(moduleNameXML);
+                XmlElement assemblyNameXML = doc.CreateElement("assemblyName");
+                assemblyNameXML.InnerText = assemblyName;
+                module.AppendChild(assemblyNameXML);
+                XmlElement activeXML = doc.CreateElement("active");
+                activeXML.InnerText = active;
+                module.AppendChild(activeXML);
             }
-            string name1 = "";
-            for (int i = name.Length - 1; i >= 0; i--) { name1 += name[i]; }
-            return name1;
-        }
-
-        public void SaveActiveModules()
-        {
-            string path = GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt";
-            if (File.Exists(path))
+            for (int i = 0; i < repository.GetCollection<IObjectSet>().Count; i++)
             {
-                FileStream file = new FileStream(path, FileMode.Truncate);
-                StreamWriter writer = new StreamWriter(file);
-                for (int i = 0; i < repository.GetCollection<IMembershipFunction>().Count; i++)
-                {
-                    string active;
-                    if (repository.GetCollection<IMembershipFunction>()[i].Active) active = "true";
-                    else active = "false";
-                    string moduleName = repository.GetCollection<IMembershipFunction>()[i].GetType().Name;
-                    string assemblyName = repository.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName;
-                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
-                    writer.WriteLine(answer);
-                }
-                for (int i = 0; i < repository.GetCollection<IObjectSet>().Count; i++)
-                {
-                    string active;
-                    if (repository.GetCollection<IObjectSet>()[i].Active) active = "true";
-                    else active = "false";
-                    string moduleName = repository.GetCollection<IObjectSet>()[i].GetType().Name;
-                    string assemblyName = repository.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName;
-                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
-                    writer.WriteLine(answer);
-                }
-                for (int i = 0; i < repository.GetCollection<ISimulator>().Count; i++)
-                {
-                    string active;
-                    if (repository.GetCollection<ISimulator>()[i].Active) active = "true";
-                    else active = "false";
-                    string moduleName = repository.GetCollection<ISimulator>()[i].GetType().Name;
-                    string assemblyName = repository.GetCollection<ISimulator>()[i].GetType().Assembly.FullName;
-                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
-                    writer.WriteLine(answer);
-                }
-                writer.Close();
-                file.Close();
+                XmlElement module = doc.CreateElement("module");
+                activeModules.AppendChild(module);
+                string moduleName = repository.GetCollection<IObjectSet>()[i].GetType().Name;
+                string assemblyName = repository.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName;
+                string active;
+                if (repository.GetCollection<IObjectSet>()[i].Active) active = "true";
+                else active = "false";
+                XmlElement moduleNameXML = doc.CreateElement("moduleName");
+                moduleNameXML.InnerText = moduleName;
+                module.AppendChild(moduleNameXML);
+                XmlElement assemblyNameXML = doc.CreateElement("assemblyName");
+                assemblyNameXML.InnerText = assemblyName;
+                module.AppendChild(assemblyNameXML);
+                XmlElement activeXML = doc.CreateElement("active");
+                activeXML.InnerText = active;
+                module.AppendChild(activeXML);
             }
-            else
+            for (int i = 0; i < repository.GetCollection<ISimulator>().Count; i++)
             {
-                FileStream file1 = new FileStream(path, FileMode.Create);
-                file1.Close();
-                SaveActiveModules();
+                XmlElement module = doc.CreateElement("module");
+                activeModules.AppendChild(module);
+                string moduleName = repository.GetCollection<ISimulator>()[i].GetType().Name;
+                string assemblyName = repository.GetCollection<ISimulator>()[i].GetType().Assembly.FullName;
+                string active;
+                if (repository.GetCollection<ISimulator>()[i].Active) active = "true";
+                else active = "false";
+                XmlElement moduleNameXML = doc.CreateElement("moduleName");
+                moduleNameXML.InnerText = moduleName;
+                module.AppendChild(moduleNameXML);
+                XmlElement assemblyNameXML = doc.CreateElement("assemblyName");
+                assemblyNameXML.InnerText = assemblyName;
+                module.AppendChild(assemblyNameXML);
+                XmlElement activeXML = doc.CreateElement("active");
+                activeXML.InnerText = active;
+                module.AppendChild(activeXML);
             }
+            doc.Save(GivePath(CurrentProjectName, true) + "\\Save.xml");
         }
     }
 }

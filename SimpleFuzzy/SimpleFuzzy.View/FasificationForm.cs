@@ -2,6 +2,7 @@
 using SimpleFuzzy.Abstract;
 
 
+
 namespace SimpleFuzzy.View
 {
     public partial class FasificationForm : MetroUserControl
@@ -12,6 +13,7 @@ namespace SimpleFuzzy.View
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             FillTreeView();
+            RefreshLinguisticVariableList();
         }
 
         private void FillTreeView()
@@ -67,6 +69,10 @@ namespace SimpleFuzzy.View
                 listView1.Items.Remove(e.Item);
                 // Дальше удаление лингвистической переменной
             }
+        }
+        public void RefreshLinguisticVariableList()
+        {
+
         }
     }
 }

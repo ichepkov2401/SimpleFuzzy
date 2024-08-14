@@ -1,6 +1,6 @@
 ﻿using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
-
+using SimpleFuzzy.Model;
 
 
 namespace SimpleFuzzy.View
@@ -53,10 +53,12 @@ namespace SimpleFuzzy.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // добавление лингвистической переменной
-            // Пока что добавляется только запись о создании переменной
-            ListViewItem item = listView1.Items.Add("Name");
-            item.SubItems.Add("X");
+            string variableName = "New Variable";
+            var newVariable = new LinguisticVariable(true) { Name = variableName };
+
+            repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
+
+            RefreshLinguisticVariableList();
         }
 
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
@@ -66,13 +68,31 @@ namespace SimpleFuzzy.View
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                listView1.Items.Remove(e.Item);
-                // Дальше удаление лингвистической переменной
+                var item = e.Item;
+                string variableName = item.Text;
+
+                var variables = repositoryService.GetCollection<LinguisticVariable>();
+                var variableToRemove = variables.FirstOrDefault(v => v.Name == variableName);
+
+                if (variableToRemove != null)
+                {
+                    variables.Remove(variableToRemove);
+                }
+
+                RefreshLinguisticVariableList();
             }
         }
         public void RefreshLinguisticVariableList()
         {
+            listView1.Items.Clear();
+            List<LinguisticVariable> linguisticVariables = repositoryService.GetCollection<LinguisticVariable>();
 
+            foreach (var variable in linguisticVariables)
+            {
+                ListViewItem item = new ListViewItem(variable.Name);
+                item.SubItems.Add("X");
+                listView1.Items.Add(item);
+            }
         }
     }
 }

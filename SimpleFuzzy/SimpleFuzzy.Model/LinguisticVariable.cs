@@ -1,4 +1,6 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SimpleFuzzy.Model
 {
@@ -22,7 +24,13 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
         }
-
+        public LinguisticVariable(bool isRedact, string name, IObjectSet baseSet, List<IMembershipFunction> func)
+        {
+            this.isRedact= isRedact;
+            this.name = name;
+            this.baseSet = baseSet;
+            this.func = func;
+        }
         public string Name
         {
             get { return name; }
@@ -169,40 +177,37 @@ namespace SimpleFuzzy.Model
 
         private string CalculateType(IMembershipFunction term, IObjectSet set)
         {
+            bool allZero = true;
+            bool allOne = true;
+            set.ToFirst();
+            while (!set.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(set.Extraction());
+                if (membershipValue != 0)
+                {
+                    allZero = false;
+                }
+                if (membershipValue != 1)
+                {
+                    allOne = false;
+                }
+                set.MoveNext();
+            }
+            if (allZero)
+            {
+                return "Пустое";
+            }
+            if (allOne)
+            {
+                return "Универсальное";
+            }
             if (height == 1)
             {
                 return "Нормальное";
             }
             else
             {
-                bool allZero = true;
-                bool allOne = true;
-                set.ToFirst();
-                while (!set.IsEnd())
-                {
-                    double membershipValue = term.MembershipFunction(set.Extraction());
-                    if (membershipValue != 0)
-                    {
-                        allZero = false;
-                    }
-                    if (membershipValue != 1)
-                    {
-                        allOne = false;
-                    }
-                    set.MoveNext();
-                }
-                if (allZero)
-                {
-                    return "Пустое";
-                }
-                else if (allOne)
-                {
-                    return "Универсальное";
-                }
-                else
-                {
-                    return "Субнормальное";
-                }
+                return "Субнормальное";
             }
         }
 
@@ -250,6 +255,45 @@ namespace SimpleFuzzy.Model
                 set.MoveNext();
             }
             return section;
+        }
+        public XmlNode Save()
+        {
+            var xmlSerializer = new XmlSerializer(typeof(LinguisticVariable));
+            var currentVariable = new LinguisticVariable(isRedact, name, baseSet, func);
+            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "\\LinguisticVariable.xml", FileMode.OpenOrCreate))
+            {
+                xmlSerializer.Serialize(fs, currentVariable);
+            }
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(Directory.GetCurrentDirectory() + "\\LinguisticVariable.xml");
+            XmlNode xmlVariable = xmlDocument;
+            return xmlVariable;
+        }
+        static LinguisticVariable Load(XmlNode xmlNode)
+        {
+            bool isRedact;
+            string name;
+            IObjectSet set;
+            List<IMembershipFunction> func;
+            var root = xmlNode as XmlElement;
+            XmlNode nodes = root.SelectSingleNode("//name");
+            name = nodes.InnerText;
+            nodes = root.SelectSingleNode("//IsRedact");
+            isRedact = bool.Parse(root.InnerText);
+            nodes = root.SelectSingleNode("//baseSet");
+            var serializerBaseSet = new XmlSerializer(typeof(IObjectSet));
+            using (var reader = new XmlNodeReader(nodes))
+            {
+                set = (IObjectSet)serializerBaseSet.Deserialize(reader);
+            }
+            nodes = root.SelectSingleNode("//func");
+            var serializerFunc = new XmlSerializer(typeof(List<IMembershipFunction>));
+            using (var reader = new XmlNodeReader(nodes))
+            {
+                func = (List<IMembershipFunction>)serializerFunc.Deserialize(reader);
+            }
+            var linguisticVariable = new LinguisticVariable(isRedact, name, set, func);
+            return linguisticVariable;
         }
     }
 }

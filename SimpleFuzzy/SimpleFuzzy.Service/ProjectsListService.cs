@@ -139,6 +139,7 @@ namespace SimpleFuzzy.Service
             if (IsContainsPath(path))
             {
                 // открытие проекта
+                repository.ClearAll();
                 CurrentProjectName = GiveName(path);
                 loaderService.UnloadAllAssemblies();
                 AddAssemblies(path); // подключение сборок
@@ -303,6 +304,54 @@ namespace SimpleFuzzy.Service
             string name1 = "";
             for (int i = name.Length - 1; i >= 0; i--) { name1 += name[i]; }
             return name1;
+        }
+
+        public void SaveActiveModules()
+        {
+            string path = GivePath(CurrentProjectName, true) + "\\ActiveAssemblies.tt";
+            if (File.Exists(path))
+            {
+                FileStream file = new FileStream(path, FileMode.Truncate);
+                StreamWriter writer = new StreamWriter(file);
+                for (int i = 0; i < repository.GetCollection<IMembershipFunction>().Count; i++)
+                {
+                    string active;
+                    if (repository.GetCollection<IMembershipFunction>()[i].Active) active = "true";
+                    else active = "false";
+                    string moduleName = repository.GetCollection<IMembershipFunction>()[i].GetType().Name;
+                    string assemblyName = repository.GetCollection<IMembershipFunction>()[i].GetType().Assembly.FullName;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
+                    writer.WriteLine(answer);
+                }
+                for (int i = 0; i < repository.GetCollection<IObjectSet>().Count; i++)
+                {
+                    string active;
+                    if (repository.GetCollection<IObjectSet>()[i].Active) active = "true";
+                    else active = "false";
+                    string moduleName = repository.GetCollection<IObjectSet>()[i].GetType().Name;
+                    string assemblyName = repository.GetCollection<IObjectSet>()[i].GetType().Assembly.FullName;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
+                    writer.WriteLine(answer);
+                }
+                for (int i = 0; i < repository.GetCollection<ISimulator>().Count; i++)
+                {
+                    string active;
+                    if (repository.GetCollection<ISimulator>()[i].Active) active = "true";
+                    else active = "false";
+                    string moduleName = repository.GetCollection<ISimulator>()[i].GetType().Name;
+                    string assemblyName = repository.GetCollection<ISimulator>()[i].GetType().Assembly.FullName;
+                    string answer = moduleName + " - " + active + " (" + assemblyName + ")";
+                    writer.WriteLine(answer);
+                }
+                writer.Close();
+                file.Close();
+            }
+            else
+            {
+                FileStream file1 = new FileStream(path, FileMode.Create);
+                file1.Close();
+                SaveActiveModules();
+            }
         }
     }
 }

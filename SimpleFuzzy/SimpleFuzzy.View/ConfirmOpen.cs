@@ -36,7 +36,6 @@ namespace SimpleFuzzy.View
             try
             {
                 // дальше по выбранной папке открывается проект
-                repositoryService.ClearAll();
                 projectList.OpenProjectfromPath(dialog.SelectedPath);
                 if (Parent is MainWindow parent)
                 {
@@ -101,7 +100,6 @@ namespace SimpleFuzzy.View
                 try
                 {
                     // открытие проекта
-                    repositoryService.ClearAll();
                     projectList.OpenProjectfromName(projectName);
                     if (Parent is MainWindow parent)
                     {

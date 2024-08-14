@@ -98,10 +98,6 @@ namespace SimpleFuzzy.Service
                         var alcWeakRef = new WeakReference(list[i], trackResurrection: true);
                         list.RemoveAt(i);
                         (alcWeakRef.Target as AssemblyLoadContext).Unload();
-                        (alcWeakRef.Target as AssemblyLoadContext).Unloading += v => 
-                        {
-                            throw new InvalidOperationException("!!!");
-                        };
                         for (int j = 0; alcWeakRef.IsAlive && (j < 10); j++)
                         {
                             GC.Collect();

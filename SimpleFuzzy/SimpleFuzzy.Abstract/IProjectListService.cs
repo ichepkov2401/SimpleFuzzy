@@ -15,5 +15,6 @@
         public string GivePath(string name, bool isFull);
         public string[]? GiveList();
         public string GiveName(string name);
+        public void SaveActiveModules();
     }
 }

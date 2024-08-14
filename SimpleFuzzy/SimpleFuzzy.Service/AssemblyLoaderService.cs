@@ -1,4 +1,6 @@
 ﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Model;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 
 namespace SimpleFuzzy.Service
@@ -6,6 +8,7 @@ namespace SimpleFuzzy.Service
     public class AssemblyLoaderService : IAssemblyLoaderService
     {
         public IRepositoryService repositoryService;
+        private List<AssemblyLoadContext> assemblyLoadContexts = new List<AssemblyLoadContext>();
         public event EventHandler? UseAssembly;
         public AssemblyLoaderService(IRepositoryService repositoryService)
         {
@@ -18,7 +21,7 @@ namespace SimpleFuzzy.Service
         }
         private void AddElements(AssemblyLoadContext context)
         {
-            
+
             for (int i = 0; i < context.Assemblies.Count(); i++)
             {
                 Type[] array = context.Assemblies.ElementAt(i).GetTypes();
@@ -61,9 +64,9 @@ namespace SimpleFuzzy.Service
         }
         private AssemblyLoadContext LoadAssembly(string filePath)
         {
-            foreach (var assemblyContextfromList in repositoryService.GetCollection<AssemblyLoadContext>())
+            foreach (var assemblyContextfromList in repositoryService.GetCollection<AssemblyContextModel>())
             {
-                if (assemblyContextfromList.Name == filePath)
+                if (assemblyContextfromList.AssemblyName == filePath)
                 {
                     throw new InvalidOperationException("Повторная загрузка сборки в домен невозможна.");
                 }
@@ -77,50 +80,52 @@ namespace SimpleFuzzy.Service
             {
                 throw new InvalidOperationException("Абсолютный путь файла введен неправильно.");
             }
-            repositoryService.GetCollection<AssemblyLoadContext>().Add(assemblyContext);
+            assemblyLoadContexts.Add(assemblyContext);
+            repositoryService.GetCollection<AssemblyContextModel>().Add(new AssemblyContextModel() { AssemblyName = assemblyContext.Name });
             return assemblyContext;
         }
         public void UnloadAssembly(string assemblyName)
         {
-            bool loaded = false;
-            List<AssemblyLoadContext> list = repositoryService.GetCollection<AssemblyLoadContext>();
-            for (int i = 0; i < list.Count; i++)
+            UseAssembly(assemblyName, new EventArgs());
+            try
             {
-                
-                if (list[i].Assemblies.ElementAt(0).FullName == assemblyName)
+                WeakReference weakReference;
+                UnloadWeak(assemblyName, out weakReference);
+                for (int j = 0; weakReference.IsAlive && (j < 10); j++)
                 {
-                    
-                    var e = new EventArgs();
-                    UseAssembly(list[i], e);
-                    loaded = true;
-                    try
-                    {
-                        var alcWeakRef = new WeakReference(list[i], trackResurrection: true);
-                        list.RemoveAt(i);
-                        (alcWeakRef.Target as AssemblyLoadContext).Unload();
-                        for (int j = 0; alcWeakRef.IsAlive && (j < 10); j++)
-                        {
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                        }
-                        break;
-                    }
-                    catch
-                    {
-                        throw new InvalidOperationException("Выгрузить сборку не удалось.");
-                    }
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
+                repositoryService.GetCollection<AssemblyContextModel>().RemoveAll(x => x.AssemblyName == assemblyName);
             }
-            if (!loaded)
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Выгрузить сборку не удалось." + e.Message);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void UnloadWeak(string assemblyName, out WeakReference weakReference)
+        {
+            var assemblyLoadContext = assemblyLoadContexts.FirstOrDefault(t => t.Name == assemblyName);
+            if (assemblyLoadContext != null)
+            {
+                assemblyLoadContexts.Remove(assemblyLoadContext);
+                weakReference = new WeakReference(assemblyLoadContext, true);
+                assemblyLoadContext.Unload();
+            }
+            else
             {
                 throw new InvalidOperationException("Удаляемой сборки нет в домене.");
             }
         }
+
+
         public void UnloadAllAssemblies()
         {
-            foreach (var context in repositoryService.GetCollection<AssemblyLoadContext>().ToList())
+            while(repositoryService.GetCollection<AssemblyContextModel>().Count > 0)
             {
-                UnloadAssembly(context.Assemblies.ElementAt(0).FullName);
+                UnloadAssembly(repositoryService.GetCollection<AssemblyContextModel>()[0].AssemblyName);
             }
 
         }

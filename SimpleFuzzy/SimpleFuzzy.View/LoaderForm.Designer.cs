@@ -1,4 +1,7 @@
 ﻿
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+
 namespace SimpleFuzzy.View 
 { 
     partial class LoaderForm
@@ -26,20 +29,26 @@ namespace SimpleFuzzy.View
             loadButton = new MetroFramework.Controls.MetroButton();
             messageTextBox = new MetroFramework.Controls.MetroTextBox();
             treeView1 = new TreeView();
+            dllListView = new ListView();
+            FileName = new ColumnHeader();
+            FileName.Text = "Имя";
+            CloseButton = new ColumnHeader();
+            CloseButton.Text = "";
+            groupBoxLoader = new GroupBox();
+            groupBoxModules = new GroupBox();
+            groupBoxLoader.SuspendLayout();
+            groupBoxModules.SuspendLayout();
             SuspendLayout();
             // 
             // filePathTextBox
             // 
-            filePathTextBox.BackColor = Color.White;
-            filePathTextBox.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point);
             filePathTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
             filePathTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-            filePathTextBox.ForeColor = Color.Black;
-            filePathTextBox.Location = new Point(23, 63);
+            filePathTextBox.Location = new Point(8, 49);
             filePathTextBox.Multiline = false;
             filePathTextBox.Name = "filePathTextBox";
             filePathTextBox.SelectedText = "";
-            filePathTextBox.Size = new Size(399, 23);
+            filePathTextBox.Size = new Size(358, 23);
             filePathTextBox.Style = MetroFramework.MetroColorStyle.Blue;
             filePathTextBox.StyleManager = null;
             filePathTextBox.TabIndex = 0;
@@ -49,9 +58,9 @@ namespace SimpleFuzzy.View
             // browseButton
             // 
             browseButton.Highlight = false;
-            browseButton.Location = new Point(428, 63);
+            browseButton.Location = new Point(372, 49);
             browseButton.Name = "browseButton";
-            browseButton.Size = new Size(100, 23);
+            browseButton.Size = new Size(99, 23);
             browseButton.Style = MetroFramework.MetroColorStyle.Blue;
             browseButton.StyleManager = null;
             browseButton.TabIndex = 1;
@@ -62,9 +71,9 @@ namespace SimpleFuzzy.View
             // loadButton
             // 
             loadButton.Highlight = false;
-            loadButton.Location = new Point(23, 92);
+            loadButton.Location = new Point(8, 20);
             loadButton.Name = "loadButton";
-            loadButton.Size = new Size(200, 23);
+            loadButton.Size = new Size(463, 23);
             loadButton.Style = MetroFramework.MetroColorStyle.Blue;
             loadButton.StyleManager = null;
             loadButton.TabIndex = 2;
@@ -74,13 +83,14 @@ namespace SimpleFuzzy.View
             // 
             // messageTextBox
             // 
+            messageTextBox.Enabled = false;
             messageTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
             messageTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-            messageTextBox.Location = new Point(23, 121);
+            messageTextBox.Location = new Point(8, 78);
             messageTextBox.Multiline = true;
             messageTextBox.Name = "messageTextBox";
             messageTextBox.SelectedText = "";
-            messageTextBox.Size = new Size(505, 100);
+            messageTextBox.Size = new Size(463, 216);
             messageTextBox.Style = MetroFramework.MetroColorStyle.Blue;
             messageTextBox.StyleManager = null;
             messageTextBox.TabIndex = 3;
@@ -89,7 +99,8 @@ namespace SimpleFuzzy.View
             // 
             // treeView1
             // 
-            treeView1.Location = new Point(23, 227);
+            treeView1.CheckBoxes = true;
+            treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
             treeNode1.Name = "";
             treeNode1.Text = "Термы";
@@ -98,22 +109,66 @@ namespace SimpleFuzzy.View
             treeNode3.Name = "";
             treeNode3.Text = "Симуляции";
             treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
-            treeView1.Size = new Size(240, 145);
-            treeView1.TabIndex = 4;
+            treeView1.ShowNodeToolTips = true;
+            treeView1.Size = new Size(398, 280);
+            treeView1.TabIndex = 0;
+            treeView1.AfterCheck += treeView1_AfterCheck;
+            // 
+            // dllListView
+            // 
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
+            dllListView.FullRowSelect = true;
+            dllListView.Location = new Point(239, 315);
+            dllListView.Name = "dllListView";
+            dllListView.Size = new Size(903, 318);
+            dllListView.TabIndex = 6;
+            dllListView.View = System.Windows.Forms.View.Details;
+            dllListView.UseCompatibleStateImageBehavior = false;
+            dllListView.Scrollable = true;
+            dllListView.ShowItemToolTips = true;
+            ListViewExtender extender = new ListViewExtender(dllListView);
+            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
+            buttonAction.Click += OnButtonActionClick;
+            buttonAction.FixedWidth = true;
+            extender.AddColumn(buttonAction);
+
+            //
+            // 
+            // groupBoxLoader
+            // 
+            groupBoxLoader.Controls.Add(filePathTextBox);
+            groupBoxLoader.Controls.Add(browseButton);
+            groupBoxLoader.Controls.Add(loadButton);
+            groupBoxLoader.Controls.Add(messageTextBox);
+            groupBoxLoader.Location = new Point(430, 3);
+            groupBoxLoader.Name = "groupBoxLoader";
+            groupBoxLoader.Size = new Size(483, 306);
+            groupBoxLoader.TabIndex = 0;
+            groupBoxLoader.TabStop = false;
+            groupBoxLoader.Text = "Загрузка модуля";
+            // 
+            // groupBoxModules
+            // 
+            groupBoxModules.Controls.Add(treeView1);
+            groupBoxModules.Location = new Point(10, 3);
+            groupBoxModules.Name = "groupBoxModules";
+            groupBoxModules.Size = new Size(414, 306);
+            groupBoxModules.TabIndex = 1;
+            groupBoxModules.TabStop = false;
+            groupBoxModules.Text = "Загруженные модули";
             // 
             // LoaderForm
             // 
             BackColor = Color.White;
-            Controls.Add(treeView1);
-            Controls.Add(messageTextBox);
-            Controls.Add(loadButton);
-            Controls.Add(browseButton);
-            Controls.Add(filePathTextBox);
+            Controls.Add(dllListView);
+            Controls.Add(groupBoxLoader);
+            Controls.Add(groupBoxModules);
             Name = "LoaderForm";
-            Size = new Size(562, 456);
+            Size = new Size(1420, 754);
+            groupBoxLoader.ResumeLayout(false);
+            groupBoxModules.ResumeLayout(false);
             ResumeLayout(false);
         }
-
         #endregion
 
         private MetroFramework.Controls.MetroTextBox filePathTextBox;
@@ -121,5 +176,11 @@ namespace SimpleFuzzy.View
         private MetroFramework.Controls.MetroButton loadButton;
         private MetroFramework.Controls.MetroTextBox messageTextBox;
         private TreeView treeView1;
+        public ListView dllListView;
+        private ColumnHeader FileName;
+        private ColumnHeader CloseButton;
+        private GroupBox groupBoxLoader;
+        private GroupBox groupBoxModules;
     }
 }
+

@@ -1,23 +1,12 @@
-﻿using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using MetroFramework.Controls;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmCopy : UserControl
+    public partial class ConfirmCopy : MetroUserControl
     {
         IProjectListService projectList;
-        public ConfirmCopy() 
+        public ConfirmCopy()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
@@ -43,7 +32,7 @@ namespace SimpleFuzzy.View
             button3_Click(sender, e);
         }
 
-        private void button3_Click(object sender, EventArgs e) 
+        private void button3_Click(object sender, EventArgs e)
         {
             if (Parent is MainWindow parent) { parent.OpenButtons(); }
             Parent.Controls.Remove(this);

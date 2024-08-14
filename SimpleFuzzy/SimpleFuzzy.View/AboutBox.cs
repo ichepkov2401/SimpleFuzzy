@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
+﻿using MetroFramework.Forms;
 using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SimpleFuzzy.View
 {
-    partial class AboutBox : Form
+    partial class AboutBox : MetroForm
     {
         public AboutBox()
         {

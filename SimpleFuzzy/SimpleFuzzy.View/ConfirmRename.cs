@@ -1,20 +1,9 @@
-﻿using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using MetroFramework.Controls;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmRename : UserControl
+    public partial class ConfirmRename : MetroUserControl
     {
         IProjectListService projectList;
         public ConfirmRename()
@@ -24,7 +13,7 @@ namespace SimpleFuzzy.View
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            try 
+            try
             {
                 projectList.RenameProject(textBox1.Text);
             }
@@ -36,7 +25,7 @@ namespace SimpleFuzzy.View
             button2_Click(sender, e);
         }
 
-        private void button2_Click(object sender, EventArgs e) 
+        private void button2_Click(object sender, EventArgs e)
         {
             if (Parent is MainWindow parent) { parent.OpenButtons(); }
             Parent.Controls.Remove(this);

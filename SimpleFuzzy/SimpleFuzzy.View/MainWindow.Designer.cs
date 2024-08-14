@@ -146,16 +146,6 @@ namespace SimpleFuzzy.View
             button6.Theme = MetroFramework.MetroThemeStyle.Light;
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
-            // 
-            // button13
-            // 
-            button13.Location = new Point(600, 0);
-            button13.Name = "button7";
-            button13.Size = new Size(94, 29);
-            button13.TabIndex = 8;
-            button13.Text = "Справка";
-            button13.UseVisualStyleBackColor = true;
-            button13.Click += button13_Click;
             //
             // button7
             // 

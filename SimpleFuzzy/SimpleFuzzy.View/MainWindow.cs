@@ -162,12 +162,6 @@ namespace SimpleFuzzy.View
             button10.Enabled = true;
             if (isContainSimulator) button11.Enabled = true;
         }
-
-        private void button13_Click(object sender, EventArgs e)
-        {
-            HelpWindow help = new HelpWindow(this);
-            help.Show();
-        }
         
         public void Dispose()
         {
@@ -199,7 +193,7 @@ namespace SimpleFuzzy.View
         private void button13_Click(object sender, EventArgs e)
         {
             HelpWindow help = new HelpWindow();
-            help.ShowDialog();
+            help.Show();
         }
 
 

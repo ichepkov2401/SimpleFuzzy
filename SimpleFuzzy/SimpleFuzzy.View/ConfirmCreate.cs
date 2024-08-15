@@ -55,10 +55,5 @@ namespace SimpleFuzzy.View
         {
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
         }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -27,7 +27,7 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Open, () => new ConfirmOpen());
             UserControls.Add(UserControlsEnum.Delete, () => new ConfirmDelete());
             UserControls.Add(UserControlsEnum.Rename, () => new ConfirmRename());
-            UserControls.Add(UserControlsEnum.Copy, () => new ConfirmCopy());
+            UserControls.Add(UserControlsEnum.Copy, () => new ConfirmSaveAs());
             UserControls.Add(UserControlsEnum.Loader, () => new LoaderForm());
             UserControls.Add(UserControlsEnum.Fasification, () => new FasificationForm());
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
@@ -185,6 +185,7 @@ namespace SimpleFuzzy.View
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
                 currentControl.Location = new Point(0, 160);
+                metroLabel1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
             }
         }
 

@@ -3,10 +3,10 @@ using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmCopy : MetroUserControl
+    public partial class ConfirmSaveAs : MetroUserControl
     {
         IProjectListService projectList;
-        public ConfirmCopy()
+        public ConfirmSaveAs()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
@@ -23,14 +23,12 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                            "Сохранить текущий проект?",
-                            "Окно подтверждения",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.None,
-                            MessageBoxDefaultButton.Button1);
-            if (result == DialogResult.Yes) { projectList.SaveAll(); }
-            try { projectList.CopyProject(projectList.CurrentProjectName + " - копия", textBox1.Text + $"\\{projectList.CurrentProjectName} - копия"); }
+            if (metroTextBox1 == null)
+            {
+                MessageBox.Show("Введите новое имя проекта");
+                return;
+            }
+            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text); }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -41,7 +39,10 @@ namespace SimpleFuzzy.View
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) { parent.OpenButtons(); }
+            if (Parent is MainWindow parent) 
+            {
+                parent.OpenButtons();
+            }
             Parent.Controls.Remove(this);
         }
 

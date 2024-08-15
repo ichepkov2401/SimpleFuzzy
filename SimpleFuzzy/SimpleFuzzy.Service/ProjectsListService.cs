@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.Loader;
 using System.Text;
@@ -125,11 +126,11 @@ namespace SimpleFuzzy.Service
         {
             string lastName = CurrentProjectName;
             AddProject(name, path);
-            DirectoryInfo directory = new DirectoryInfo(path);
-            directory.Create();
             DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
             DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
-            foreach (var item in source.GetFiles()) { item.CopyTo(destin + item.Name, true); }
+            foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" +  item.Name, true); }
+            OpenProjectfromName(name);
+            
         }
         public void DeleteProject(string name)
         {

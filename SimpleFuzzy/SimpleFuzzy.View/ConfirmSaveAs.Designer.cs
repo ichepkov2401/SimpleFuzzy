@@ -1,6 +1,6 @@
 ﻿namespace SimpleFuzzy.View
 {
-    partial class ConfirmCopy
+    partial class ConfirmSaveAs
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -33,6 +33,8 @@
             textBox1 = new MetroFramework.Controls.MetroTextBox();
             button2 = new MetroFramework.Controls.MetroButton();
             button3 = new MetroFramework.Controls.MetroButton();
+            metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
             SuspendLayout();
             // 
             // label1
@@ -85,13 +87,13 @@
             // button2
             // 
             button2.Highlight = false;
-            button2.Location = new Point(112, 39);
+            button2.Location = new Point(112, 74);
             button2.Name = "button2";
             button2.Size = new Size(94, 29);
             button2.Style = MetroFramework.MetroColorStyle.Blue;
             button2.StyleManager = null;
             button2.TabIndex = 3;
-            button2.Text = "Готово";
+            button2.Text = "Сохранить";
             button2.Theme = MetroFramework.MetroThemeStyle.Light;
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
@@ -99,7 +101,7 @@
             // button3
             // 
             button3.Highlight = false;
-            button3.Location = new Point(212, 39);
+            button3.Location = new Point(212, 74);
             button3.Name = "button3";
             button3.Size = new Size(94, 29);
             button3.Style = MetroFramework.MetroColorStyle.Blue;
@@ -110,16 +112,50 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
-            // ConfirmCopy
+            // metroLabel1
+            // 
+            metroLabel1.AutoSize = true;
+            metroLabel1.CustomBackground = false;
+            metroLabel1.FontSize = MetroFramework.MetroLabelSize.Medium;
+            metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Light;
+            metroLabel1.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
+            metroLabel1.Location = new Point(3, 39);
+            metroLabel1.Name = "metroLabel1";
+            metroLabel1.Size = new Size(91, 20);
+            metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
+            metroLabel1.StyleManager = null;
+            metroLabel1.TabIndex = 6;
+            metroLabel1.Text = "Введите имя";
+            metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
+            metroLabel1.UseStyleColors = false;
+            // 
+            // metroTextBox1
+            // 
+            metroTextBox1.FontSize = MetroFramework.MetroTextBoxSize.Small;
+            metroTextBox1.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
+            metroTextBox1.Location = new Point(112, 39);
+            metroTextBox1.Multiline = false;
+            metroTextBox1.Name = "metroTextBox1";
+            metroTextBox1.SelectedText = "";
+            metroTextBox1.Size = new Size(268, 29);
+            metroTextBox1.Style = MetroFramework.MetroColorStyle.Blue;
+            metroTextBox1.StyleManager = null;
+            metroTextBox1.TabIndex = 7;
+            metroTextBox1.Theme = MetroFramework.MetroThemeStyle.Light;
+            metroTextBox1.UseStyleColors = false;
+            // 
+            // ConfirmSaveAs
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(metroTextBox1);
+            Controls.Add(metroLabel1);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(textBox1);
             Controls.Add(button1);
             Controls.Add(label1);
-            Name = "ConfirmCopy";
+            Name = "ConfirmSaveAs";
             Size = new Size(686, 415);
             Load += ConfirmCopy_Load;
             ResumeLayout(false);
@@ -133,5 +169,7 @@
         private MetroFramework.Controls.MetroTextBox textBox1;
         private MetroFramework.Controls.MetroButton button2;
         private MetroFramework.Controls.MetroButton button3;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroTextBox metroTextBox1;
     }
 }

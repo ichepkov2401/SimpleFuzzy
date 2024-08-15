@@ -58,6 +58,13 @@ namespace SimpleFuzzy.View
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
                 moduleLoaderService.AssemblyLoader(filePath);
+                foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyLoadContext>())
+                {
+                    if (assemblyLoadContext.Name == filePath)
+                    {
+                        messageTextBox.Text = assemblyLoadContext.Assemblies.ElementAt(0).FullName;
+                    }
+                }
                 RefreshDllList(repositoryService.GetCollection<AssemblyLoadContext>());
                 TreeViewShow();
             }
@@ -156,6 +163,7 @@ namespace SimpleFuzzy.View
                     foreach (TreeNode child in node.Nodes)
                     {
                         child.Checked = e.Node.Checked;
+                        modules[child.Text].Active = e.Node.Checked;
                     }
                     return;
                 }
@@ -189,9 +197,14 @@ namespace SimpleFuzzy.View
                             {
                                 foreach (TreeNode node1 in treeView1.Nodes[2].Nodes)
                                 {
-                                    if (node1.Checked) { node1.Checked = false; }
+                                    if (node1.Checked) 
+                                    {
+                                        node1.Checked = false;
+                                        modules[node1.Text].Active = false;
+                                    }
                                 }
                                 node.Checked = true;
+                                modules[node.Text].Active = true;
                             }
                             else { node.Checked = false; }
                             return;
@@ -245,15 +258,15 @@ namespace SimpleFuzzy.View
             dllListView.Items.Clear();
             foreach (var dll in dllList)
             {
-                ListViewItem item = dllListView.Items.Add(dll.Name);
+                string s = dll.Name;
+                ListViewItem item = dllListView.Items.Add(s.Split('\\')[^1]);
+                string dllInfo = dll.Name + "\n" + "\n";
                 LoadedAssembies[item] = dll;
                 item.SubItems.Add("X");
-
-                string dllInfo = "Полное имя файла:\n" + dll.GetType().Assembly.Location + "\n" + "\n";
-
+                FileName.Width = -1;
                 Type[] array = dll.Assemblies.ElementAt(0).GetTypes();
                 //--------------------------------------------------------------------------------------
-                string s = "Термы:\n";
+                s = "Термы:\n";
                 bool checker = false;
                 List<IMembershipFunction> MembershipList = repositoryService.GetCollection<IMembershipFunction>();
                 foreach (Type type in array)

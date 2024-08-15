@@ -98,9 +98,12 @@
             Location = new Point(0, 0);
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
+            MaximumSize = new Size(272, 335);
             MinimizeBox = false;
+            MinimumSize = new Size(272, 335);
             Name = "HelpWindow";
             Padding = new Padding(0, 60, 0, 0);
+            SizeGripStyle = SizeGripStyle.Hide;
             Text = "Справка";
             ResumeLayout(false);
         }

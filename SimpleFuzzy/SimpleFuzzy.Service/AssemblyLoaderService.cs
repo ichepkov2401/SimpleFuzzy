@@ -18,7 +18,7 @@ namespace SimpleFuzzy.Service
         }
         private void AddElements(AssemblyLoadContext context)
         {
-
+            
             for (int i = 0; i < context.Assemblies.Count(); i++)
             {
                 Type[] array = context.Assemblies.ElementAt(i).GetTypes();

@@ -203,9 +203,14 @@ namespace SimpleFuzzy.View
                             {
                                 foreach (TreeNode node1 in treeView1.Nodes[2].Nodes)
                                 {
-                                    if (node1.Checked) { node1.Checked = false; }
+                                    if (node1.Checked) 
+                                    {
+                                        node1.Checked = false;
+                                        modules[node1.Text].Active = false;
+                                    }
                                 }
                                 node.Checked = true;
+                                modules[node.Text].Active = true;
                             }
                             else { node.Checked = false; }
                             return;

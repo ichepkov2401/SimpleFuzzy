@@ -146,7 +146,7 @@ namespace SimpleFuzzy.View
             button6.Theme = MetroFramework.MetroThemeStyle.Light;
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
-            // 
+            //
             // button7
             // 
             button7.Highlight = false;

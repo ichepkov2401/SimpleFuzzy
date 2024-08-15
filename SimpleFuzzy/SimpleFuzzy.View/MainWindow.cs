@@ -193,7 +193,7 @@ namespace SimpleFuzzy.View
         private void button13_Click(object sender, EventArgs e)
         {
             HelpWindow help = new HelpWindow();
-            help.Show();
+            help.ShowDialog();
         }
 
 

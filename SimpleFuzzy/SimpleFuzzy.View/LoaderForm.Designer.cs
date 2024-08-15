@@ -118,19 +118,13 @@ namespace SimpleFuzzy.View
             // 
             dllListView.Columns.AddRange(new ColumnHeader[] { FileName });
             dllListView.FullRowSelect = true;
-            dllListView.Location = new Point(6, 23);
+            dllListView.Location = new Point(10, 23);
             dllListView.Name = "dllListView";
-            dllListView.Size = new Size(885, 186);
-            dllListView.TabIndex = 6;
-            dllListView.View = System.Windows.Forms.View.Details;
-            dllListView.UseCompatibleStateImageBehavior = false;
-            dllListView.Scrollable = true;
             dllListView.ShowItemToolTips = true;
-            ListViewExtender extender = new ListViewExtender(dllListView);
-            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
-            buttonAction.Click += OnButtonActionClick;
-            buttonAction.FixedWidth = true;
-            extender.AddColumn(buttonAction);
+            dllListView.Size = new Size(881, 186);
+            dllListView.TabIndex = 6;
+            dllListView.UseCompatibleStateImageBehavior = false;
+            dllListView.View = System.Windows.Forms.View.Details;
             FileName.Text = "Имя";
             CloseButton.Text = "";
             // 
@@ -170,7 +164,6 @@ namespace SimpleFuzzy.View
             // LoaderForm
             // 
             BackColor = Color.White;
-            Controls.Add(dllListView);
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
             Controls.Add(groupBoxDLL);

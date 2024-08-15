@@ -49,6 +49,7 @@ namespace SimpleFuzzy.View
             button11 = new ToolStripMenuItem();
             logoBox = new PictureBox();
             toolTip1 = new ToolTip(components);
+            timer1 = new System.Windows.Forms.Timer(components);
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
@@ -180,6 +181,10 @@ namespace SimpleFuzzy.View
             logoBox.TabIndex = 0;
             logoBox.TabStop = false;
             // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -221,5 +226,6 @@ namespace SimpleFuzzy.View
         private ToolStripMenuItem button13;
         private PictureBox logoBox;
         private ToolTip toolTip1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

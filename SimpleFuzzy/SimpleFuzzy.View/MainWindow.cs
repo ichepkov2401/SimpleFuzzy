@@ -35,6 +35,7 @@ namespace SimpleFuzzy.View
             toolTip1.InitialDelay = 1000;
             toolTip1.ReshowDelay = 500;
             Locked();
+            timer1.Start();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -196,18 +197,15 @@ namespace SimpleFuzzy.View
             help.Show();
         }
 
-
-        // Так как нынешний MoveMouse не может обрабатывать объекты типа ToolScriptItem, в этой сборке было решено адаптировать метод MouseMove
-        private void MainWindow_MouseMove(object sender, MouseEventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            // Находим элемент меню, над которым находится курсор
-            ToolStripItem item = menuStrip2.GetItemAt(menuStrip2.PointToClient(MousePosition));
-
-            if (item != null && item == button11)
+            var v = new Point(MousePosition.X - (Location.X + menuStrip2.Location.X + button11.Bounds.Location.X),
+                MousePosition.Y - (Location.Y + menuStrip2.Location.Y + button11.Bounds.Location.Y));
+            if (v.X >= 0 && v.X <= button11.Width && v.Y >= 0 && v.Y <= button11.Height)
             {
                 if (!IsShownToolTip1 && projectList.CurrentProjectName != null && !isContainSimulator)
                 {
-                    button11.ToolTipText = "Симуляция не загружена в проект или отключена в окне загрузчика";
+                    toolTip1.Show("Симуляция не загружена в проект или отключена в окне загрузчика", menuStrip2);
                     IsShownToolTip1 = true;
                 }
             }
@@ -215,7 +213,7 @@ namespace SimpleFuzzy.View
             {
                 if (IsShownToolTip1)
                 {
-                    button11.ToolTipText = "";
+                    toolTip1.Hide(menuStrip2);
                     IsShownToolTip1 = false;
                 }
             }

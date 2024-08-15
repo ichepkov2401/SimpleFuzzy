@@ -11,10 +11,12 @@ namespace SimpleFuzzy.Service
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
+        Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
         public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
         {
             repository = repositoryService;
             this.loaderService = loaderService;
+            pair.Add("activeModules", ChooseActive);
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -50,35 +52,41 @@ namespace SimpleFuzzy.Service
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(GivePath(CurrentProjectName, true) + "\\Save.xml");
-                ChooseActive(doc);
+                var root = doc.DocumentElement;
+                for (int i = 0; i < root.ChildNodes.Count; i++)
+                {
+                    Action<XmlNodeList> action;
+                    if (pair.TryGetValue(root.ChildNodes[i].Name, out action))
+                    {
+                        action(root.ChildNodes[i].ChildNodes);
+                    }
+                }
             }
         }
 
-        private void ChooseActive(XmlDocument doc)
+        private void ChooseActive(XmlNodeList list)
         {
-            XmlNodeList list = doc.ChildNodes[0].ChildNodes[0].ChildNodes;
             foreach (XmlNode moduleNode in list)
             {
-                XmlNodeList moduleList = moduleNode.ChildNodes;
-                string moduleName = moduleList[0].InnerText;
-                string assemblyName = moduleList[1].InnerText;
-                string active = moduleList[2].InnerText;
+                string moduleName = moduleNode.Attributes["moduleName"].Value;
+                string assemblyName = moduleNode.Attributes["assemblyName"].Value;
                 bool status;
-                if (active == "true") status = true;
+                if (moduleNode.InnerText == "true") status = true;
                 else status = false;
+
                 bool isContinue = false;
-                IModulable module = repository.GetCollection<IMembershipFunction>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().FullName);
+                IModulable module = repository.GetCollection<IMembershipFunction>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
                 if (module != null) { 
                     module.Active = status;
                     continue;
                 }
-                module = repository.GetCollection<IMembershipFunction>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().FullName);
+                module = repository.GetCollection<IObjectSet>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
                 if (module != null)
                 {
                     module.Active = status;
                     continue;
                 }
-                module = repository.GetCollection<IMembershipFunction>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().FullName);
+                module = repository.GetCollection<ISimulator>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
                 if (module != null)
                 {
                     module.Active = status;
@@ -274,8 +282,8 @@ namespace SimpleFuzzy.Service
         private void SaveActiveModulesXML(XmlElement activeModules)
         {
             var s = repository.GetCollection<IMembershipFunction>().Cast<IModulable>().
-                Concat(repository.GetCollection<IMembershipFunction>().Cast<IModulable>()).
-                Concat(repository.GetCollection<IMembershipFunction>().Cast<IModulable>());
+                Concat(repository.GetCollection<IObjectSet>().Cast<IModulable>()).
+                Concat(repository.GetCollection<ISimulator>().Cast<IModulable>());
             foreach (IModulable element in s)
             {
                 XmlElement module = activeModules.OwnerDocument.CreateElement("module");
@@ -285,15 +293,16 @@ namespace SimpleFuzzy.Service
                 string active;
                 if (element.Active) active = "true";
                 else active = "false";
-                XmlElement moduleNameXML = activeModules.OwnerDocument.CreateElement("moduleName");
-                moduleNameXML.InnerText = moduleName;
-                module.AppendChild(moduleNameXML);
-                XmlElement assemblyNameXML = activeModules.OwnerDocument.CreateElement("assemblyName");
-                assemblyNameXML.InnerText = assemblyName;
-                module.AppendChild(assemblyNameXML);
-                XmlElement activeXML = activeModules.OwnerDocument.CreateElement("active");
-                activeXML.InnerText = active;
-                module.AppendChild(activeXML);
+
+                XmlAttribute moduleNameXML = activeModules.OwnerDocument.CreateAttribute("moduleName");
+                moduleNameXML.Value = moduleName;
+                module.Attributes.Append(moduleNameXML);
+
+                XmlAttribute assemblyNameXML = activeModules.OwnerDocument.CreateAttribute("assemblyName");
+                assemblyNameXML.Value = assemblyName;
+                module.Attributes.Append(assemblyNameXML);
+
+                module.InnerText = active;
             }
         }
     }

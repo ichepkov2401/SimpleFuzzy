@@ -14,6 +14,7 @@
         public bool IsContainsPath(string path);
         public string GivePath(string name, bool isFull);
         public string[]? GiveList();
-        public void SaveActiveModulesXML();
+        public void SaveAll();
+        public void LoadAll();
     }
 }

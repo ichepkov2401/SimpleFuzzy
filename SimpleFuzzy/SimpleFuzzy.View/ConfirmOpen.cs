@@ -6,12 +6,10 @@ namespace SimpleFuzzy.View
     public partial class ConfirmOpen : MetroUserControl
     {
         IProjectListService projectList;
-        IRepositoryService repositoryService;
         public ConfirmOpen()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
-            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
             label2.Visible = false;
             string[] list = projectList.GiveList();

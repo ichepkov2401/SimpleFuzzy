@@ -22,7 +22,7 @@ namespace SimpleFuzzy.View
                 return;
             }
             // Дальше открывается проект
-            repositoryService.ClearAll();
+            projectList.OpenProjectfromName(projectList.CurrentProjectName);
             if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();

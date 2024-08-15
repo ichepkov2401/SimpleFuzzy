@@ -67,7 +67,7 @@ namespace SimpleFuzzy.View
 
         private void button6_Click(object sender, EventArgs e)
         {
-            projectList.SaveActiveModulesXML();
+            projectList.SaveAll();
             // сохранение
         }
         private void button7_Click(object sender, EventArgs e)

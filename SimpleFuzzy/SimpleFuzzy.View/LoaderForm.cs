@@ -300,9 +300,9 @@ namespace SimpleFuzzy.View
             {
                 moduleLoaderService.UnloadAssembly(LoadedAssembies[e.Item]);
                 try { File.Delete(projectListService.GivePath(projectListService.CurrentProjectName, true) + "\\" + e.Item.Text); }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Разработчики уже решают эту проблему)", "Ошибка удаления");
+                    MessageBox.Show("Разработчики уже решают эту проблему)" + ex.Message, "Ошибка удаления");
                     return;
                 }
                 dllListView.Items.Remove(e.Item);

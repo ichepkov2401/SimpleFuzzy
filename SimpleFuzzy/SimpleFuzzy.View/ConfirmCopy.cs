@@ -23,6 +23,13 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
+            DialogResult result = MessageBox.Show(
+                            "Сохранить текущий проект?",
+                            "Окно подтверждения",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.None,
+                            MessageBoxDefaultButton.Button1);
+            if (result == DialogResult.Yes) { projectList.SaveAll(); }
             try { projectList.CopyProject(projectList.CurrentProjectName + " - копия", textBox1.Text + $"\\{projectList.CurrentProjectName} - копия"); }
             catch (Exception ex)
             {

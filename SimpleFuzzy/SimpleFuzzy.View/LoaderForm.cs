@@ -163,6 +163,7 @@ namespace SimpleFuzzy.View
                     foreach (TreeNode child in node.Nodes)
                     {
                         child.Checked = e.Node.Checked;
+                        modules[child.Text].Active = e.Node.Checked;
                     }
                     return;
                 }
@@ -196,9 +197,14 @@ namespace SimpleFuzzy.View
                             {
                                 foreach (TreeNode node1 in treeView1.Nodes[2].Nodes)
                                 {
-                                    if (node1.Checked) { node1.Checked = false; }
+                                    if (node1.Checked) 
+                                    {
+                                        node1.Checked = false;
+                                        modules[node1.Text].Active = false;
+                                    }
                                 }
                                 node.Checked = true;
+                                modules[node.Text].Active = true;
                             }
                             else { node.Checked = false; }
                             return;

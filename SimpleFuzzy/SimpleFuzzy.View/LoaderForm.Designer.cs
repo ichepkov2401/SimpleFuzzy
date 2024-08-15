@@ -28,7 +28,7 @@ namespace SimpleFuzzy.View
             browseButton = new MetroFramework.Controls.MetroButton();
             loadButton = new MetroFramework.Controls.MetroButton();
             messageTextBox = new MetroFramework.Controls.MetroTextBox();
-            treeView1 = new TreeView();
+            treeView1 = new NoClickTree();
             dllListView = new ListView();
             FileName = new ColumnHeader();
             CloseButton = new ColumnHeader();
@@ -131,8 +131,6 @@ namespace SimpleFuzzy.View
             extender.AddColumn(buttonAction);
             FileName.Text = "Имя";
             CloseButton.Text = "";
-
-            //
             // 
             // groupBoxLoader
             // 
@@ -175,7 +173,7 @@ namespace SimpleFuzzy.View
         private MetroFramework.Controls.MetroButton browseButton;
         private MetroFramework.Controls.MetroButton loadButton;
         private MetroFramework.Controls.MetroTextBox messageTextBox;
-        private TreeView treeView1;
+        private NoClickTree treeView1;
         public ListView dllListView;
         private ColumnHeader FileName;
         private ColumnHeader CloseButton;

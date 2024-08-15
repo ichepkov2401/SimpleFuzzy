@@ -1,11 +1,10 @@
 ﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-using System.Runtime.Loader;
 
 public class RepositoryService : IRepositoryService
 {
     // Коллекции для хранения различных типов объектов
-    public readonly List<AssemblyLoadContext> _assemblyContext;
+    public readonly List<AssemblyContextModel> _assemblyContext;
     public readonly List<IObjectSet> _objectSets;
     public readonly List<IMembershipFunction> _membershipFunctions;
     public readonly List<ISimulator> _simulators;
@@ -13,7 +12,7 @@ public class RepositoryService : IRepositoryService
 
     public RepositoryService()
     {
-        _assemblyContext = new List<AssemblyLoadContext>();
+        _assemblyContext = new List<AssemblyContextModel>();
         _objectSets = new List<IObjectSet>();
         _membershipFunctions = new List<IMembershipFunction>();
         _simulators = new List<ISimulator>();
@@ -22,45 +21,38 @@ public class RepositoryService : IRepositoryService
 
     public void AssemblyHandler(object sender, EventArgs e)
     {
-        AssemblyLoadContext context = sender as AssemblyLoadContext;
-        for (int i = 0; i < context.Assemblies.Count(); i++)
+        string context = sender as string;
+        for (int k = 0; k < _membershipFunctions.Count; k++)
         {
-            Type[] array = context.Assemblies.ElementAt(i).GetTypes();
-            for (int j = 0; j < array.Length; j++)
+            if (_membershipFunctions[k].GetType().Assembly.Location == context)
             {
-                bool isBreak = false;
-                for (int k = 0; k < _membershipFunctions.Count; k++)
-                {
-                    if (_membershipFunctions[k].GetType() == array[j]) 
-                    {
-                        _membershipFunctions.RemoveAt(k);
-                        isBreak = true;
-                        break;
-                    }
-                 }
-                 if (isBreak) continue;
-                 for (int k = 0; k < _objectSets.Count; k++)
-                 {
-                     if (_objectSets[k].GetType() == array[j])
-                     {
-                         _objectSets.RemoveAt(k);
-                         isBreak = true;
-                         break;
-                      }
-                  }
-                  if (isBreak) continue;
-                  for (int k = 0; k < _simulators.Count; k++)
-                  {
-                     if (_simulators[k].GetType() == array[j])
-                     {
-                         _simulators.RemoveAt(k);
-                         break;
-                     }
-                   }
-                }
-               
+                _membershipFunctions.RemoveAt(k);
             }
         }
+        for (int k = 0; k < _objectSets.Count; k++)
+        {
+            if (_objectSets[k].GetType().Assembly.Location == context)
+            {
+                _objectSets.RemoveAt(k);
+            }
+        }
+        for (int k = 0; k < _simulators.Count; k++)
+        {
+            if (_simulators[k].GetType().Assembly.Location == context)
+            {
+                _simulators.RemoveAt(k);
+            }
+        }
+    }
+
+    public void ClearAll()
+    {
+        GetCollection<IMembershipFunction>().Clear();
+        GetCollection<IObjectSet>().Clear();
+        GetCollection<ISimulator>().Clear();
+        GetCollection<LinguisticVariable>().Clear();
+        GetCollection<AssemblyContextModel>().Clear();
+    }
 
     // Универсальный метод для получения коллекций
     public List<T> GetCollection<T>()
@@ -81,7 +73,7 @@ public class RepositoryService : IRepositoryService
         {
             return (List<T>)(object)_linguisticVariables;
         }
-        if (typeof(T) == typeof(AssemblyLoadContext))
+        if (typeof(T) == typeof(AssemblyContextModel))
         {
             return (List<T>)(object)_assemblyContext;
         }

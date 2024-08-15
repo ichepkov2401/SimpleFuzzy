@@ -14,7 +14,7 @@
         public bool IsContainsPath(string path);
         public string GivePath(string name, bool isFull);
         public string[]? GiveList();
-        public void SaveAll();
-        public void LoadAll();
+        public void SaveAll(string name = "\\Save.xml");
+        public void LoadAll(string name = "\\Save.xml");
     }
 }

@@ -47,12 +47,12 @@ namespace SimpleFuzzy.Service
                 }
         }
 
-        public void LoadAll()
+        public void LoadAll(string name = "\\Save.xml")
         {
-            if (File.Exists(GivePath(CurrentProjectName, true) + "\\Save.xml"))
+            if (File.Exists(GivePath(CurrentProjectName, true) + name))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(GivePath(CurrentProjectName, true) + "\\Save.xml");
+                doc.Load(GivePath(CurrentProjectName, true) + name);
                 var root = doc.DocumentElement;
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
@@ -125,12 +125,15 @@ namespace SimpleFuzzy.Service
         public void CopyProject(string name, string path)
         {
             string lastName = CurrentProjectName;
+            SaveAll("\\SaveCopy.xml");
             AddProject(name, path);
             DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
             DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
             foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" +  item.Name, true); }
+            File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
+            File.Delete(GivePath(name, true) + "\\Save.xml");
+            File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
             OpenProjectfromName(name);
-            
         }
         public void DeleteProject(string name)
         {
@@ -266,7 +269,7 @@ namespace SimpleFuzzy.Service
             return text;
         }
 
-        public void SaveAll()
+        public void SaveAll(string name = "\\Save.xml")
         {
             // открытие xml файла
             XmlDocument doc = new XmlDocument();
@@ -277,7 +280,7 @@ namespace SimpleFuzzy.Service
             // методы сохранения
             SaveActiveModulesXML(activeModules);
             // сохранение xml файла
-            doc.Save(GivePath(CurrentProjectName, true) + "\\Save.xml");
+            doc.Save(GivePath(CurrentProjectName, true) + name);
         }
 
         private void SaveActiveModulesXML(XmlElement activeModules)

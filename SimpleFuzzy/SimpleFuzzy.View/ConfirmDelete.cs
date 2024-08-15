@@ -24,6 +24,7 @@ namespace SimpleFuzzy.View
             {
                 parent.OpenButtons();
                 parent.Locked();
+                parent.ChangeNameOfProject();
             }
             Parent.Controls.Remove(this);
         }

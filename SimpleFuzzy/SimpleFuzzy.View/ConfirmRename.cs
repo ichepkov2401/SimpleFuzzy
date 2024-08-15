@@ -22,7 +22,11 @@ namespace SimpleFuzzy.View
                 MessageBox.Show(ex.Message);
                 return;
             }
-            button2_Click(sender, e);
+            if (Parent is MainWindow parent)
+            {
+                parent.OpenButtons();
+                parent.OpenLoader();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

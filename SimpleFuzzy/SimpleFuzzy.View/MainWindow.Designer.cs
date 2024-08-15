@@ -278,7 +278,7 @@ namespace SimpleFuzzy.View
             metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
             metroLabel1.StyleManager = null;
             metroLabel1.TabIndex = 13;
-            metroLabel1.Text = "Имя текущего проекта: ";
+            metroLabel1.Text = "";
             metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
             metroLabel1.UseStyleColors = false;
             // 

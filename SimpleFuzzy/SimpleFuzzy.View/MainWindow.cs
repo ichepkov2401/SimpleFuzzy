@@ -40,6 +40,11 @@ namespace SimpleFuzzy.View
             Locked();
         }
 
+        public void ChangeNameOfProject()
+        {
+            if (projectList.CurrentProjectName != null) metroLabel1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
+            else metroLabel1.Text = "";
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             SwichUserControl(UserControlsEnum.Create);
@@ -185,7 +190,7 @@ namespace SimpleFuzzy.View
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
                 currentControl.Location = new Point(0, 160);
-                metroLabel1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
+                ChangeNameOfProject();
             }
         }
 

@@ -136,9 +136,9 @@ namespace SimpleFuzzy.Service
             if (IsContainsName(name))
             {
                 DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
+                loaderService.UnloadAllAssemblies();
                 foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
                 Directory.Delete(GivePath(name, true), true);
-                loaderService.UnloadAllAssemblies();
                 string[] text = GiveList();
                 FileStream file = new FileStream(pathPL, FileMode.Truncate);
                 StreamWriter writer = new StreamWriter(file);

@@ -258,42 +258,31 @@ namespace SimpleFuzzy.Model
         }
         public XmlNode Save()
         {
-            var xmlSerializer = new XmlSerializer(typeof(LinguisticVariable));
-            var currentVariable = new LinguisticVariable(isRedact, name, baseSet, func);
-            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "\\LinguisticVariable.xml", FileMode.OpenOrCreate))
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNode linguisticNode = xmlDoc.CreateElement("LingiusticVariable");
+
+            XmlNode nameNode = xmlDoc.CreateElement("name");
+            nameNode.InnerText = name;
+            linguisticNode.AppendChild(nameNode);
+
+            XmlNode redactNode = xmlDoc.CreateElement("isRedact");
+            redactNode.InnerText = isRedact.ToString();
+            linguisticNode.AppendChild(redactNode);
+
+            XmlNode objectsetNode = xmlDoc.CreateElement("baseSet");
+            objectsetNode.InnerText = baseSet.ToString();
+            linguisticNode.AppendChild(objectsetNode);
+
+            XmlElement funcNode = xmlDoc.CreateElement("func");
+            foreach (var function in func)
             {
-                xmlSerializer.Serialize(fs, currentVariable);
+                XmlNode functionNode = xmlDoc.CreateElement("Onefunction");
+                functionNode.InnerText = function.ToString();
+                funcNode.AppendChild(functionNode);
             }
-            var xmlDocument = new XmlDocument();
-            xmlDocument.Load(Directory.GetCurrentDirectory() + "\\LinguisticVariable.xml");
-            XmlNode xmlVariable = xmlDocument;
-            return xmlVariable;
-        }
-        static LinguisticVariable Load(XmlNode xmlNode)
-        {
-            bool isRedact;
-            string name;
-            IObjectSet set;
-            List<IMembershipFunction> func;
-            var root = xmlNode as XmlElement;
-            XmlNode nodes = root.SelectSingleNode("//name");
-            name = nodes.InnerText;
-            nodes = root.SelectSingleNode("//IsRedact");
-            isRedact = bool.Parse(root.InnerText);
-            nodes = root.SelectSingleNode("//baseSet");
-            var serializerBaseSet = new XmlSerializer(typeof(IObjectSet));
-            using (var reader = new XmlNodeReader(nodes))
-            {
-                set = (IObjectSet)serializerBaseSet.Deserialize(reader);
-            }
-            nodes = root.SelectSingleNode("//func");
-            var serializerFunc = new XmlSerializer(typeof(List<IMembershipFunction>));
-            using (var reader = new XmlNodeReader(nodes))
-            {
-                func = (List<IMembershipFunction>)serializerFunc.Deserialize(reader);
-            }
-            var linguisticVariable = new LinguisticVariable(isRedact, name, set, func);
-            return linguisticVariable;
+            linguisticNode.AppendChild(funcNode);
+
+            return linguisticNode;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Model;
+using System.Xml;
 
 namespace SimpleFuzzy.Service
 {
@@ -6,9 +8,11 @@ namespace SimpleFuzzy.Service
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
         public IAssemblyLoaderService loaderService;
-        public ProjectListService(IAssemblyLoaderService loaderService)
+        public IRepositoryService repositoryService;
+        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
         {
             this.loaderService = loaderService;
+            this.repositoryService = repositoryService;
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -195,6 +199,32 @@ namespace SimpleFuzzy.Service
                 text[i] = list.ElementAt(i);
             }
             return text;
+        }
+        public LinguisticVariable LoadLinguisticVariable(XmlNode xmlnode)
+        {
+            string namefromNode = xmlnode["name"].InnerText;
+            bool redactfromNode = bool.Parse(xmlnode["isRedact"].InnerText);
+            IObjectSet newSet = null;
+            foreach (var objectSet in repositoryService.GetCollection<IObjectSet>())
+            {
+                if (objectSet.GetType().FullName == xmlnode["baseSet"].InnerText)
+                {
+                    newSet = objectSet;
+                    break;
+                }
+            }
+            var membershipFunctions = new List<IMembershipFunction>();
+            foreach (var function in repositoryService.GetCollection<IMembershipFunction>())
+            {
+                foreach (XmlNode childnode in xmlnode["func"].ChildNodes)
+                {
+                    if (function.GetType().FullName == childnode.InnerText)
+                    {
+                        membershipFunctions.Add(function);
+                    }
+                }
+            }
+            return new LinguisticVariable(redactfromNode, namefromNode, newSet, membershipFunctions);
         }
     }
 }

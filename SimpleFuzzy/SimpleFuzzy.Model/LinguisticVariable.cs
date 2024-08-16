@@ -256,10 +256,15 @@ namespace SimpleFuzzy.Model
             }
             return section;
         }
-        public XmlNode Save()
+        public void Save(ref XmlNode parentNode)
         {
             XmlDocument xmlDoc = new XmlDocument();
+            if (parentNode.ParentNode == null)
+            {
+                parentNode = xmlDoc.CreateElement("ListofLinguisticVariable");
+            }
             XmlNode linguisticNode = xmlDoc.CreateElement("LingiusticVariable");
+            parentNode.AppendChild(linguisticNode);
 
             XmlNode nameNode = xmlDoc.CreateElement("name");
             nameNode.InnerText = name;
@@ -270,19 +275,17 @@ namespace SimpleFuzzy.Model
             linguisticNode.AppendChild(redactNode);
 
             XmlNode objectsetNode = xmlDoc.CreateElement("baseSet");
-            objectsetNode.InnerText = baseSet.ToString();
+            objectsetNode.InnerText = baseSet.GetType().FullName + " " + baseSet.GetType().Assembly.FullName;
             linguisticNode.AppendChild(objectsetNode);
 
             XmlElement funcNode = xmlDoc.CreateElement("func");
             foreach (var function in func)
             {
                 XmlNode functionNode = xmlDoc.CreateElement("Onefunction");
-                functionNode.InnerText = function.ToString();
+                functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
                 funcNode.AppendChild(functionNode);
             }
             linguisticNode.AppendChild(funcNode);
-
-            return linguisticNode;
         }
     }
 }

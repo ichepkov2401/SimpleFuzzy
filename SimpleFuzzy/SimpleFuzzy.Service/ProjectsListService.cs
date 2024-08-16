@@ -200,31 +200,36 @@ namespace SimpleFuzzy.Service
             }
             return text;
         }
-        public LinguisticVariable LoadLinguisticVariable(XmlNode xmlnode)
+        public List<LinguisticVariable> LoadLinguisticVariable(XmlNode xmlParent)
         {
-            string namefromNode = xmlnode["name"].InnerText;
-            bool redactfromNode = bool.Parse(xmlnode["isRedact"].InnerText);
-            IObjectSet newSet = null;
-            foreach (var objectSet in repositoryService.GetCollection<IObjectSet>())
+            var ListofLinguisticVariable = new List<LinguisticVariable>();
+            foreach (XmlNode xmlLinguistic in xmlParent.ChildNodes)
             {
-                if (objectSet.GetType().FullName == xmlnode["baseSet"].InnerText)
+                string namefromNode = xmlLinguistic["name"].InnerText;
+                bool redactfromNode = bool.Parse(xmlLinguistic["isRedact"].InnerText);
+                IObjectSet? newSet = null;
+                foreach (var objectSet in repositoryService.GetCollection<IObjectSet>())
                 {
-                    newSet = objectSet;
-                    break;
-                }
-            }
-            var membershipFunctions = new List<IMembershipFunction>();
-            foreach (var function in repositoryService.GetCollection<IMembershipFunction>())
-            {
-                foreach (XmlNode childnode in xmlnode["func"].ChildNodes)
-                {
-                    if (function.GetType().FullName == childnode.InnerText)
+                    if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
                     {
-                        membershipFunctions.Add(function);
+                        newSet = objectSet;
+                        break;
                     }
                 }
+                var membershipFunctions = new List<IMembershipFunction>();
+                foreach (var function in repositoryService.GetCollection<IMembershipFunction>())
+                {
+                    foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
+                    {
+                        if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
+                        {
+                            membershipFunctions.Add(function);
+                        }
+                    }
+                }
+                ListofLinguisticVariable.Add(new LinguisticVariable(redactfromNode, namefromNode, newSet, membershipFunctions));
             }
-            return new LinguisticVariable(redactfromNode, namefromNode, newSet, membershipFunctions);
+            return ListofLinguisticVariable;
         }
     }
 }

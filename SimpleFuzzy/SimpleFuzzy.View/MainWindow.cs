@@ -1,4 +1,6 @@
 using MetroFramework.Forms;
+using System.IO;
+using System.Runtime.Loader;
 using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
@@ -8,6 +10,7 @@ namespace SimpleFuzzy.View
     {
         Dictionary<UserControlsEnum, ControlConstruct> UserControls = new Dictionary<UserControlsEnum, ControlConstruct>();
         public UserControl currentControl = null;
+        IRepositoryService repositoryService;
         IProjectListService projectList;
         private ToolStripMenuItem[] workspaceButtons;
         bool IsShownToolTip1 = true;
@@ -16,7 +19,7 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
-
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             // Инициализация массива кнопок рабочего пространства
             workspaceButtons = new ToolStripMenuItem[] { button7, button8, button9, button10, button11 };
 
@@ -24,7 +27,7 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Open, () => new ConfirmOpen());
             UserControls.Add(UserControlsEnum.Delete, () => new ConfirmDelete());
             UserControls.Add(UserControlsEnum.Rename, () => new ConfirmRename());
-            UserControls.Add(UserControlsEnum.Copy, () => new ConfirmCopy());
+            UserControls.Add(UserControlsEnum.Copy, () => new ConfirmSaveAs());
             UserControls.Add(UserControlsEnum.Loader, () => new LoaderForm());
             UserControls.Add(UserControlsEnum.Fasification, () => new FasificationForm());
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
@@ -38,6 +41,11 @@ namespace SimpleFuzzy.View
             timer1.Start();
         }
 
+        public void ChangeNameOfProject()
+        {
+            if (projectList.CurrentProjectName != null) metroLabel1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
+            else metroLabel1.Text = "";
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             SwichUserControl(UserControlsEnum.Create);
@@ -65,6 +73,7 @@ namespace SimpleFuzzy.View
 
         private void button6_Click(object sender, EventArgs e)
         {
+            projectList.SaveAll();
             // сохранение
         }
         private void button7_Click(object sender, EventArgs e)
@@ -163,12 +172,6 @@ namespace SimpleFuzzy.View
             button10.Enabled = true;
             if (isContainSimulator) button11.Enabled = true;
         }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         public void EnableSimulationsButton(bool enable)
         {
@@ -188,6 +191,7 @@ namespace SimpleFuzzy.View
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
                 currentControl.Location = new Point(0, 120);
+
             }
         }
 

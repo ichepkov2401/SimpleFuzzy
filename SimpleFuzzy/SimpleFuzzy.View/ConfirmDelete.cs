@@ -15,15 +15,16 @@ namespace SimpleFuzzy.View
         private void button1_Click(object sender, EventArgs e)
         {
             try { projectList.DeleteProject(projectList.CurrentProjectName); }
-            catch (Exception ex)
+            catch 
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Разработчики уже решают эту проблему)", "Ошибка удаления");
                 return;
             }
             if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();
                 parent.Locked();
+                parent.ChangeNameOfProject();
             }
             Parent.Controls.Remove(this);
         }

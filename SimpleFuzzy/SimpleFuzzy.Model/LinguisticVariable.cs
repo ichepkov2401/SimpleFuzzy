@@ -11,7 +11,7 @@ namespace SimpleFuzzy.Model
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
-        private Dictionary<IMembershipFunction, object> coreCache = new Dictionary<IMembershipFunction, object>();
+        private Dictionary<IMembershipFunction, List<object>> coreCache = new Dictionary<IMembershipFunction, List<object>>();
 
         public LinguisticVariable(bool isRedact)
         {
@@ -118,7 +118,7 @@ namespace SimpleFuzzy.Model
             return result;
         }
         //Расчет свойств нечеткого множества
-        public Tuple<double,string,List<object>,object,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+        public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 
             if (!heightCache.ContainsKey(term))
             {
@@ -211,19 +211,20 @@ namespace SimpleFuzzy.Model
             return areaOfInfluence;
         }
 
-        private object CalculateCore(IMembershipFunction term)
+        private List<object> CalculateCore(IMembershipFunction term)
         {
+            List<object> result = new List<object>();
             baseSet.ToFirst();
             while (!baseSet.IsEnd())
             {
                 double membershipValue = term.MembershipFunction(baseSet.Extraction());
                 if (membershipValue == 1)
                 {
-                    return baseSet.Extraction();
+                    result.Add(baseSet.Extraction());
                 }
                 baseSet.MoveNext();
             }
-            return null; // Отсутствие ядра
+            return result;
         }
         private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {

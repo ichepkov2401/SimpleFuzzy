@@ -53,14 +53,34 @@ namespace SimpleFuzzy.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string variableName = "New Variable";
-            var newVariable = new LinguisticVariable(true) { Name = variableName };
+            using (var inputBox = new LinguisticVariableInputForm("Введите имя переменной:", "Создание переменной"))
+            {
+                if (inputBox.ShowDialog() == DialogResult.OK)
+                {
+                    string variableName = inputBox.InputText;
 
-            repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
+                    if (string.IsNullOrWhiteSpace(variableName))
+                    {
+                        MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-            RefreshLinguisticVariableList();
+                    var existingVariable = repositoryService.GetCollection<LinguisticVariable>()
+                                                            .FirstOrDefault(v => v.Name == variableName);
+
+                    if (existingVariable != null)
+                    {
+                        MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    var newVariable = new LinguisticVariable(true) { Name = variableName };
+                    repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
+
+                    RefreshLinguisticVariableList();
+                }
+            }
         }
-
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
             const string message = "Вы уверенны, что хотите удалить выбранный файл?";

@@ -251,30 +251,30 @@ namespace SimpleFuzzy.Model
         }
         public void Save(ref XmlNode parentNode)
         {
-            XmlDocument xmlDoc = new XmlDocument();
             if (parentNode.ParentNode == null)
             {
+                XmlDocument xmlDoc = new XmlDocument();
                 parentNode = xmlDoc.CreateElement("ListofLinguisticVariable");
             }
-            XmlNode linguisticNode = xmlDoc.CreateElement("LingiusticVariable");
+            XmlNode linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
             parentNode.AppendChild(linguisticNode);
 
-            XmlNode nameNode = xmlDoc.CreateElement("name");
+            XmlNode nameNode = parentNode.OwnerDocument.CreateElement("name");
             nameNode.InnerText = name;
             linguisticNode.AppendChild(nameNode);
 
-            XmlNode redactNode = xmlDoc.CreateElement("isRedact");
+            XmlNode redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
             redactNode.InnerText = isRedact.ToString();
             linguisticNode.AppendChild(redactNode);
 
-            XmlNode objectsetNode = xmlDoc.CreateElement("baseSet");
+            XmlNode objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
             objectsetNode.InnerText = baseSet.GetType().FullName + " " + baseSet.GetType().Assembly.FullName;
             linguisticNode.AppendChild(objectsetNode);
 
-            XmlElement funcNode = xmlDoc.CreateElement("func");
+            XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
             foreach (var function in func)
             {
-                XmlNode functionNode = xmlDoc.CreateElement("Onefunction");
+                XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
                 functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
                 funcNode.AppendChild(functionNode);
             }

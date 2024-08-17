@@ -1,18 +1,24 @@
-﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.Loader;
+using System.Text;
 using System.Xml;
+using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.Service
 {
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
-        public IRepositoryService repositoryService;
+        Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
         public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
         {
+            repository = repositoryService;
             this.loaderService = loaderService;
-            this.repositoryService = repositoryService;
+            pair.Add("activeModules", ChooseActive);
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -34,25 +40,83 @@ namespace SimpleFuzzy.Service
             }
             else { throw new InvalidOperationException("Проект с таким именем уже существует"); }
         }
+        private void AddAssemblies(string path) 
+        {
+                foreach (string fileName in Directory.GetFiles(path))
+                {
+                    if (fileName.Split('\\')[^1] != "Save.xml") loaderService.AssemblyLoader(fileName);
+                }
+        }
+
+        public void LoadAll(string name = "\\Save.xml")
+        {
+            if (File.Exists(GivePath(CurrentProjectName, true) + name))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(GivePath(CurrentProjectName, true) + name);
+                var root = doc.DocumentElement;
+                for (int i = 0; i < root.ChildNodes.Count; i++)
+                {
+                    Action<XmlNodeList> action;
+                    if (pair.TryGetValue(root.ChildNodes[i].Name, out action))
+                    {
+                        action(root.ChildNodes[i].ChildNodes);
+                    }
+                }
+            }
+        }
+
+        private void ChooseActive(XmlNodeList list)
+        {
+            foreach (XmlNode moduleNode in list)
+            {
+                string moduleName = moduleNode.Attributes["moduleName"].Value;
+                string assemblyName = moduleNode.Attributes["assemblyName"].Value;
+                bool status;
+                if (moduleNode.InnerText == "true") status = true;
+                else status = false;
+
+                bool isContinue = false;
+                IModulable module = repository.GetCollection<IMembershipFunction>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
+                if (module != null) { 
+                    module.Active = status;
+                    continue;
+                }
+                module = repository.GetCollection<IObjectSet>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
+                if (module != null)
+                {
+                    module.Active = status;
+                    continue;
+                }
+                module = repository.GetCollection<ISimulator>().FirstOrDefault(t => t.GetType().Name == moduleName && assemblyName == t.GetType().Assembly.FullName);
+                if (module != null)
+                {
+                    module.Active = status;
+                    continue;
+                }
+            }
+        }
         public void OpenProjectfromName(string name)
         {
             if (IsContainsName(name))
             {
-                CurrentProjectName = name;
-                // открываетие проекта
-                loaderService.UnloadAllAssemblies();
+                OpenProjectfromPath(GivePath(name, true));
             }
             else
             {
                 throw new InvalidOperationException("Проекта с таким именем не существует");
             }
         }
-        public void OpenProjectfromPath(string path)
+        public void OpenProjectfromPath(string path) 
         {
             if (IsContainsPath(path))
             {
                 // открытие проекта
                 loaderService.UnloadAllAssemblies();
+                repository.ClearAll();
+                CurrentProjectName = path.Split('\\')[^1];
+                AddAssemblies(path); // подключение сборок
+                LoadAll(); // загрузка сохранения
             }
             else
             {
@@ -61,18 +125,23 @@ namespace SimpleFuzzy.Service
         }
         public void CopyProject(string name, string path)
         {
+            string lastName = CurrentProjectName;
+            SaveAll("\\SaveCopy.xml");
             AddProject(name, path);
-            DirectoryInfo directory = new DirectoryInfo(path);
-            directory.Create();
-            DirectoryInfo source = new DirectoryInfo(GivePath(CurrentProjectName, true));
-            DirectoryInfo destin = new DirectoryInfo(path);
-            foreach (var item in source.GetFiles()) { item.CopyTo(destin + item.Name, true); }
+            DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
+            DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
+            foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" +  item.Name, true); }
+            File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
+            File.Delete(GivePath(name, true) + "\\Save.xml");
+            File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
+            OpenProjectfromName(name);
         }
         public void DeleteProject(string name)
         {
             if (IsContainsName(name))
             {
                 DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
+                loaderService.UnloadAllAssemblies();
                 foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
                 Directory.Delete(GivePath(name, true), true);
                 string[] text = GiveList();
@@ -151,7 +220,7 @@ namespace SimpleFuzzy.Service
             }
             return false;
         }
-        public string GivePath(string name, bool isFull)
+        public string GivePath(string name, bool isFull) 
         {
             if (IsContainsName(name))
             {
@@ -200,6 +269,7 @@ namespace SimpleFuzzy.Service
             }
             return text;
         }
+        
         public List<LinguisticVariable> LoadLinguisticVariable(XmlNode xmlParent)
         {
             var ListofLinguisticVariable = new List<LinguisticVariable>();
@@ -208,7 +278,7 @@ namespace SimpleFuzzy.Service
                 string namefromNode = xmlLinguistic["name"].InnerText;
                 bool redactfromNode = bool.Parse(xmlLinguistic["isRedact"].InnerText);
                 IObjectSet? newSet = null;
-                foreach (var objectSet in repositoryService.GetCollection<IObjectSet>())
+                foreach (var objectSet in repository.GetCollection<IObjectSet>())
                 {
                     if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
                     {
@@ -217,7 +287,7 @@ namespace SimpleFuzzy.Service
                     }
                 }
                 var membershipFunctions = new List<IMembershipFunction>();
-                foreach (var function in repositoryService.GetCollection<IMembershipFunction>())
+                foreach (var function in repository.GetCollection<IMembershipFunction>())
                 {
                     foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
                     {
@@ -230,6 +300,46 @@ namespace SimpleFuzzy.Service
                 ListofLinguisticVariable.Add(new LinguisticVariable(redactfromNode, namefromNode, newSet, membershipFunctions));
             }
             return ListofLinguisticVariable;
+
+        public void SaveAll(string name = "\\Save.xml")
+        {
+            // открытие xml файла
+            XmlDocument doc = new XmlDocument();
+            XmlElement root = doc.CreateElement("saves");
+            doc.AppendChild(root);
+            XmlElement activeModules = doc.CreateElement("activeModules");
+            root.AppendChild(activeModules);
+            // методы сохранения
+            SaveActiveModulesXML(activeModules);
+            // сохранение xml файла
+            doc.Save(GivePath(CurrentProjectName, true) + name);
+        }
+
+        private void SaveActiveModulesXML(XmlElement activeModules)
+        {
+            var s = repository.GetCollection<IMembershipFunction>().Cast<IModulable>().
+                Concat(repository.GetCollection<IObjectSet>().Cast<IModulable>()).
+                Concat(repository.GetCollection<ISimulator>().Cast<IModulable>());
+            foreach (IModulable element in s)
+            {
+                XmlElement module = activeModules.OwnerDocument.CreateElement("module");
+                activeModules.AppendChild(module);
+                string moduleName = element.GetType().Name;
+                string assemblyName = element.GetType().Assembly.FullName;
+                string active;
+                if (element.Active) active = "true";
+                else active = "false";
+
+                XmlAttribute moduleNameXML = activeModules.OwnerDocument.CreateAttribute("moduleName");
+                moduleNameXML.Value = moduleName;
+                module.Attributes.Append(moduleNameXML);
+
+                XmlAttribute assemblyNameXML = activeModules.OwnerDocument.CreateAttribute("assemblyName");
+                assemblyNameXML.Value = assemblyName;
+                module.Attributes.Append(assemblyNameXML);
+
+                module.InnerText = active;
+            }
         }
     }
 }

@@ -27,11 +27,9 @@ namespace SimpleFuzzy.View
         }
 
         #region Windows Form Designer generated code
-          
+
         private void InitializeComponent()
         {
-            SuspendLayout();
-            
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             folderBrowserDialog1 = new FolderBrowserDialog();
@@ -50,6 +48,7 @@ namespace SimpleFuzzy.View
             logoBox = new PictureBox();
             toolTip1 = new ToolTip(components);
             button13 = new MetroButton();
+            metroLabel1 = new MetroLabel();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -126,7 +125,7 @@ namespace SimpleFuzzy.View
             button5.Style = MetroFramework.MetroColorStyle.Blue;
             button5.StyleManager = null;
             button5.TabIndex = 5;
-            button5.Text = "Копия";
+            button5.Text = "Сохранить как";
             button5.Theme = MetroFramework.MetroThemeStyle.Light;
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
@@ -266,11 +265,29 @@ namespace SimpleFuzzy.View
             button13.UseVisualStyleBackColor = true;
             button13.Click += button13_Click;
             // 
+            // metroLabel1
+            // 
+            metroLabel1.AutoSize = true;
+            metroLabel1.CustomBackground = false;
+            metroLabel1.FontSize = MetroFramework.MetroLabelSize.Medium;
+            metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Light;
+            metroLabel1.LabelMode = MetroLabelMode.Default;
+            metroLabel1.Location = new Point(540, 22);
+            metroLabel1.Name = "metroLabel1";
+            metroLabel1.Size = new Size(84, 20);
+            metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
+            metroLabel1.StyleManager = null;
+            metroLabel1.TabIndex = 13;
+            metroLabel1.Text = "";
+            metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
+            metroLabel1.UseStyleColors = false;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(914, 600);
+            Controls.Add(metroLabel1);
             Controls.Add(button12);
             Controls.Add(button11);
             Controls.Add(button10);
@@ -292,6 +309,7 @@ namespace SimpleFuzzy.View
             MouseMove += MainWindow_MouseMove;
             ((System.ComponentModel.ISupportInitialize)logoBox).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -312,5 +330,6 @@ namespace SimpleFuzzy.View
         private PictureBox logoBox;
         private ToolTip toolTip1;
         private MetroFramework.Controls.MetroButton button13;
+        private MetroLabel metroLabel1;
     }
 }

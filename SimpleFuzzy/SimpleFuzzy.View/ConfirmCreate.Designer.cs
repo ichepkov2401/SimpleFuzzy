@@ -129,7 +129,6 @@
             label2.Text = "Расположение";
             label2.Theme = MetroFramework.MetroThemeStyle.Light;
             label2.UseStyleColors = false;
-            label2.Click += label2_Click;
             // 
             // button3
             // 

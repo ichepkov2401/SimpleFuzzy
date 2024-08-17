@@ -5,11 +5,13 @@ namespace SimpleFuzzy.View
 {
     public partial class ConfirmCreate : MetroUserControl
     {
+        IRepositoryService repositoryService;
         IProjectListService projectList;
         public ConfirmCreate()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -20,6 +22,7 @@ namespace SimpleFuzzy.View
                 return;
             }
             // Дальше открывается проект
+            projectList.OpenProjectfromName(projectList.CurrentProjectName);
             if (Parent is MainWindow parent)
             {
                 parent.OpenButtons();
@@ -30,7 +33,7 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "\\Projects";
+            string path = Directory.GetCurrentDirectory() + "\\Projects\\";
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.RootFolder = Environment.SpecialFolder.Desktop;
             dialog.SelectedPath = path;
@@ -51,11 +54,6 @@ namespace SimpleFuzzy.View
         private void ConfirmCreate_Load(object sender, EventArgs e)
         {
             if (Parent is MainWindow parent) { parent.BlockButtons(); }
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

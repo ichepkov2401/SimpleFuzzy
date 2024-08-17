@@ -300,6 +300,7 @@ namespace SimpleFuzzy.Service
                 ListofLinguisticVariable.Add(new LinguisticVariable(redactfromNode, namefromNode, newSet, membershipFunctions));
             }
             return ListofLinguisticVariable;
+        }
 
         public void SaveAll(string name = "\\Save.xml")
         {

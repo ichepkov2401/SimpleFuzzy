@@ -126,11 +126,11 @@ namespace SimpleFuzzy.Model
             var pivot = array[leftIndex].Item2;
             while (i <= j)
             {
-                while (array[i].Item2 < pivot)
+                while (array[i].Item2 > pivot)
                 {
                     i++;
                 }
-                while (array[j].Item2 > pivot)
+                while (array[j].Item2 < pivot)
                 {
                     j--;
                 }

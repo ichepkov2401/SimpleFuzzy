@@ -1,4 +1,5 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Xml;
 
 namespace SimpleFuzzy.Model
 {
@@ -16,6 +17,13 @@ namespace SimpleFuzzy.Model
         public LinguisticVariable(bool isRedact)
         {
             this.isRedact = isRedact;
+        }
+        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<IMembershipFunction> func)
+        {
+            this.name = name;
+            this.isRedact = isRedact;
+            this.baseSet = baseSet;
+            this.func = func;
         }
 
         public string Name
@@ -240,6 +248,37 @@ namespace SimpleFuzzy.Model
                 baseSet.MoveNext();
             }
             return section;
+        }
+        public void Save(ref XmlNode parentNode)
+        {
+            if (parentNode == null)
+            {
+                XmlDocument doc = new XmlDocument();
+                parentNode = doc.CreateElement("ListofLinguisticVariable");
+            }
+            XmlNode linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
+            parentNode.AppendChild(linguisticNode);
+
+            XmlNode nameNode = parentNode.OwnerDocument.CreateElement("name");
+            nameNode.InnerText = name;
+            linguisticNode.AppendChild(nameNode);
+
+            XmlNode redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
+            redactNode.InnerText = isRedact.ToString();
+            linguisticNode.AppendChild(redactNode);
+
+            XmlNode objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
+            objectsetNode.InnerText = baseSet.GetType().FullName + " " + baseSet.GetType().Assembly.FullName;
+            linguisticNode.AppendChild(objectsetNode);
+
+            XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
+            foreach (var function in func)
+            {
+                XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
+                functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
+                funcNode.AppendChild(functionNode);
+            }
+            linguisticNode.AppendChild(funcNode);
         }
     }
 }

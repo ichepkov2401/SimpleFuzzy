@@ -32,12 +32,22 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Fasification, () => new FasificationForm());
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
             UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
-            UserControls.Add(UserControlsEnum.Simulation, () => new SimulationForm());
+            UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
 
             toolTip1.AutoPopDelay = 5000;
             toolTip1.InitialDelay = 1000;
             toolTip1.ReshowDelay = 500;
             Locked();
+        }
+
+        private UserControl AddSimulation()
+        {
+            ISimulator simulator = repositoryService.GetCollection<ISimulator>().FirstOrDefault(t => t.Active);
+            if (simulator != null) 
+            {
+                return simulator.GetVisualObject() as UserControl;
+            }
+            throw new Exception("Нет активной симуляции");
         }
 
         public void ChangeNameOfProject()

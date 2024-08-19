@@ -1,8 +1,9 @@
-﻿using SimpleFuzzy.Service;
+﻿using MetroFramework.Forms;
+using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
-    public partial class GenerationObjectSetUI : UserControl
+    public partial class GenerationObjectSetUI : MetroForm
     {
         GenerationObjectSetService service = new GenerationObjectSetService();
         public GenerationObjectSetUI()

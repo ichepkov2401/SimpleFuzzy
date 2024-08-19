@@ -8,6 +8,7 @@ namespace SimpleFuzzy.View
     public partial class FasificationForm : MetroUserControl
     {
         IRepositoryService repositoryService;
+        LinguisticVariableUI variableUI;
         public FasificationForm()
         {
             InitializeComponent();
@@ -74,7 +75,7 @@ namespace SimpleFuzzy.View
                         return;
                     }
 
-                    var newVariable = new LinguisticVariable(true) { Name = variableName };
+                    LinguisticVariable newVariable =  new LinguisticVariable(true) { Name = variableName };
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
                     RefreshLinguisticVariableList();
@@ -83,7 +84,7 @@ namespace SimpleFuzzy.View
         }
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Вы уверенны, что хотите удалить выбранную лингвистическую переменную?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -112,6 +113,24 @@ namespace SimpleFuzzy.View
                 ListViewItem item = new ListViewItem(variable.Name);
                 item.SubItems.Add("X");
                 listView1.Items.Add(item);
+            }
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (variableUI != null) 
+            {
+                Controls.Remove(variableUI);
+                variableUI.Dispose();
+            }
+            if (listView1.SelectedIndices.Count == 1)
+            {
+                var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == listView1.SelectedItems[0].Text);
+                {
+                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList);
+                    Controls.Add(variableUI);
+                    variableUI.Location = new Point(325, 0);
+                }
             }
         }
     }

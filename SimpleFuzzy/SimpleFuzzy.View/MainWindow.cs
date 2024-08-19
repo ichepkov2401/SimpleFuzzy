@@ -10,7 +10,6 @@ namespace SimpleFuzzy.View
     {
         Dictionary<UserControlsEnum, ControlConstruct> UserControls = new Dictionary<UserControlsEnum, ControlConstruct>();
         public UserControl currentControl = null;
-        IRepositoryService repositoryService;
         IProjectListService projectList;
         private Button[] workspaceButtons;
         bool IsShownToolTip1 = true;
@@ -19,7 +18,6 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
-            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             // Инициализация массива кнопок рабочего пространства
             workspaceButtons = new Button[] { button7, button8, button9, button10, button11 };
 

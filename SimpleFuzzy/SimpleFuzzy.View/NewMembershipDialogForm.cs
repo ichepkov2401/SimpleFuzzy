@@ -1,4 +1,5 @@
-﻿using SimpleFuzzy.Abstract;
+﻿using MetroFramework.Forms;
+using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 using System;
 using System.Collections.Generic;
@@ -12,21 +13,26 @@ using System.Windows.Forms;
 
 namespace SimpleFuzzy.View
 {
-    public partial class NewMembershipDialogForm : Form
+    public partial class NewMembershipDialogForm : MetroForm
     {
         IObjectSet ObjectSet { get; set; }
         FuzzyOperation FuzzyOperation { get; set; }
+        IAssemblyLoaderService assemblyLoaderService;
+
+        UserControl UserControl { get; set; }
         public NewMembershipDialogForm()
         {
             InitializeComponent();
-            GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI();
-            generationMembershipUI.Location = new Point(0, 20);
-            Controls.Add(generationMembershipUI);
         }
 
         public NewMembershipDialogForm(IObjectSet objectSet) : this()
         {
+            assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             ObjectSet = objectSet;
+            GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet);
+            generationMembershipUI.Location = new Point(0, 20);
+            UserControl = generationMembershipUI;
+            Controls.Add(generationMembershipUI);
         }
 
         public NewMembershipDialogForm(FuzzyOperation fuzzyOperation, IObjectSet objectSet) : this()
@@ -38,17 +44,24 @@ namespace SimpleFuzzy.View
 
         private void metroRadioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            Controls.RemoveAt(Controls.Count - 1);
+            Controls.Remove(UserControl);
             if (metroRadioButton1.Checked)
             {
-                GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI();
+                GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet);
                 generationMembershipUI.Location = new Point(15, 40);
+                UserControl = generationMembershipUI;
                 Controls.Add(generationMembershipUI);
             }
             else
             {
-                FuzzyOperationUI fuzzy = new FuzzyOperationUI(FuzzyOperation != null ? FuzzyOperation : new Model.FuzzyOperation(), ObjectSet, () => Close() );
+                if (FuzzyOperation == null)
+                {
+                    FuzzyOperation = new FuzzyOperation();
+                    assemblyLoaderService.UseAssembly += FuzzyOperation.UnloadHandler;
+                }
+                FuzzyOperationUI fuzzy = new FuzzyOperationUI(FuzzyOperation, ObjectSet, () => Close() );
                 fuzzy.Location = new Point(15, 40);
+                UserControl = fuzzy;
                 Controls.Add(fuzzy);
             }
         }

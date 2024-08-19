@@ -19,6 +19,18 @@ namespace SimpleFuzzy.Model
             this.isRedact = isRedact;
         }
 
+        public void UnloadingHandler(object sender, EventArgs e)
+        {
+            string context = sender as string;
+            if (baseSet.GetType().Assembly.Location == context)
+                baseSet = null;
+            func.RemoveAll(t => t.Item1.GetType().Assembly.Location == context);
+            heightCache.Clear();
+            typeCache.Clear();
+            areaOfInfluenceCache.Clear();
+            coreCache.Clear();
+        }
+
         public string Name
         {
             get { return name; }

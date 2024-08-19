@@ -8,11 +8,13 @@ namespace SimpleFuzzy.View
     public partial class FasificationForm : MetroUserControl
     {
         IRepositoryService repositoryService;
+        IAssemblyLoaderService assemblyLoaderService;
         LinguisticVariableUI variableUI;
         public FasificationForm()
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             FillTreeView();
             RefreshLinguisticVariableList();
         }
@@ -74,8 +76,8 @@ namespace SimpleFuzzy.View
                         MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-
                     LinguisticVariable newVariable =  new LinguisticVariable(true) { Name = variableName };
+                    assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
                     RefreshLinguisticVariableList();

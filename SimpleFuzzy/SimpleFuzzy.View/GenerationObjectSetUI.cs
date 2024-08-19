@@ -1,13 +1,19 @@
 ﻿using MetroFramework.Forms;
+using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
     public partial class GenerationObjectSetUI : MetroForm
     {
-        GenerationObjectSetService service = new GenerationObjectSetService();
+        IGenerationObjectSetService service;
+        ICompileService serviceCompile;
+        IProjectListService projectListService;
         public GenerationObjectSetUI()
         {
+            service = AutofacIntegration.GetInstance<IGenerationObjectSetService>();
+            serviceCompile = AutofacIntegration.GetInstance<ICompileService>();
+            projectListService = AutofacIntegration.GetInstance<IProjectListService>();
             InitializeComponent();
         }
 
@@ -41,6 +47,7 @@ namespace SimpleFuzzy.View
             {
                 string generatedCode = service.ReturnObjectSet(first, step, last);
                 txtGeneratedCode.Text = generatedCode;
+                serviceCompile.Compile(generatedCode, $"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{DateTime.Now}.dll");
             }
             catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }

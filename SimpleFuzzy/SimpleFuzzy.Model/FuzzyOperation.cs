@@ -1,4 +1,6 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Collections.Generic;
+using System;
 
 namespace SimpleFuzzy.Model
 {
@@ -15,12 +17,27 @@ namespace SimpleFuzzy.Model
             {"Нечеткое пересечение", (false, (x, y, z) => Math.Min(x.MembershipFunction(z), y.MembershipFunction(z)))}
         };
 
+        public void UnloadHandler(object sender, EventArgs e)
+        {
+            string context = sender as string;
+            if (Operand1 != null && Operand1.GetType().Assembly.FullName == context)
+                Operand1 = null;
+            if (Operand2 != null && Operand2.GetType().Assembly.FullName == context)
+                Operand2 = null;
+        }
+
         public Type InputType => Operand1.InputType;
 
         public bool Active { get => true; set => throw new NotImplementedException(); }
 
         public string Name { get; set; } = "";
 
-        public double MembershipFunction(object elem) => operations[Func].Item2(Operand1, Operand2, elem);
+        public double MembershipFunction(object elem)
+        {
+            if (Operand1 != null && Operand2 != null)
+                return operations[Func].Item2(Operand1, Operand2, elem);
+            else
+                return 0;
+        }
     }
 }

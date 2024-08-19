@@ -23,9 +23,6 @@ namespace SimpleFuzzy.View
 
         public LinguisticVariableUI()
         {
-            _repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
-            linguisticVariable = new LinguisticVariable(true);
-            oldName = linguisticVariable.Name;
             InitializeComponent();
         }
 
@@ -48,6 +45,7 @@ namespace SimpleFuzzy.View
             SetObjectSet();
             nameTextBox.Text = linguisticVariable.Name;
             if (linguisticVariable.baseSet == null)
+                if (baseSetComboBox.Items.Count > 0)
                 baseSetComboBox.SelectedIndex = 0;
             else
             {
@@ -284,13 +282,16 @@ namespace SimpleFuzzy.View
 
         private void FazificationObjectChaged(object sender, EventArgs e)
         {
-            linguisticVariable.BaseSet.ToFirst();
-            for (int i = 0; i < trackBar.Value; i++)
-                linguisticVariable.BaseSet.MoveNext();
-            nowObject = linguisticVariable.BaseSet.Extraction();
-            ObjectSetLabel.Text = nowObject.ToString();
-            FazificationDescription.Text = linguisticVariable.GetResultofFuzzy(linguisticVariable.Fazzification(nowObject));
-            UpdateGraph();
+            if (linguisticVariable.BaseSet != null)
+            {
+                linguisticVariable.BaseSet.ToFirst();
+                for (int i = 0; i < trackBar.Value; i++)
+                    linguisticVariable.BaseSet.MoveNext();
+                nowObject = linguisticVariable.BaseSet.Extraction();
+                ObjectSetLabel.Text = nowObject.ToString();
+                FazificationDescription.Text = linguisticVariable.GetResultofFuzzy(linguisticVariable.Fazzification(nowObject));
+                UpdateGraph();
+            }
         }
 
         private void GenerateMembershipFunction_Click(object sender, EventArgs e)

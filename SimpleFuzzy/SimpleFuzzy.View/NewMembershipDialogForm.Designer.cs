@@ -78,7 +78,7 @@
             Controls.Add(metroRadioButton2);
             Controls.Add(metroRadioButton1);
             Name = "NewMembershipDialogForm";
-            Text = "NewMembershipDialogForm";
+            //Text = "NewMembershipDialogForm";
             ResumeLayout(false);
             PerformLayout();
         }

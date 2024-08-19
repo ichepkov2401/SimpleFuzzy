@@ -3,6 +3,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SimpleFuzzy.View
@@ -12,6 +13,7 @@ namespace SimpleFuzzy.View
         string[] unos = { "Нечеткое дополнение" };
         string[] bins = { "Нечеткое пересечение" };
         IRepositoryService repositoryService;
+        IAssemblyLoaderService assemblyLoaderService;
         FuzzyOperation fuzzyOperation;
         IObjectSet ObjectSet { get; set; }
         private Dictionary<string, IMembershipFunction> termsName = new Dictionary<string, IMembershipFunction>();
@@ -22,8 +24,22 @@ namespace SimpleFuzzy.View
             InitializeComponent();
         }
 
+        private void UnloadHandler(object sender, EventArgs e)
+        {
+            string context = sender as string;
+            if (ObjectSet.GetType().Assembly.FullName == context)
+                ObjectSet = null;
+            for (int i = 0; i < termsName.Count; i++)
+            {
+                if (termsName.ElementAt(i).Value.GetType().Assembly.FullName == context)
+                    termsName.Remove(termsName.ElementAt(i).Key);
+            }
+        }
+
         public FuzzyOperationUI(FuzzyOperation fuzzyOperation, IObjectSet objectSet, Action close)
         {
+            assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
+            assemblyLoaderService.UseAssembly += UnloadHandler;
             this.ObjectSet = objectSet;
             this.fuzzyOperation = fuzzyOperation;
             oldName = fuzzyOperation.Name;
@@ -36,39 +52,42 @@ namespace SimpleFuzzy.View
             nameTextBox.Text = fuzzyOperation.Name;
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             var list = repositoryService.GetCollection<IMembershipFunction>();
-            ObjectSet.ToFirst();
-            foreach (var item in list)
+            if (ObjectSet != null)
             {
-                if (item.InputType != ObjectSet.Extraction().GetType()) continue;
-                Queue<IMembershipFunction> queue = new Queue<IMembershipFunction>();
-                queue.Enqueue(item);
-                bool check = false;
-                while (queue.Count > 0)
+                ObjectSet.ToFirst();
+                foreach (var item in list)
                 {
-                    var value = queue.Dequeue();
-                    if (value != null && value.GetType() == typeof(FuzzyOperation))
+                    if (item.InputType != ObjectSet.Extraction().GetType()) continue;
+                    Queue<IMembershipFunction> queue = new Queue<IMembershipFunction>();
+                    queue.Enqueue(item);
+                    bool check = false;
+                    while (queue.Count > 0)
                     {
-                        if (value == fuzzyOperation)
+                        var value = queue.Dequeue();
+                        if (value != null && value.GetType() == typeof(FuzzyOperation))
                         {
-                            check = true; break;
-                        }
-                        else
-                        {
-                            queue.Enqueue((value as FuzzyOperation).Operand1);
-                            queue.Enqueue((value as FuzzyOperation).Operand2);
+                            if (value == fuzzyOperation)
+                            {
+                                check = true; break;
+                            }
+                            else
+                            {
+                                queue.Enqueue((value as FuzzyOperation).Operand1);
+                                queue.Enqueue((value as FuzzyOperation).Operand2);
+                            }
                         }
                     }
-                }
-                string name = $"{item.Name}";
-                if (list.Count(t => t.Name == item.Name) > 1)
-                {
-                    name = $"{item.Name} - {item.GetType()}";
-                    if (list.Where(x => x.Name == item.Name).Count(x => x.GetType() == item.GetType()) > 1)
+                    string name = $"{item.Name}";
+                    if (list.Count(t => t.Name == item.Name) > 1)
                     {
-                        name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.FullName}";
+                        name = $"{item.Name} - {item.GetType()}";
+                        if (list.Where(x => x.Name == item.Name).Count(x => x.GetType() == item.GetType()) > 1)
+                        {
+                            name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.FullName}";
+                        }
                     }
+                    termsName.Add(item.Name, item);
                 }
-                termsName.Add(item.Name, item);
             }
             if (fuzzyOperation.Operand1 == null)
             {

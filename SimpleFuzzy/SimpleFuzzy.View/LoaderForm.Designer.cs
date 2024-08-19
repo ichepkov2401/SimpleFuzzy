@@ -124,11 +124,6 @@ namespace SimpleFuzzy.View
             dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.Scrollable = true;
             dllListView.ShowItemToolTips = true;
-            ListViewExtender extender = new ListViewExtender(dllListView);
-            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
-            buttonAction.Click += OnButtonActionClick;
-            buttonAction.FixedWidth = true;
-            extender.AddColumn(buttonAction);
             FileName.Text = "Имя";
             CloseButton.Text = "";
             // 

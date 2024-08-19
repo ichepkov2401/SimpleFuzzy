@@ -4,7 +4,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 {
     public class CraneSimulator : ISimulator
     {
-        public event EventHandler<SimulatorEventArgs> StateChanged;
+        public bool Active { get; set; }
+        public string Name { get; } = "Crane simulator";
+
         public double m = 1; // Масса маятника (кг)
         public double M = 5; // Масса каретки (кг)
         public double l = 2; // Длина маятника (м)
@@ -12,19 +14,17 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         public double k1 = 0.1; // Коэффициент торможения каретки
         public double k2 = 0.1; // Коэффициент затухания колебаний
         public double x = 0; // Положение каретки (м)
-        public double y = 0.1; // Угол отклонения маятника (рад)
+        public double y = 0; // Угол отклонения маятника (рад)
         public double f = 0; // Сила, действующая на каретку (Н)
         public double dx = 0;
         public double dy = 0;
         public double t = 0.01;
         public double beamSize = 20; // по умолчанию размер балки 20
         public double platformPosition = 0;
-        private const double MAX_ANGLE = Math.PI / 2;
+        public const double MAX_ANGLE = Math.PI / 2;
         private bool cargoLoaded = false;
 
-        public UserControl GetVisualObject() => new VisualCrane { craneSimulator = this };
-
-        public void SetBeamSize(double size) { beamSize = size; StateChanged?.Invoke(this, new SimulatorEventArgs()); }
+        public object GetVisualObject() => new FromOfSimulator(this);
 
         public void Step()
         {
@@ -37,46 +37,6 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
             // Ограничение движения каретки
             x = Math.Max(0, Math.Min(beamSize, x));
-
-            CheckEmergencySituation();
-            StateChanged?.Invoke(this, new SimulatorEventArgs());
         }
-
-        private void CheckEmergencySituation()
-        {
-            if (x < 0 || x >= beamSize || Math.Abs(y) >= MAX_ANGLE) { EmergencyStop(); return; }
-        }
-
-        private void EmergencyStop()
-        {
-            string message = (x < 0 || x >= beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
-            Reset();
-            StateChanged?.Invoke(this, new SimulatorEventArgs(message, true));
-        }
-
-        public void Reset(double initialX = 0, double initialY = 0.1, double initialPlatformPosition = 0)
-        {
-            x = initialX;
-            y = initialY;
-            dx = dy = f = 0;
-            platformPosition = initialPlatformPosition;
-            StateChanged?.Invoke(this, new SimulatorEventArgs());
-        }
-
-        public void ApplyForce(double force) => f = force;
-
-        public double GetNormalizedPosition() { return x / beamSize; }
-    }
-}
-
-public class SimulatorEventArgs : EventArgs
-{
-    public string Message { get; }
-    public bool IsEmergency { get; }
-
-    public SimulatorEventArgs(string message = "", bool isEmergency = false)
-    {
-        Message = message;
-        IsEmergency = isEmergency;
     }
 }

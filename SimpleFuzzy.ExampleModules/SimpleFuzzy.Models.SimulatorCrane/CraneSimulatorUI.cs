@@ -21,22 +21,29 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
             context = BufferedGraphicsManager.Current;
             grafx = context.Allocate(CreateGraphics(), DisplayRectangle);
-
             var assembly = Assembly.GetExecutingAssembly();
-
-            string spritesPath = Path.Combine(System.Windows.Forms.Application.StartupPath, "..", "..", "assets", "sprites");
-            backgroundImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "port2.png"));
-            cartImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "carriage.png"));
-            containerImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cable and weight.png"));
-            constructImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "construct.png"));
-            cargoImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cargo.png"));
-            platformImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "platform.png"));
+            try
+            {
+                string spritesPath = Path.Combine(System.Windows.Forms.Application.StartupPath, "assets", "sprites");
+                backgroundImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "port2.png"));
+                cartImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "carriage.png"));
+                containerImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cable and weight.png"));
+                constructImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "construct.png"));
+                cargoImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cargo.png"));
+                platformImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "platform.png"));
+            }
+            catch { }
+            Paint += OnPaint;
+            Dock = DockStyle.Fill;
         }
 
-
-        protected override void OnPaint(PaintEventArgs e)
+        public VisualCrane(CraneSimulator crane) : this()
         {
-            base.OnPaint(e);
+            craneSimulator = crane;
+        }
+
+        protected void OnPaint(object sender, PaintEventArgs e)
+        {
             var g = e.Graphics;
             g.Clear(Color.FromArgb(135, 206, 235)); // Очищаем весь экран цветом неба
 

@@ -1,42 +1,63 @@
 ﻿using SimpleFuzzy.Abstract;
 
-
 namespace SimpleFuzzy.Models.SimulatorCrane
 {
     public partial class FromOfSimulator : UserControl
     {
         private CraneSimulator simulator;
+        private VisualCrane visualCrane;
         private System.Windows.Forms.Timer timer;
         private bool isSimulationRunning = false;
 
         public FromOfSimulator()
         {
             InitializeComponent();
-            SetupSimulator();
             SetupControls();
 
             timer = new System.Windows.Forms.Timer { Interval = 16 }; // ~60 FPS
-            timer.Tick += (s, e) => simulator.Step();
+            timer.Tick += TimerTick;
         }        
 
-        private void SetupSimulator()
+        public FromOfSimulator(CraneSimulator crane) 
         {
-            simulator = new CraneSimulator();
-            simulator.StateChanged += OnSimulatorStateChanged;
-
+            simulator = crane;
+            InitializeComponent();
+            SetupControls();
+            visualCrane = new VisualCrane(crane);
+            cranePanel.Controls.Add(visualCrane);
             timer = new System.Windows.Forms.Timer { Interval = 16 }; // ~60 FPS
-            timer.Tick += (s, e) => simulator.Step();
+            timer.Tick += TimerTick;
         }
 
-        // Изменения значений
-        private void forceTrackBar_ValueChanged(object sender, EventArgs e) => simulator.ApplyForce(forceTrackBar.Value / 10.0);
+        private void TimerTick(object sender, EventArgs e)
+        {
+            simulator.Step();
+            if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
+            {
+                timer.Stop();
+                string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
+                MessageBox.Show(message); 
+                Reset();
+            }
+            visualCrane.Invalidate();
+        }
+        public void Reset()
+        {
+            simulator.x = (double)numInitialPosition.Value;
+            simulator.y = (double)numInitialAngle.Value * Math.PI / 180;
+            simulator.dx = simulator.dy = simulator.f = 0;
+            simulator.platformPosition = (double)numPlatformPosition.Value;
+            visualCrane.Invalidate();
+        }
+
+        // Изменения значений 
+        private void forceTrackBar_ValueChanged(object sender, EventArgs e) => simulator.f = forceTrackBar.Value;
         private void numBeamSize_ValueChanged(object sender, EventArgs e)
         {
-            simulator.SetBeamSize((double)numBeamSize.Value);
+            simulator.beamSize = (double)numBeamSize.Value;
             numInitialPosition.Maximum = numBeamSize.Value;
             numPlatformPosition.Maximum = Math.Min(numBeamSize.Value * 0.525M, numBeamSize.Value - 1);
             if (numPlatformPosition.Value > numPlatformPosition.Maximum) numPlatformPosition.Value = numPlatformPosition.Maximum;
-
             Invalidate();
         }
         private void numPlatformPosition_ValueChanged(object sender, EventArgs e)
@@ -45,16 +66,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             Invalidate();
         }
 
-        private void UpdateVisuals()
-        {
-            numPlatformPosition.Value = (decimal)simulator.platformPosition;
-            numInitialPosition.Value = (decimal)simulator.x;
-            numInitialAngle.Value = (decimal)(simulator.y * 180 / Math.PI);
-            forceTrackBar.Value = (int)(simulator.f * 10);
-
-            Invalidate();
-        }
-
+        // потом доработать
         private void CheckCargoLoading()
         {
             double containerBottom = simulator.y + simulator.l * Math.Cos(simulator.y);
@@ -64,23 +76,11 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 simulator.x >= simulator.platformPosition &&
                 simulator.x <= simulator.platformPosition + 5 &&
                 Math.Abs(simulator.y) < 0.1 &&
-                Math.Abs(simulator.GetNormalizedPosition()) < 0.1)
+                Math.Abs(simulator.x / simulator.beamSize) < 0.1)
             {
                 MessageBox.Show("Груз успешно установлен на платформу!", "Успешная загрузка", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                simulator.Reset();
+                Reset();
             }
-        }
-
-
-        private void OnSimulatorStateChanged(object sender, EventArgs e)
-        {
-            if (e is SimulatorEventArgs args)
-            {
-                if (args.IsEmergency) MessageBox.Show(args.Message, "Аварийная ситуация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else if (!string.IsNullOrEmpty(args.Message)) MessageBox.Show(args.Message, "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            UpdateVisuals();
-            CheckCargoLoading();
         }
 
         private void SetupControls()
@@ -148,12 +148,12 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             numLengthPendulum.Value = (decimal)simulator.l;
             numDampingCart.Value = (decimal)simulator.k1;
             numDampingPendulum.Value = (decimal)simulator.k2;
-            numInitialPosition.Value = 0;
-            numInitialAngle.Value = (decimal)(simulator.y * 180 / Math.PI);
-            numBeamSize.Value = 20;
+            numInitialPosition.Value = (decimal)simulator.x;
+            numInitialAngle.Value = (decimal)simulator.y;
+            numBeamSize.Value = (decimal)simulator.beamSize;
 
 
-            numPlatformPosition.Value = 0;
+            numPlatformPosition.Value = (decimal)simulator.platformPosition;
             numPlatformPosition.Minimum = 0;
             numPlatformPosition.Maximum = numBeamSize.Value * 0.525M;
             numInitialPosition.Minimum = 0;
@@ -192,10 +192,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         private void btnReset_Click(object sender, EventArgs e)
         {
             timer.Stop(); 
-            simulator.Reset();
+            Reset();
             isSimulationRunning = false;
             EnableControls();
-            SetInitialValues();
             forceTrackBar.Value = 0;
         }
 

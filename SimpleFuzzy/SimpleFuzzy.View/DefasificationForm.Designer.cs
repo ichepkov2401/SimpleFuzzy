@@ -28,128 +28,171 @@
         /// </summary>
         private void InitializeComponent()
         {
-            comboBox1 = new ComboBox();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
-            radioButton3 = new RadioButton();
-            radioButton4 = new RadioButton();
-            radioButton5 = new RadioButton();
-            radioButton6 = new RadioButton();
-            radioButton7 = new RadioButton();
+            OutputVariables = new ComboBox();
+            MaxProd = new RadioButton();
+            MaxMin = new RadioButton();
+            MaximumMethod = new RadioButton();
+            MethodAverageMax = new RadioButton();
+            MetodLeftLineDef = new RadioButton();
+            MethodRightLineDef = new RadioButton();
+            MethodSenterGravity = new RadioButton();
+            MethodsOfInference = new GroupBox();
+            MethodsOfDefasification = new GroupBox();
+            DefasificationResult = new Label();
+            MethodsOfInference.SuspendLayout();
+            MethodsOfDefasification.SuspendLayout();
             SuspendLayout();
             // 
-            // comboBox1
+            // OutputVariables
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(44, 37);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(151, 28);
-            comboBox1.TabIndex = 0;
+            OutputVariables.FormattingEnabled = true;
+            OutputVariables.Location = new Point(3, 3);
+            OutputVariables.Name = "OutputVariables";
+            OutputVariables.Size = new Size(151, 28);
+            OutputVariables.TabIndex = 0;
+            OutputVariables.SelectedIndexChanged += OutputVariables_SelectedIndexChanged;
             // 
-            // radioButton1
+            // MaxProd
             // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(410, 108);
-            radioButton1.Name = "Max-Prod";
-            radioButton1.Size = new Size(117, 24);
-            radioButton1.TabIndex = 1;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Max-Prod";
-            radioButton1.UseVisualStyleBackColor = true;
+            MaxProd.AutoSize = true;
+            MaxProd.Location = new Point(10, 20);
+            MaxProd.Name = "MaxProd";
+            MaxProd.Size = new Size(95, 24);
+            MaxProd.TabIndex = 1;
+            MaxProd.TabStop = true;
+            MaxProd.Text = "Max-Prod";
+            MaxProd.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // MaxMin
             // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(410, 138);
-            radioButton2.Name = "Max-Min";
-            radioButton2.Size = new Size(117, 24);
-            radioButton2.TabIndex = 2;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "Max-Min";
-            radioButton2.UseVisualStyleBackColor = true;
+            MaxMin.AutoSize = true;
+            MaxMin.Location = new Point(10, 45);
+            MaxMin.Name = "MaxMin";
+            MaxMin.Size = new Size(89, 24);
+            MaxMin.TabIndex = 2;
+            MaxMin.TabStop = true;
+            MaxMin.Text = "Max-Min";
+            MaxMin.UseVisualStyleBackColor = true;
             // 
-            // radioButton3
+            // MaximumMethod
             // 
-            radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(533, 108);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(117, 24);
-            radioButton3.TabIndex = 3;
-            radioButton3.TabStop = true;
-            radioButton3.Text = "radioButton3";
-            radioButton3.UseVisualStyleBackColor = true;
+            MaximumMethod.AutoSize = true;
+            MaximumMethod.Location = new Point(10, 20);
+            MaximumMethod.Name = "MaximumMethod";
+            MaximumMethod.Size = new Size(157, 24);
+            MaximumMethod.TabIndex = 3;
+            MaximumMethod.TabStop = true;
+            MaximumMethod.Text = "Метод максимума";
+            MaximumMethod.UseVisualStyleBackColor = true;
             // 
-            // radioButton4
+            // MethodAverageMax
             // 
-            radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(533, 138);
-            radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(117, 24);
-            radioButton4.TabIndex = 4;
-            radioButton4.TabStop = true;
-            radioButton4.Text = "radioButton4";
-            radioButton4.UseVisualStyleBackColor = true;
+            MethodAverageMax.AutoSize = true;
+            MethodAverageMax.Location = new Point(10, 70);
+            MethodAverageMax.Name = "MethodAverageMax";
+            MethodAverageMax.Size = new Size(304, 24);
+            MethodAverageMax.TabIndex = 4;
+            MethodAverageMax.TabStop = true;
+            MethodAverageMax.Text = "Метод среднего значения максимумов";
+            MethodAverageMax.UseVisualStyleBackColor = true;
             // 
-            // radioButton5
+            // MetodLeftLineDef
             // 
-            radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(533, 168);
-            radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(117, 24);
-            radioButton5.TabIndex = 5;
-            radioButton5.TabStop = true;
-            radioButton5.Text = "radioButton5";
-            radioButton5.UseVisualStyleBackColor = true;
+            MetodLeftLineDef.AutoSize = true;
+            MetodLeftLineDef.Location = new Point(10, 95);
+            MetodLeftLineDef.Name = "MetodLeftLineDef";
+            MetodLeftLineDef.Size = new Size(316, 24);
+            MetodLeftLineDef.TabIndex = 5;
+            MetodLeftLineDef.TabStop = true;
+            MetodLeftLineDef.Text = "Метод линейной дефазификации (слева)";
+            MetodLeftLineDef.UseVisualStyleBackColor = true;
             // 
-            // radioButton6
+            // MethodRightLineDef
             // 
-            radioButton6.AutoSize = true;
-            radioButton6.Location = new Point(533, 198);
-            radioButton6.Name = "radioButton6";
-            radioButton6.Size = new Size(117, 24);
-            radioButton6.TabIndex = 6;
-            radioButton6.TabStop = true;
-            radioButton6.Text = "radioButton6";
-            radioButton6.UseVisualStyleBackColor = true;
+            MethodRightLineDef.AutoSize = true;
+            MethodRightLineDef.Location = new Point(10, 120);
+            MethodRightLineDef.Name = "MethodRightLineDef";
+            MethodRightLineDef.Size = new Size(326, 24);
+            MethodRightLineDef.TabIndex = 6;
+            MethodRightLineDef.TabStop = true;
+            MethodRightLineDef.Text = "Метод линейной дефазификации (справа)";
+            MethodRightLineDef.UseVisualStyleBackColor = true;
             // 
-            // radioButton7
+            // MethodSenterGravity
             // 
-            radioButton7.AutoSize = true;
-            radioButton7.Location = new Point(533, 228);
-            radioButton7.Name = "radioButton7";
-            radioButton7.Size = new Size(117, 24);
-            radioButton7.TabIndex = 7;
-            radioButton7.TabStop = true;
-            radioButton7.Text = "radioButton7";
-            radioButton7.UseVisualStyleBackColor = true;
+            MethodSenterGravity.AutoSize = true;
+            MethodSenterGravity.Location = new Point(10, 45);
+            MethodSenterGravity.Name = "MethodSenterGravity";
+            MethodSenterGravity.Size = new Size(186, 24);
+            MethodSenterGravity.TabIndex = 7;
+            MethodSenterGravity.TabStop = true;
+            MethodSenterGravity.Text = "Метод центра тяжести";
+            MethodSenterGravity.UseVisualStyleBackColor = true;
+            // 
+            // MethodsOfInference
+            // 
+            MethodsOfInference.Controls.Add(MaxProd);
+            MethodsOfInference.Controls.Add(MaxMin);
+            MethodsOfInference.Location = new Point(160, 3);
+            MethodsOfInference.Name = "MethodsOfInference";
+            MethodsOfInference.Size = new Size(172, 77);
+            MethodsOfInference.TabIndex = 8;
+            MethodsOfInference.TabStop = false;
+            MethodsOfInference.Text = "Методы инференции";
+            // 
+            // MethodsOfDefasification
+            // 
+            MethodsOfDefasification.Controls.Add(MaximumMethod);
+            MethodsOfDefasification.Controls.Add(MethodAverageMax);
+            MethodsOfDefasification.Controls.Add(MetodLeftLineDef);
+            MethodsOfDefasification.Controls.Add(MethodRightLineDef);
+            MethodsOfDefasification.Controls.Add(MethodSenterGravity);
+            MethodsOfDefasification.Location = new Point(338, 3);
+            MethodsOfDefasification.Name = "MethodsOfDefasification";
+            MethodsOfDefasification.Size = new Size(338, 151);
+            MethodsOfDefasification.TabIndex = 9;
+            MethodsOfDefasification.TabStop = false;
+            MethodsOfDefasification.Text = "Методы дефазификации";
+            // 
+            // DefasificationResult
+            // 
+            DefasificationResult.AutoSize = true;
+            DefasificationResult.Location = new Point(338, 190);
+            DefasificationResult.Name = "DefasificationResult";
+            DefasificationResult.Size = new Size(197, 20);
+            DefasificationResult.TabIndex = 10;
+            DefasificationResult.Text = "Результат дефазификации: ";
             // 
             // DefasificationForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(radioButton7);
-            Controls.Add(radioButton6);
-            Controls.Add(radioButton5);
-            Controls.Add(radioButton4);
-            Controls.Add(radioButton3);
-            Controls.Add(radioButton2);
-            Controls.Add(radioButton1);
-            Controls.Add(comboBox1);
+            Controls.Add(DefasificationResult);
+            Controls.Add(MethodsOfDefasification);
+            Controls.Add(MethodsOfInference);
+            Controls.Add(OutputVariables);
             Name = "DefasificationForm";
             Size = new Size(870, 477);
+            MethodsOfInference.ResumeLayout(false);
+            MethodsOfInference.PerformLayout();
+            MethodsOfDefasification.ResumeLayout(false);
+            MethodsOfDefasification.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private ComboBox comboBox1;
-        private RadioButton radioButton1;
-        private RadioButton radioButton2;
-        private RadioButton radioButton3;
-        private RadioButton radioButton4;
-        private RadioButton radioButton5;
-        private RadioButton radioButton6;
-        private RadioButton radioButton7;
+        private ComboBox OutputVariables;
+        private RadioButton MaxProd;
+        private RadioButton MaxMin;
+        private RadioButton MaximumMethod;
+        private RadioButton MethodAverageMax;
+        private RadioButton MetodLeftLineDef;
+        private RadioButton MethodRightLineDef;
+        private RadioButton MethodSenterGravity;
+        private GroupBox MethodsOfInference;
+        private GroupBox MethodsOfDefasification;
+        private Label DefasificationResult;
     }
 }

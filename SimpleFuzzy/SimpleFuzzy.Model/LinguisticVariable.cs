@@ -1,4 +1,5 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Xml;
 
 namespace SimpleFuzzy.Model
 {
@@ -8,19 +9,21 @@ namespace SimpleFuzzy.Model
         public IObjectSet baseSet; // Базовое множество
         public List<IMembershipFunction> func = new List<IMembershipFunction>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
-        public double? height; // Высота нечеткого множества
-        public string type; // Тип нечеткого множества
-        public List<object> areaOfInfluence; // Область влияния
-        public object core; // Ядро нечеткого множества
-        public List<object> section; // Сечение нечеткого множества
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
-        private Dictionary<IMembershipFunction, object> coreCache = new Dictionary<IMembershipFunction, object>();
+        private Dictionary<IMembershipFunction, List<object>> coreCache = new Dictionary<IMembershipFunction, List<object>>();
 
         public LinguisticVariable(bool isRedact)
         {
             this.isRedact = isRedact;
+        }
+        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<IMembershipFunction> func)
+        {
+            this.name = name;
+            this.isRedact = isRedact;
+            this.baseSet = baseSet;
+            this.func = func;
         }
 
         public string Name
@@ -80,6 +83,7 @@ namespace SimpleFuzzy.Model
             {
                 toStringList[i] = (func[i].Name, list[i]);
             }
+            toStringList = toStringList.OrderByDescending(x => x.Item2).ToArray();
             double sum = 0;
             foreach (var zeroValue in toStringList)
             {
@@ -92,23 +96,24 @@ namespace SimpleFuzzy.Model
             var listofRange = new (string, double[])[8]
             {
                 ("Точно", new double[2]{1.01, 1}),
-                ("Почти точно", new double[2] { 0.99, 0.9 }),
-                ("Скорее", new double[2] { 0.89, 0.8 }),
-                ("Не совсем", new double[2] { 0.79, 0.6 }),
-                ("Наполовину", new double[2] { 0.59, 0.4 }),
-                ("Немного", new double[2] { 0.39, 0.2 }),
-                ("Совсем немного", new double[2] { 0.19, 0.1 }),
-                ("Едва ли", new double[2] { 0.09, 0.01 })
+                ("Почти точно", new double[2] { 1, 0.9 }),
+                ("Скорее", new double[2] { 0.9, 0.8 }),
+                ("Не совсем", new double[2] { 0.8, 0.6 }),
+                ("Наполовину", new double[2] { 0.6, 0.4 }),
+                ("Немного", new double[2] { 0.4, 0.2 }),
+                ("Совсем немного", new double[2] { 0.2, 0.1 }),
+                ("Едва ли", new double[2] { 0.1, 0.01 })
             };
             int countTerms = 0;
-            foreach (var range in listofRange)
+            foreach (var pair in toStringList)
             {
-                foreach (var pair in toStringList)
+                foreach (var range in listofRange)
                 {
-                    if (range.Item2[0] >= pair.Item2 && pair.Item2 >= range.Item2[1])
+                    if (range.Item2[0] > pair.Item2 && pair.Item2 >= range.Item2[1])
                     {
                         result += $"{range.Item1} {pair.Item1}, ";
                         countTerms++;
+                        break;
                     }
                 }
             }
@@ -122,134 +127,161 @@ namespace SimpleFuzzy.Model
             }
             return result;
         }
+
         //Расчет свойств нечеткого множества
-        public void CalculationFuzzySetProperties(IMembershipFunction term,IObjectSet set, double sectionHeight) {
+        public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 
             if (!heightCache.ContainsKey(term))
             {
-                heightCache[term] = CalculateHeight(term, set);
+                heightCache[term] = CalculateHeight(term);
             }
-            height = heightCache[term];
 
             if (!typeCache.ContainsKey(term))
             {
-                typeCache[term] = CalculateType(term, set);
+                typeCache[term] = CalculateType(term);
             }
-            type = typeCache[term];
-
+          
             if (!areaOfInfluenceCache.ContainsKey(term))
             {
-                areaOfInfluenceCache[term] = CalculateAreaOfInfluence(term, set);
+                areaOfInfluenceCache[term] = CalculateAreaOfInfluence(term);
             }
-            areaOfInfluence = areaOfInfluenceCache[term];
-
+            
             if (!coreCache.ContainsKey(term))
             {
-                coreCache[term] = CalculateCore(term, set);
+                coreCache[term] = CalculateCore(term);
             }
-            core = coreCache[term];
 
+            List<object> section = CalculateSection(term, sectionHeight);
 
-            section = CalculateSection(term, sectionHeight, set);
+            return Tuple.Create( heightCache[term], typeCache[term], areaOfInfluenceCache[term], coreCache[term], section);
         }
-        private double CalculateHeight(IMembershipFunction term, IObjectSet set) {
+        private double CalculateHeight(IMembershipFunction term) {
             double maxHeight = 0;
-            set.ToFirst();
-            while (!set.IsEnd())
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
             {
-                double membershipValue = term.MembershipFunction(set.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet.Extraction());
                 if (membershipValue > maxHeight)
                 {
                     maxHeight = membershipValue;
                 }
-                set.MoveNext();
+                baseSet.MoveNext();
             }
             return maxHeight;
         }
 
-        private string CalculateType(IMembershipFunction term, IObjectSet set)
+        private string CalculateType(IMembershipFunction term)
         {
-            if (height == 1)
+            bool allZero = true;
+            bool allOne = true;
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
+            {
+                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                if (membershipValue != 0)
+                {
+                    allZero = false;
+                }
+                if (membershipValue != 1)
+                {
+                    allOne = false;
+                }
+                baseSet.MoveNext();
+            }
+            if (allZero)
+            {
+                return "Пустое";
+            }
+            else if (allOne)
+            {
+                return "Универсальное";
+            }
+            else if (heightCache[term] == 1)
             {
                 return "Нормальное";
             }
             else
             {
-                bool allZero = true;
-                bool allOne = true;
-                set.ToFirst();
-                while (!set.IsEnd())
-                {
-                    double membershipValue = term.MembershipFunction(set.Extraction());
-                    if (membershipValue != 0)
-                    {
-                        allZero = false;
-                    }
-                    if (membershipValue != 1)
-                    {
-                        allOne = false;
-                    }
-                    set.MoveNext();
-                }
-                if (allZero)
-                {
-                    return "Пустое";
-                }
-                else if (allOne)
-                {
-                    return "Универсальное";
-                }
-                else
-                {
-                    return "Субнормальное";
-                }
+                return "Субнормальное";
             }
         }
 
-        private List<object> CalculateAreaOfInfluence(IMembershipFunction term, IObjectSet set)
+        private List<object> CalculateAreaOfInfluence(IMembershipFunction term)
         {
             var areaOfInfluence = new List<object>();
-            set.ToFirst();
-            while (!set.IsEnd())
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
             {
-                double membershipValue = term.MembershipFunction(set.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet.Extraction());
                 if (membershipValue > 0)
                 {
-                    areaOfInfluence.Add(set.Extraction());
+                    areaOfInfluence.Add(baseSet.Extraction());
                 }
-                set.MoveNext();
+                baseSet.MoveNext();
             }
             return areaOfInfluence;
         }
 
-        private object CalculateCore(IMembershipFunction term, IObjectSet set)
+        private List<object> CalculateCore(IMembershipFunction term)
         {
-            set.ToFirst();
-            while (!set.IsEnd())
+            List<object> result = new List<object>();
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
             {
-                double membershipValue = term.MembershipFunction(set.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet.Extraction());
                 if (membershipValue == 1)
                 {
-                    return set.Extraction();
+                    result.Add(baseSet.Extraction());
                 }
-                set.MoveNext();
+                baseSet.MoveNext();
             }
-            return null; // Отсутствие ядра
+            return result;
         }
-        private List<object> CalculateSection(IMembershipFunction term, double sectionHeight, IObjectSet set)
+        private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {
             var section = new List<object>();
-            set.ToFirst();
-            while (!set.IsEnd())
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
             {
-                double membershipValue = term.MembershipFunction(set.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet.Extraction());
                 if (membershipValue > sectionHeight)
                 {
-                    section.Add(set.Extraction());
+                    section.Add(baseSet.Extraction());
                 }
-                set.MoveNext();
+                baseSet.MoveNext();
             }
             return section;
+        }
+        public void Save(ref XmlNode parentNode)
+        {
+            if (parentNode == null)
+            {
+                XmlDocument doc = new XmlDocument();
+                parentNode = doc.CreateElement("ListofLinguisticVariable");
+            }
+            XmlNode linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
+            parentNode.AppendChild(linguisticNode);
+
+            XmlNode nameNode = parentNode.OwnerDocument.CreateElement("name");
+            nameNode.InnerText = name;
+            linguisticNode.AppendChild(nameNode);
+
+            XmlNode redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
+            redactNode.InnerText = isRedact.ToString();
+            linguisticNode.AppendChild(redactNode);
+
+            XmlNode objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
+            objectsetNode.InnerText = baseSet.GetType().FullName + " " + baseSet.GetType().Assembly.FullName;
+            linguisticNode.AppendChild(objectsetNode);
+
+            XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
+            foreach (var function in func)
+            {
+                XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
+                functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
+                funcNode.AppendChild(functionNode);
+            }
+            linguisticNode.AppendChild(funcNode);
         }
     }
 }

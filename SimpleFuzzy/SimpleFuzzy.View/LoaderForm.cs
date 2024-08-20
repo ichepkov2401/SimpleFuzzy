@@ -16,6 +16,11 @@ namespace SimpleFuzzy.View
         public LoaderForm()
         {
             InitializeComponent();
+            ListViewExtender extender = new ListViewExtender(dllListView);
+            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
+            buttonAction.Click += OnButtonActionClick;
+            buttonAction.FixedWidth = true;
+            extender.AddColumn(buttonAction);
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();

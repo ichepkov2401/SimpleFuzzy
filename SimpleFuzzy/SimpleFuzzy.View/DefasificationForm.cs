@@ -7,6 +7,7 @@ namespace SimpleFuzzy.View
     public partial class DefasificationForm : MetroUserControl
     {
         IRepositoryService repositoryService;
+        DefasificationUI defasificationUI;
         public DefasificationForm()
         {
             InitializeComponent();
@@ -24,7 +25,17 @@ namespace SimpleFuzzy.View
 
         private void OutputVariables_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (defasificationUI != null)
+            {
+                Controls.Remove(defasificationUI);
+                defasificationUI.Dispose();
 
+            }
+            var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == OutputVariables.SelectedItem.ToString());
+            defasificationUI = new DefasificationUI(variable);
+            Controls.Add(defasificationUI);
+            defasificationUI.Location = new Point(325, 0);
+                
         }
     }
 }

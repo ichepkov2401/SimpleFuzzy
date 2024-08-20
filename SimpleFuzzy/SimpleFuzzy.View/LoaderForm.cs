@@ -16,6 +16,7 @@ namespace SimpleFuzzy.View
         public LoaderForm()
         {
             InitializeComponent();
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
             ListViewExtender extender = new ListViewExtender(dllListView);
             ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
             buttonAction.Click += OnButtonActionClick;

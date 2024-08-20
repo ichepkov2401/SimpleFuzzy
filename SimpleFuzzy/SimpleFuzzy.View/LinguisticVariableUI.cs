@@ -58,7 +58,7 @@ namespace SimpleFuzzy.View
 
         private void SetObjectSet()
         {
-            var baseSets = _repositoryService.GetCollection<IObjectSet>();
+            var baseSets = _repositoryService.GetCollection<IObjectSet>().Where(x => x.Active);
             foreach (var baseSet in baseSets)
             {
                 string name = baseSet.Name;
@@ -80,7 +80,7 @@ namespace SimpleFuzzy.View
             termsName.Clear();
             termsComboBox.Items.Clear();
             termsListView.Items.Clear();
-            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x => x.InputType.IsAssignableFrom(objectSetType));
+            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x => x.Active && x.InputType.IsAssignableFrom(objectSetType));
             foreach (var term in terms)
             {
                 string name = term.Name;
@@ -246,6 +246,7 @@ namespace SimpleFuzzy.View
                 var term = termsName[e.Item.Text];
                 linguisticVariable.DeleteTerm(term);
                 SetTerms();
+                termView_SelectedIndexChanged(sender, null);
             }
         }
 
@@ -255,6 +256,7 @@ namespace SimpleFuzzy.View
             var term = termsName[e.Item.Text];
             linguisticVariable.SetColor(term, colorDialog.Color);
             SetTerms();
+            termView_SelectedIndexChanged(sender, null);
         }
 
         private void termView_SelectedIndexChanged(object sender, EventArgs e)

@@ -28,8 +28,8 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         public void Step()
         {
-            double ax = (m * l * l * dy * dy * Math.Sin(y) + l * f - m * g * l * Math.Sin(y) * Math.Cos(y) - (k1 * dx)) / (l * M + l * m * Math.Sin(y) * Math.Sin(y));
-            double ay = (-(M + m) * g * Math.Sin(y) - m * l * dy * dy * Math.Sin(y) * Math.Cos(y) - f * Math.Cos(y) - (k2 * dy)) / (l * M + l * m * Math.Sin(y) * Math.Sin(y));
+            double ax = (m * l * l * dy * dy * Math.Sin(y) + l * f - m * g * l * Math.Sin(y) * Math.Cos(y)) / (l * M + l * m * Math.Sin(y) * Math.Sin(y)) - (dx * k1);
+            double ay = (-(M + m) * g * Math.Sin(y) - m * l * dy * dy * Math.Sin(y) * Math.Cos(y) - f * Math.Cos(y)) / (l * M + l * m * Math.Sin(y) * Math.Sin(y)) - (dy * k2);
             dx += ax * t;
             dy += ay * t;
             x += dx * t;

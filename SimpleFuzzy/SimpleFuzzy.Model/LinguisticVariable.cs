@@ -7,6 +7,7 @@ namespace SimpleFuzzy.Model
     public class LinguisticVariable
     {
         public string name; // Имя лингвистической переменной
+        public bool isInput; // входная или выходная переменная
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
@@ -43,6 +44,12 @@ namespace SimpleFuzzy.Model
         {
             get { return name; }
             set { if (isRedact == true) { name = value; } }
+        }
+
+        public bool IsInput
+        {
+            get { return isInput; }
+            set { if (isRedact == true) { isInput = value; } }
         }
 
         public IObjectSet BaseSet

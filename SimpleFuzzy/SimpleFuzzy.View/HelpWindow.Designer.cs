@@ -102,6 +102,7 @@
             MinimizeBox = false;
             MinimumSize = new Size(272, 335);
             Name = "HelpWindow";
+            Padding = new Padding(0, 60, 0, 0);
             SizeGripStyle = SizeGripStyle.Hide;
             Text = "Справка";
             ResumeLayout(false);

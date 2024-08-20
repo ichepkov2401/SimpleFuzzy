@@ -33,7 +33,6 @@
             // 
             // outputVariableComboBox
             // 
-            outputVariableComboBox.FormattingEnabled = true;
             outputVariableComboBox.Location = new Point(420, 72);
             outputVariableComboBox.Name = "outputVariableComboBox";
             outputVariableComboBox.Size = new Size(194, 28);

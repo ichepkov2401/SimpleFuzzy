@@ -34,7 +34,7 @@ namespace SimpleFuzzy.Model
 
         public double MembershipFunction(object elem)
         {
-            if (Operand1 != null && Operand2 != null)
+            if (Operand1 != null && (Operand2 != null || operations[Func].Item1))
                 return operations[Func].Item2(Operand1, Operand2, elem);
             else
                 return 0;

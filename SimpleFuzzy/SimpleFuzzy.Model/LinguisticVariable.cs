@@ -19,7 +19,7 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
         }
-        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<IMembershipFunction> func)
+        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
             this.name = name;
             this.isRedact = isRedact;
@@ -309,8 +309,17 @@ namespace SimpleFuzzy.Model
             foreach (var function in func)
             {
                 XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
-                functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
+                functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
                 funcNode.AppendChild(functionNode);
+                XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
+                moduleNameXML.Value = function.Item2.R.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
+                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
+                moduleNameXML.Value = function.Item2.G.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
+                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
+                moduleNameXML.Value = function.Item2.B.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
             }
             linguisticNode.AppendChild(funcNode);
         }

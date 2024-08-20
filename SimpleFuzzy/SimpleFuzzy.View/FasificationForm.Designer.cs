@@ -73,6 +73,7 @@ namespace SimpleFuzzy.View
             listView1.TabIndex = 1;
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = System.Windows.Forms.View.Details;
+            listView1.SelectedIndexChanged += listView1_SelectedIndexChanged;
             // 
             // button1
             // 

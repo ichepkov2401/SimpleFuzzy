@@ -132,7 +132,11 @@ namespace SimpleFuzzy.View
             {
                 operations.DataSource = bins;
                 operand2.Enabled = true;
-                if (operand2.Items.Count > 0) operand2.SelectedIndex = 0;
+                if (operand2.Items.Count > 0)
+                {
+                    operand2.SelectedIndex = 0;
+                    fuzzyOperation.Operand2 = termsName[(string)operand2.SelectedItem];
+                }
             }
             operations.SelectedIndex = 0;
             operand1_SelectedIndexChanged(sender, e);

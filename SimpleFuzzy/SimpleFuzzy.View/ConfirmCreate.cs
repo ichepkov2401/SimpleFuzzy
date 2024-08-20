@@ -10,6 +10,7 @@ namespace SimpleFuzzy.View
         public ConfirmCreate()
         {
             InitializeComponent();
+            textBox2.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
         }

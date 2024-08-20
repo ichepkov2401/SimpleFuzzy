@@ -12,7 +12,7 @@ namespace SimpleFuzzy.View
         public UserControl currentControl = null;
         IRepositoryService repositoryService;
         IProjectListService projectList;
-        private Button[] workspaceButtons;
+        private ToolStripMenuItem[] workspaceButtons;
         bool IsShownToolTip1 = true;
         public bool isContainSimulator = false;
         public MainWindow()
@@ -21,7 +21,7 @@ namespace SimpleFuzzy.View
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             // Инициализация массива кнопок рабочего пространства
-            workspaceButtons = new Button[] { button7, button8, button9, button10, button11 };
+            workspaceButtons = new ToolStripMenuItem[] { button7, button8, button9, button10, button11 };
 
             UserControls.Add(UserControlsEnum.Create, () => new ConfirmCreate());
             UserControls.Add(UserControlsEnum.Open, () => new ConfirmOpen());
@@ -38,6 +38,7 @@ namespace SimpleFuzzy.View
             toolTip1.InitialDelay = 1000;
             toolTip1.ReshowDelay = 500;
             Locked();
+            timer1.Start();
         }
 
         private UserControl AddSimulation()
@@ -119,9 +120,9 @@ namespace SimpleFuzzy.View
             aboutBox.ShowDialog();
 
         }
-        private void SwitchWorkspace(UserControlsEnum workspace, Button clickedButton)
+        private void SwitchWorkspace(UserControlsEnum workspace, ToolStripMenuItem clickedButton)
         {
-            foreach (Button button in workspaceButtons) { button.Enabled = true; }
+            foreach (var item in workspaceButtons) { item.Enabled = true; }
             clickedButton.Enabled = false;
             if (!isContainSimulator) button11.Enabled = false;
             SwichUserControl(workspace);
@@ -199,8 +200,8 @@ namespace SimpleFuzzy.View
             {
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
-                currentControl.Location = new Point(0, 160);
-                ChangeNameOfProject();
+                currentControl.Location = new Point(0, 120);
+
             }
         }
 
@@ -210,26 +211,25 @@ namespace SimpleFuzzy.View
             help.ShowDialog();
         }
 
-
-        private void MainWindow_MouseMove(object sender, MouseEventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            Control ctrl = this.GetChildAtPoint(e.Location);
-
-            if (ctrl != null)
+            var v = new Point(MousePosition.X - (Location.X + menuStrip2.Location.X + button11.Bounds.Location.X),
+                MousePosition.Y - (Location.Y + menuStrip2.Location.Y + button11.Bounds.Location.Y));
+            if (v.X >= 0 && v.X <= button11.Width && v.Y >= 0 && v.Y <= button11.Height)
             {
-                if (ctrl == this.button11 && !IsShownToolTip1 && projectList.CurrentProjectName != null && !isContainSimulator)
+                if (!IsShownToolTip1 && projectList.CurrentProjectName != null && !isContainSimulator)
                 {
-                    toolTip1.SetToolTip(this.button11, "Симуляция не загружена в проект или отключена в окне загрузчика");
-                    string tipstring = this.toolTip1.GetToolTip(this.button11);
-                    this.toolTip1.Show(tipstring, this.button11, this.button11.Width / 2, this.button11.Height / 2);
+                    toolTip1.Show("Симуляция не загружена в проект или отключена в окне загрузчика", menuStrip2);
                     IsShownToolTip1 = true;
                 }
             }
             else
             {
-                this.toolTip1.Hide(this.button11);
-                IsShownToolTip1 = false;
-                toolTip1.SetToolTip(this.button11, null);
+                if (IsShownToolTip1)
+                {
+                    toolTip1.Hide(menuStrip2);
+                    IsShownToolTip1 = false;
+                }
             }
         }
     }

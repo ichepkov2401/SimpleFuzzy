@@ -45,8 +45,10 @@ namespace SimpleFuzzy.View
             SetObjectSet();
             nameTextBox.Text = linguisticVariable.Name;
             if (linguisticVariable.baseSet == null)
+            {
                 if (baseSetComboBox.Items.Count > 0)
-                baseSetComboBox.SelectedIndex = 0;
+                    baseSetComboBox.SelectedIndex = 0;
+            }
             else
             {
                 baseSetComboBox.SelectedItem = objectSetsName.FirstOrDefault(t => t.Value == linguisticVariable.baseSet).Key;

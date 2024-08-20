@@ -11,6 +11,7 @@ namespace SimpleFuzzy.View
         Dictionary<string, string> isUsed = new();
         public InferenceForm()
         {
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             var variableList = GetLinguisticVariableList();
             foreach (var linguisticVariable in variableList) isUsed[linguisticVariable.Name] = "false";
             RefreshAll();
@@ -19,8 +20,7 @@ namespace SimpleFuzzy.View
 
         public List<LinguisticVariable> GetLinguisticVariableList()
         {
-            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
-            return repositoryService.GetCollection<LinguisticVariable>();
+            return repositoryService!.GetCollection<LinguisticVariable>();
         }
 
         public void RefreshAll()

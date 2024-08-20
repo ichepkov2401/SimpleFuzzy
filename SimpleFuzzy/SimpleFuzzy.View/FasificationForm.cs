@@ -13,6 +13,11 @@ namespace SimpleFuzzy.View
         public FasificationForm()
         {
             InitializeComponent();
+            ListViewExtender extender = new ListViewExtender(listView1);
+            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
+            buttonAction.Click += OnButtonActionClick;
+            buttonAction.FixedWidth = true;
+            extender.AddColumn(buttonAction);
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             FillTreeView();

@@ -73,12 +73,6 @@ namespace SimpleFuzzy.View
             listView1.TabIndex = 1;
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = System.Windows.Forms.View.Details;
-            ListViewExtender extender = new ListViewExtender(listView1);
-            ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
-            buttonAction.Click += OnButtonActionClick;
-            buttonAction.FixedWidth = true;
-            extender.AddColumn(buttonAction);
-            listView1.SelectedIndexChanged += listView1_SelectedIndexChanged;
             // 
             // button1
             // 

@@ -19,6 +19,7 @@ namespace SimpleFuzzy.View
         {
             for (int i = 0; i < repositoryService.GetCollection<LinguisticVariable>().Count; i++)
             {
+                if (!repositoryService.GetCollection<LinguisticVariable>()[i].isInput)
                 OutputVariables.Items.Add(repositoryService.GetCollection<LinguisticVariable>()[i].Name);
             }
         }

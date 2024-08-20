@@ -4,6 +4,7 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Xml;
 using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.Service
 {
@@ -308,6 +309,37 @@ namespace SimpleFuzzy.Service
 
                 module.InnerText = active;
             }
+        }
+        public List<LinguisticVariable> LoadLinguisticVariable(XmlNode xmlParent)
+        {
+            var ListofLinguisticVariable = new List<LinguisticVariable>();
+            foreach (XmlNode xmlLinguistic in xmlParent.ChildNodes)
+            {
+                string namefromNode = xmlLinguistic["name"].InnerText;
+                bool redactfromNode = bool.Parse(xmlLinguistic["isRedact"].InnerText);
+                IObjectSet? newSet = null;
+                foreach (var objectSet in repository.GetCollection<IObjectSet>())
+                {
+                    if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
+                    {
+                        newSet = objectSet;
+                        break;
+                    }
+                }
+                var membershipFunctions = new List<IMembershipFunction>();
+                foreach (var function in repository.GetCollection<IMembershipFunction>())
+                {
+                    foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
+                    {
+                        if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
+                        {
+                            membershipFunctions.Add(function);
+                        }
+                    }
+                }
+                ListofLinguisticVariable.Add(new LinguisticVariable(namefromNode, redactfromNode, newSet, membershipFunctions));
+            }
+            return ListofLinguisticVariable;
         }
     }
 }

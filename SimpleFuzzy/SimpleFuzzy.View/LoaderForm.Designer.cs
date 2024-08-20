@@ -125,6 +125,8 @@ namespace SimpleFuzzy.View
             dllListView.TabIndex = 6;
             dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.View = System.Windows.Forms.View.Details;
+            dllListView.Scrollable = true;
+            dllListView.ShowItemToolTips = true;
             FileName.Text = "Имя";
             CloseButton.Text = "";
             // 

@@ -83,6 +83,7 @@ namespace SimpleFuzzy.Model
             {
                 toStringList[i] = (func[i].Name, list[i]);
             }
+            toStringList = toStringList.OrderByDescending(x => x.Item2).ToArray();
             double sum = 0;
             foreach (var zeroValue in toStringList)
             {
@@ -95,23 +96,24 @@ namespace SimpleFuzzy.Model
             var listofRange = new (string, double[])[8]
             {
                 ("Точно", new double[2]{1.01, 1}),
-                ("Почти точно", new double[2] { 0.99, 0.9 }),
-                ("Скорее", new double[2] { 0.89, 0.8 }),
-                ("Не совсем", new double[2] { 0.79, 0.6 }),
-                ("Наполовину", new double[2] { 0.59, 0.4 }),
-                ("Немного", new double[2] { 0.39, 0.2 }),
-                ("Совсем немного", new double[2] { 0.19, 0.1 }),
-                ("Едва ли", new double[2] { 0.09, 0.01 })
+                ("Почти точно", new double[2] { 1, 0.9 }),
+                ("Скорее", new double[2] { 0.9, 0.8 }),
+                ("Не совсем", new double[2] { 0.8, 0.6 }),
+                ("Наполовину", new double[2] { 0.6, 0.4 }),
+                ("Немного", new double[2] { 0.4, 0.2 }),
+                ("Совсем немного", new double[2] { 0.2, 0.1 }),
+                ("Едва ли", new double[2] { 0.1, 0.01 })
             };
             int countTerms = 0;
-            foreach (var range in listofRange)
+            foreach (var pair in toStringList)
             {
-                foreach (var pair in toStringList)
+                foreach (var range in listofRange)
                 {
-                    if (range.Item2[0] >= pair.Item2 && pair.Item2 >= range.Item2[1])
+                    if (range.Item2[0] > pair.Item2 && pair.Item2 >= range.Item2[1])
                     {
                         result += $"{range.Item1} {pair.Item1}, ";
                         countTerms++;
+                        break;
                     }
                 }
             }
@@ -125,6 +127,7 @@ namespace SimpleFuzzy.Model
             }
             return result;
         }
+
         //Расчет свойств нечеткого множества
         public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 

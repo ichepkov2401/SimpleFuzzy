@@ -28,43 +28,55 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Graphic = new Label();
-            DefasificationResult = new Label();
+            graphPictureBox = new PictureBox();
+            ResultDef = new TextBox();
+            label1 = new Label();
+            ((System.ComponentModel.ISupportInitialize)graphPictureBox).BeginInit();
             SuspendLayout();
             // 
-            // Graphic
+            // graphPictureBox
             // 
-            Graphic.AutoSize = true;
-            Graphic.Location = new Point(10, 100);
-            Graphic.Name = "Graphic";
-            Graphic.Size = new Size(125, 20);
-            Graphic.TabIndex = 0;
-            Graphic.Text = "Тут будет график";
+            graphPictureBox.Location = new Point(405, 0);
+            graphPictureBox.Name = "graphPictureBox";
+            graphPictureBox.Size = new Size(430, 221);
+            graphPictureBox.TabIndex = 8;
+            graphPictureBox.TabStop = false;
             // 
-            // DefasificationResult
+            // ResultDef
             // 
-            DefasificationResult.AutoSize = true;
-            DefasificationResult.Location = new Point(10, 150);
-            DefasificationResult.Name = "DefasificationResult";
-            DefasificationResult.Size = new Size(265, 20);
-            DefasificationResult.TabIndex = 1;
-            DefasificationResult.Text = "Запись о результате дефазификации";
+            ResultDef.Location = new Point(659, 233);
+            ResultDef.Name = "ResultDef";
+            ResultDef.Size = new Size(125, 27);
+            ResultDef.TabIndex = 10;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(460, 236);
+            label1.Name = "label1";
+            label1.Size = new Size(193, 20);
+            label1.TabIndex = 11;
+            label1.Text = "Результат дефазификации:";
             // 
             // DefasificationUI
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(DefasificationResult);
-            Controls.Add(Graphic);
+            Controls.Add(label1);
+            Controls.Add(ResultDef);
+            Controls.Add(graphPictureBox);
             Name = "DefasificationUI";
-            Size = new Size(738, 436);
+            Size = new Size(871, 542);
+            ((System.ComponentModel.ISupportInitialize)graphPictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
+        private PictureBox graphPictureBox;
         #endregion
 
-        private Label Graphic;
-        private Label DefasificationResult;
+        private Button button1;
+        private TextBox ResultDef;
+        private Label label1;
     }
 }

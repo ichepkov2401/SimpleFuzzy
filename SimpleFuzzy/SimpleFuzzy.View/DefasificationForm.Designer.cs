@@ -132,7 +132,7 @@
             // 
             MethodsOfInference.Controls.Add(MaxProd);
             MethodsOfInference.Controls.Add(MaxMin);
-            MethodsOfInference.Location = new Point(160, 3);
+            MethodsOfInference.Location = new Point(3, 98);
             MethodsOfInference.Name = "MethodsOfInference";
             MethodsOfInference.Size = new Size(172, 77);
             MethodsOfInference.TabIndex = 8;
@@ -146,7 +146,7 @@
             MethodsOfDefasification.Controls.Add(MetodLeftLineDef);
             MethodsOfDefasification.Controls.Add(MethodRightLineDef);
             MethodsOfDefasification.Controls.Add(MethodSenterGravity);
-            MethodsOfDefasification.Location = new Point(338, 3);
+            MethodsOfDefasification.Location = new Point(3, 181);
             MethodsOfDefasification.Name = "MethodsOfDefasification";
             MethodsOfDefasification.Size = new Size(338, 151);
             MethodsOfDefasification.TabIndex = 9;

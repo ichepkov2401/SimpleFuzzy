@@ -33,6 +33,12 @@ namespace SimpleFuzzy.View
 
             }
             var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == OutputVariables.SelectedItem.ToString());
+            if (variable.baseSet == null || variable.CountFunc == 0)
+            {
+                MessageBox.Show("У лингвистической переменной отсутствует базовое множество или не добавлено ни одного терма." +
+                    " Перейдите к фазификации, чтобы добавить их");
+                return;
+            }
             defasificationUI = new DefasificationUI(variable);
             Controls.Add(defasificationUI);
             defasificationUI.Location = new Point(0, 0);

@@ -20,7 +20,7 @@ namespace SimpleFuzzy.View
 
         public List<LinguisticVariable> GetLinguisticVariableList()
         {
-            return repositoryService!.GetCollection<LinguisticVariable>();
+            return repositoryService.GetCollection<LinguisticVariable>();
         }
 
         public void RefreshAll()

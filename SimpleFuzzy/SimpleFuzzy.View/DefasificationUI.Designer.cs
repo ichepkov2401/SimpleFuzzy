@@ -28,23 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            Graphic = new Label();
+            DefasificationResult = new Label();
             SuspendLayout();
             // 
-            // label1
+            // Graphic
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(119, 244);
-            label1.Name = "label1";
-            label1.Size = new Size(50, 20);
-            label1.TabIndex = 0;
-            label1.Text = "label1";
+            Graphic.AutoSize = true;
+            Graphic.Location = new Point(10, 100);
+            Graphic.Name = "Graphic";
+            Graphic.Size = new Size(125, 20);
+            Graphic.TabIndex = 0;
+            Graphic.Text = "Тут будет график";
+            // 
+            // DefasificationResult
+            // 
+            DefasificationResult.AutoSize = true;
+            DefasificationResult.Location = new Point(10, 150);
+            DefasificationResult.Name = "DefasificationResult";
+            DefasificationResult.Size = new Size(265, 20);
+            DefasificationResult.TabIndex = 1;
+            DefasificationResult.Text = "Запись о результате дефазификации";
             // 
             // DefasificationUI
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(label1);
+            Controls.Add(DefasificationResult);
+            Controls.Add(Graphic);
             Name = "DefasificationUI";
             Size = new Size(738, 436);
             ResumeLayout(false);
@@ -53,6 +64,7 @@
 
         #endregion
 
-        private Label label1;
+        private Label Graphic;
+        private Label DefasificationResult;
     }
 }

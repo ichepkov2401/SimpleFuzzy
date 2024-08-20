@@ -38,7 +38,6 @@
             MethodSenterGravity = new RadioButton();
             MethodsOfInference = new GroupBox();
             MethodsOfDefasification = new GroupBox();
-            DefasificationResult = new Label();
             MethodsOfInference.SuspendLayout();
             MethodsOfDefasification.SuspendLayout();
             SuspendLayout();
@@ -154,20 +153,10 @@
             MethodsOfDefasification.TabStop = false;
             MethodsOfDefasification.Text = "Методы дефазификации";
             // 
-            // DefasificationResult
-            // 
-            DefasificationResult.AutoSize = true;
-            DefasificationResult.Location = new Point(338, 190);
-            DefasificationResult.Name = "DefasificationResult";
-            DefasificationResult.Size = new Size(197, 20);
-            DefasificationResult.TabIndex = 10;
-            DefasificationResult.Text = "Результат дефазификации: ";
-            // 
             // DefasificationForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(DefasificationResult);
             Controls.Add(MethodsOfDefasification);
             Controls.Add(MethodsOfInference);
             Controls.Add(OutputVariables);
@@ -178,7 +167,6 @@
             MethodsOfDefasification.ResumeLayout(false);
             MethodsOfDefasification.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -193,6 +181,5 @@
         private RadioButton MethodSenterGravity;
         private GroupBox MethodsOfInference;
         private GroupBox MethodsOfDefasification;
-        private Label DefasificationResult;
     }
 }

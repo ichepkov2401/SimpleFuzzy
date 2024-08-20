@@ -34,7 +34,7 @@ namespace SimpleFuzzy.View
             var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == OutputVariables.SelectedItem.ToString());
             defasificationUI = new DefasificationUI(variable);
             Controls.Add(defasificationUI);
-            defasificationUI.Location = new Point(325, 0);
+            defasificationUI.Location = new Point(0, 0);
                 
         }
     }

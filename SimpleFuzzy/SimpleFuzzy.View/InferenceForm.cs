@@ -20,7 +20,7 @@ namespace SimpleFuzzy.View
 
         public List<LinguisticVariable> GetLinguisticVariableList()
         {
-            return repositoryService!.GetCollection<LinguisticVariable>();
+            return repositoryService.GetCollection<LinguisticVariable>();
         }
 
         public void RefreshAll()
@@ -39,20 +39,20 @@ namespace SimpleFuzzy.View
         public void RefreshOutputVariables(List<LinguisticVariable> linguisticVariableList)
         {
             if (outputVariableComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (!linguisticVariable.isInput) outputVariableComboBox!.Items.Add(linguisticVariable.Name);
+            foreach (var linguisticVariable in linguisticVariableList) if (!linguisticVariable.isInput) outputVariableComboBox?.Items.Add(linguisticVariable.Name);
         }
 
 
         public void RefreshInputStringVariables(List<LinguisticVariable> linguisticVariableList)
         {
             if (stringsComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (!linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") stringsComboBox!.Items.Add(linguisticVariable.Name);
+            foreach (var linguisticVariable in linguisticVariableList) if (linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") stringsComboBox?.Items.Add(linguisticVariable.Name);
         }
 
         public void RefreshInputColumnVariables(List<LinguisticVariable> linguisticVariableList)
         {
             if (columnsComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (!linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") columnsComboBox!.Items.Add(linguisticVariable.Name);
+            foreach (var linguisticVariable in linguisticVariableList) if (linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") columnsComboBox?.Items.Add(linguisticVariable.Name);
         }
 
         private void ColumnOnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)

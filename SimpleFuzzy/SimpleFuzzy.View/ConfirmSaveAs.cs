@@ -9,6 +9,7 @@ namespace SimpleFuzzy.View
         public ConfirmSaveAs()
         {
             InitializeComponent();
+            textBox1.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
         }
         private void button1_Click(object sender, EventArgs e)

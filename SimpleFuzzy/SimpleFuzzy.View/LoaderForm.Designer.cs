@@ -34,8 +34,10 @@ namespace SimpleFuzzy.View
             CloseButton = new ColumnHeader();
             groupBoxLoader = new GroupBox();
             groupBoxModules = new GroupBox();
+            groupBoxDLL = new GroupBox();
             groupBoxLoader.SuspendLayout();
             groupBoxModules.SuspendLayout();
+            groupBoxDLL.SuspendLayout();
             SuspendLayout();
             // 
             // filePathTextBox
@@ -88,7 +90,7 @@ namespace SimpleFuzzy.View
             messageTextBox.Multiline = true;
             messageTextBox.Name = "messageTextBox";
             messageTextBox.SelectedText = "";
-            messageTextBox.Size = new Size(463, 216);
+            messageTextBox.Size = new Size(463, 169);
             messageTextBox.Style = MetroFramework.MetroColorStyle.Blue;
             messageTextBox.StyleManager = null;
             messageTextBox.TabIndex = 3;
@@ -108,20 +110,21 @@ namespace SimpleFuzzy.View
             treeNode3.Text = "Симуляции";
             treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
             treeView1.ShowNodeToolTips = true;
-            treeView1.Size = new Size(398, 280);
+            treeView1.Size = new Size(398, 227);
             treeView1.TabIndex = 0;
             treeView1.AfterCheck += treeView1_AfterCheck;
             // 
             // dllListView
             // 
-            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName });
             dllListView.FullRowSelect = true;
-            dllListView.Location = new Point(239, 315);
+            dllListView.Location = new Point(10, 23);
             dllListView.Name = "dllListView";
-            dllListView.Size = new Size(903, 318);
+            dllListView.ShowItemToolTips = true;
+            dllListView.Size = new Size(881, 186);
             dllListView.TabIndex = 6;
-            dllListView.View = System.Windows.Forms.View.Details;
             dllListView.UseCompatibleStateImageBehavior = false;
+            dllListView.View = System.Windows.Forms.View.Details;
             dllListView.Scrollable = true;
             dllListView.ShowItemToolTips = true;
             FileName.Text = "Имя";
@@ -135,7 +138,7 @@ namespace SimpleFuzzy.View
             groupBoxLoader.Controls.Add(messageTextBox);
             groupBoxLoader.Location = new Point(430, 3);
             groupBoxLoader.Name = "groupBoxLoader";
-            groupBoxLoader.Size = new Size(483, 306);
+            groupBoxLoader.Size = new Size(483, 256);
             groupBoxLoader.TabIndex = 0;
             groupBoxLoader.TabStop = false;
             groupBoxLoader.Text = "Загрузка модуля";
@@ -145,21 +148,32 @@ namespace SimpleFuzzy.View
             groupBoxModules.Controls.Add(treeView1);
             groupBoxModules.Location = new Point(10, 3);
             groupBoxModules.Name = "groupBoxModules";
-            groupBoxModules.Size = new Size(414, 306);
+            groupBoxModules.Size = new Size(414, 256);
             groupBoxModules.TabIndex = 1;
             groupBoxModules.TabStop = false;
             groupBoxModules.Text = "Загруженные модули";
             // 
+            // groupBoxDLL
+            // 
+            groupBoxDLL.Controls.Add(dllListView);
+            groupBoxDLL.Location = new Point(10, 265);
+            groupBoxDLL.Name = "groupBoxDLL";
+            groupBoxDLL.Size = new Size(903, 215);
+            groupBoxDLL.TabIndex = 7;
+            groupBoxDLL.TabStop = false;
+            groupBoxDLL.Text = "Загруженные DLL файлы";
+            // 
             // LoaderForm
             // 
             BackColor = Color.White;
-            Controls.Add(dllListView);
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
+            Controls.Add(groupBoxDLL);
             Name = "LoaderForm";
-            Size = new Size(1420, 754);
+            Size = new Size(916, 490);
             groupBoxLoader.ResumeLayout(false);
             groupBoxModules.ResumeLayout(false);
+            groupBoxDLL.ResumeLayout(false);
             ResumeLayout(false);
         }
         #endregion
@@ -174,6 +188,7 @@ namespace SimpleFuzzy.View
         private ColumnHeader CloseButton;
         private GroupBox groupBoxLoader;
         private GroupBox groupBoxModules;
+        private GroupBox groupBoxDLL;
     }
 }
 

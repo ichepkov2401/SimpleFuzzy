@@ -29,10 +29,10 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Rename, () => new ConfirmRename());
             UserControls.Add(UserControlsEnum.Copy, () => new ConfirmSaveAs());
             UserControls.Add(UserControlsEnum.Loader, () => new LoaderForm());
-            UserControls.Add(UserControlsEnum.Fasification, () => new FasificationForm());
-            UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
-            UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
-            UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
+            UserControls.Add(UserControlsEnum.Fasification, () => new UserControl());
+            UserControls.Add(UserControlsEnum.Inference, () => new UserControl());
+            UserControls.Add(UserControlsEnum.Defasification, () => new UserControl());
+            UserControls.Add(UserControlsEnum.Simulation, () => new UserControl());
 
             toolTip1.AutoPopDelay = 5000;
             toolTip1.InitialDelay = 1000;

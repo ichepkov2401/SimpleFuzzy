@@ -1,22 +1,31 @@
-﻿using OxyPlot;
+﻿using Antlr4.Runtime.Tree;
+using MetroFramework.Controls;
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Legends;
 using OxyPlot.Series;
+using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
-    public partial class GenerationMembershipUI : UserControl
+    public partial class GenerationMembershipUI : MetroUserControl
     {
         private List<(TextBox Condition, TextBox Value)> conditionControls = new List<(TextBox, TextBox)>();
-        private GenerationMembershipFunctionService generator = new GenerationMembershipFunctionService();
+        private IGenerationMembershipFunctionService generator;
+        private IRepositoryService repositoryService;
+        private ICompileService compileService;
+        private IProjectListService projectListService;
+        private Dictionary<string, IObjectSet> setsName = new Dictionary<string, IObjectSet>();
+        private IObjectSet objectSet;
 
         public GenerationMembershipUI()
         {
+            generator = AutofacIntegration.GetInstance<IGenerationMembershipFunctionService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            compileService = AutofacIntegration.GetInstance<ICompileService>();
             InitializeComponent();
-            InitializeTypeComboBox();
             InitializeBaseSetComboBox();
-
             plotView.Dock = DockStyle.Fill;
             splitContainer.Panel2.Controls.Clear();
             splitContainer.Panel2.Controls.Add(plotView);
@@ -24,19 +33,47 @@ namespace SimpleFuzzy.View
             plotView.Model = new PlotModel { };
         }
 
-
-        private void InitializeTypeComboBox()
+        public GenerationMembershipUI(IObjectSet objectSet)
         {
-            comboBoxType.Items.AddRange(new object[] { "int", "double", "float", "string" });
-            comboBoxType.SelectedIndex = 0;
+            this.objectSet = objectSet;
+            generator = AutofacIntegration.GetInstance<IGenerationMembershipFunctionService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            compileService = AutofacIntegration.GetInstance<ICompileService>();
+            projectListService = AutofacIntegration.GetInstance<IProjectListService>();
+            InitializeComponent();
+            InitializeBaseSetComboBox();
+            plotView.Dock = DockStyle.Fill;
+            splitContainer.Panel2.Controls.Clear();
+            splitContainer.Panel2.Controls.Add(plotView);
+
+            plotView.Model = new PlotModel { };
         }
 
         private void InitializeBaseSetComboBox()
         {
-            comboBoxBaseSet.Items.Add("[-10, 10]");
-            comboBoxBaseSet.Items.Add("[-1.0, 1.0]");
-            comboBoxBaseSet.Items.Add("[\"a\", \"b\", \"c\", \"d\", \"e\"]");
-            comboBoxBaseSet.SelectedIndex = 0;
+            string selectName = null;
+            var list = repositoryService.GetCollection<IObjectSet>();
+            foreach (var value in repositoryService.GetCollection<IObjectSet>())
+            {
+                string name = value.Name;
+                if (list.Count(t => t.Name == value.Name) > 1)
+                {
+                    name = $"{value.Name} - {value.GetType()}";
+                    if (list.Where(x => x.Name == value.Name).Count(x => x.GetType() == value.GetType()) > 1)
+                    {
+                        name = $"{value.Name} - {value.GetType()} - {value.GetType().Assembly.FullName}";
+                    }
+                }
+                setsName.Add(name, value);
+                comboBoxBaseSet.Items.Add(name);
+            }
+            if (selectName == null)
+            {
+                if (comboBoxBaseSet.Items.Count > 0)
+                    comboBoxBaseSet.SelectedIndex = 0;
+            }
+            else
+                comboBoxBaseSet.SelectedItem = selectName;
         }
 
         private void buttonAddCondition_Click(object sender, EventArgs e) => AddConditionRow();
@@ -102,10 +139,9 @@ namespace SimpleFuzzy.View
             {
                 generator.AddCondition(control.Condition.Text, control.Value.Text);
             }
-
-            Type selectedType = Type.GetType($"System.{comboBoxType.SelectedItem}");
-            string generatedCode = generator.GenerateCode(selectedType);
-
+            objectSet.ToFirst();
+            string generatedCode = generator.GenerateCode(objectSet.Extraction().GetType());
+            compileService.Compile(generatedCode, $"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{DateTime.Now}.dll");
             textBoxGeneratedCode.Text = generatedCode;
         }
 

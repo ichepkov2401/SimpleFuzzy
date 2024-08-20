@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Loader;
 using System.Text;
@@ -326,14 +327,20 @@ namespace SimpleFuzzy.Service
                         break;
                     }
                 }
-                var membershipFunctions = new List<IMembershipFunction>();
+                var membershipFunctions = new List<(IMembershipFunction, Color)>();
                 foreach (var function in repository.GetCollection<IMembershipFunction>())
                 {
                     foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
                     {
                         if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
                         {
-                            membershipFunctions.Add(function);
+                            string r = childnode.Attributes["R"].Value;
+                            string g = childnode.Attributes["G"].Value;
+                            string b = childnode.Attributes["B"].Value;
+                            if (r != null && g != null && b != null)
+                                membershipFunctions.Add((function, Color.FromArgb(int.Parse(r), int.Parse(g), int.Parse(b))));
+                            else
+                                membershipFunctions.Add((function, Color.Black));
                         }
                     }
                 }

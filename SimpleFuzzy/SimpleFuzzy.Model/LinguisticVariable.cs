@@ -75,7 +75,7 @@ namespace SimpleFuzzy.Model
             {
                 toStringList[i] = (func[i].Name, list[i]);
             }
-            QuickSort(toStringList, 0, toStringList.Length - 1);
+            toStringList = toStringList.OrderByDescending(x => x.Item2).ToArray();
             double sum = 0;
             foreach (var zeroValue in toStringList)
             {
@@ -119,37 +119,7 @@ namespace SimpleFuzzy.Model
             }
             return result;
         }
-        private (string, double)[] QuickSort((string, double)[] array, int leftIndex, int rightIndex)
-        {
-            var i = leftIndex;
-            var j = rightIndex;
-            var pivot = array[leftIndex].Item2;
-            while (i <= j)
-            {
-                while (array[i].Item2 > pivot)
-                {
-                    i++;
-                }
-                while (array[j].Item2 < pivot)
-                {
-                    j--;
-                }
-                if (i <= j)
-                {
-                    var temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                    i++;
-                    j--;
-                }
-            }
 
-            if (leftIndex < j)
-                QuickSort(array, leftIndex, j);
-            if (i < rightIndex)
-                QuickSort(array, i, rightIndex);
-            return array;
-        }
         //Расчет свойств нечеткого множества
         public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 

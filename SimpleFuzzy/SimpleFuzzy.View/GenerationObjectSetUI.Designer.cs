@@ -15,10 +15,6 @@
 
         private void InitializeComponent()
         {
-            this.txtFirst.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.txtStep.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.txtLast.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.btnGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
 
             txtFirst = new TextBox();
             txtStep = new TextBox();
@@ -166,6 +162,11 @@
             grpOutput.ResumeLayout(false);
             grpOutput.PerformLayout();
             ResumeLayout(false);
+
+            this.txtFirst.TextChanged += new System.EventHandler(this.ValidateInput);
+            this.txtStep.TextChanged += new System.EventHandler(this.ValidateInput);
+            this.txtLast.TextChanged += new System.EventHandler(this.ValidateInput);
+            this.btnGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
         }
 
         private System.Windows.Forms.TextBox txtFirst;

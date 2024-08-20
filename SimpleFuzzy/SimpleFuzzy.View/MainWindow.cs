@@ -10,8 +10,8 @@ namespace SimpleFuzzy.View
     {
         Dictionary<UserControlsEnum, ControlConstruct> UserControls = new Dictionary<UserControlsEnum, ControlConstruct>();
         public UserControl currentControl = null;
-        IRepositoryService repositoryService;
         IProjectListService projectList;
+        IRepositoryService repositoryService;
         private ToolStripMenuItem[] workspaceButtons;
         bool IsShownToolTip1 = true;
         public bool isContainSimulator = false;

@@ -1,4 +1,5 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Drawing;
 using System.Xml;
 
 namespace SimpleFuzzy.Model
@@ -8,7 +9,7 @@ namespace SimpleFuzzy.Model
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
         public IObjectSet baseSet; // Базовое множество
-        public List<IMembershipFunction> func = new List<IMembershipFunction>(); // Список термов
+        public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
@@ -19,12 +20,24 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
         }
-        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<IMembershipFunction> func)
+        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
             this.name = name;
             this.isRedact = isRedact;
             this.baseSet = baseSet;
             this.func = func;
+        }
+
+        public void UnloadingHandler(object sender, EventArgs e)
+        {
+            string context = sender as string;
+            if (baseSet.GetType().Assembly.Location == context)
+                baseSet = null;
+            func.RemoveAll(t => t.Item1.GetType().Assembly.Location == context);
+            heightCache.Clear();
+            typeCache.Clear();
+            areaOfInfluenceCache.Clear();
+            coreCache.Clear();
         }
 
         public string Name
@@ -42,53 +55,71 @@ namespace SimpleFuzzy.Model
         public IObjectSet BaseSet
         {
             get { return baseSet; }
-            set { if (isRedact == true) { baseSet = value; } }
-        }
-
-        public void AddTerm(IMembershipFunction term)
-        {
-            Type Type1 = baseSet.Extraction().GetType(), Type2 = func[0].GetType(); // Проверка типов данных
-            if (Type1 != Type2)
+            set
             {
-                throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают");
-            }
-            else
-            {
-                func.Add(term);
+                if (isRedact == true)
+                    if (func.Count == 0) { baseSet = value; }
+                    else
+                    {
+                        if (func[0].Item1.InputType == value.Extraction().GetType()) { baseSet = value; }
+                        else { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+                    }
             }
         }
 
-        public void DeleteTerm(IMembershipFunction term) => func.Remove(term);
-
-        public Dictionary<object, List<double>> Graphic()  // Создание массива списков для графика
+        public void AddTerm((IMembershipFunction, Color) term)
         {
-            var graphicList = new Dictionary<object, List<double>>();
+            if (baseSet == null)
+            {
+                if (func.Count == 0) { func.Add(term); }
+                else if (term.Item1.InputType == func[0].Item1.InputType) { func.Add(term); }
+                else { throw new InvalidOperationException("Тип данных добавляемого терма не совпадает с уже имеющимися термами в списке"); }
+            }
+            else if (baseSet.Extraction().GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+            else { func.Add(term); } // Проверка типов данных
+        }
+
+        public void DeleteTerm(IMembershipFunction term) => func.RemoveAll(t => t.Item1 == term);
+
+        public bool ContainsFunc(IMembershipFunction term) => func.Count(t => t.Item1 == term) > 0;
+
+        public Color GetColor(IMembershipFunction term) => func.FirstOrDefault(t => t.Item1 == term).Item2;
+
+        public void SetColor(IMembershipFunction term, Color color) => func[func.FindIndex(t => t.Item1 == term)] = (term, color);
+
+        public int CountFunc => func.Count;
+
+        public IMembershipFunction this[int index] => func[index].Item1;
+
+        public double[] Fazzification(object elementBaseSet)
+        {
+            var list = new double[func.Count];
+            for (int i = 0; i < func.Count; i++)
+            {
+                list[i] = (func[i].Item1.MembershipFunction(elementBaseSet));
+            }
+            return list;
+        }
+
+        public List<(object, double[])> Graphic()
+        {
+            var graphicList = new List<(object, double[])>();
             baseSet.ToFirst();
             while (!baseSet.IsEnd())
             {
-                graphicList.Add(baseSet.Extraction(), Fazzification(baseSet.Extraction()));
+                graphicList.Add((baseSet.Extraction(), Fazzification(baseSet.Extraction())));
                 baseSet.MoveNext();
             }
             return graphicList;
         }
 
-        public List<double> Fazzification(object elementBaseSet)
-        {
-            var list = new List<double>();
-            foreach (var function in func)
-            {
-                list.Add(function.MembershipFunction(elementBaseSet));
-            }
-            return list;
-        }
-
-        public string GetResultofFuzzy(List<double> list)
+        public string GetResultofFuzzy(double[] list)
         {
             string result = "";
             var toStringList = new (string, double)[func.Count];
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Length; i++)
             {
-                toStringList[i] = (func[i].Name, list[i]);
+                toStringList[i] = (func[i].Item1.Name, list[i]);
             }
             toStringList = toStringList.OrderByDescending(x => x.Item2).ToArray();
             double sum = 0;
@@ -136,7 +167,7 @@ namespace SimpleFuzzy.Model
         }
 
         //Расчет свойств нечеткого множества
-        public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+        public Tuple<double, string,List<object>, List<object>, List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 
             if (!heightCache.ContainsKey(term))
             {
@@ -285,8 +316,17 @@ namespace SimpleFuzzy.Model
             foreach (var function in func)
             {
                 XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
-                functionNode.InnerText = function.GetType().FullName + " " + function.GetType().Assembly.FullName;
+                functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
                 funcNode.AppendChild(functionNode);
+                XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
+                moduleNameXML.Value = function.Item2.R.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
+                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
+                moduleNameXML.Value = function.Item2.G.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
+                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
+                moduleNameXML.Value = function.Item2.B.ToString();
+                functionNode.Attributes.Append(moduleNameXML);
             }
             linguisticNode.AppendChild(funcNode);
         }

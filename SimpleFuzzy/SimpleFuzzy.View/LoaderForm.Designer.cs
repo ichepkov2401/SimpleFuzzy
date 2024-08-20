@@ -116,7 +116,6 @@ namespace SimpleFuzzy.View
             // 
             // dllListView
             // 
-            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton});
             dllListView.FullRowSelect = true;
             dllListView.Location = new Point(10, 23);
             dllListView.Name = "dllListView";

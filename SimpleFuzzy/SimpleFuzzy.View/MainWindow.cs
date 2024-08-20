@@ -12,7 +12,6 @@ namespace SimpleFuzzy.View
         public UserControl currentControl = null;
         IProjectListService projectList;
         IRepositoryService repositoryService;
-        private Button[] workspaceButtons;
         private ToolStripMenuItem[] workspaceButtons;
         bool IsShownToolTip1 = true;
         public bool isContainSimulator = false;

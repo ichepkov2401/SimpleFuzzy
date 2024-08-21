@@ -29,6 +29,7 @@ namespace SimpleFuzzy.View
         {
             if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
+                parent.ChangeNameOfProject();
                 parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
             else { Parent.Controls.Remove(this); }

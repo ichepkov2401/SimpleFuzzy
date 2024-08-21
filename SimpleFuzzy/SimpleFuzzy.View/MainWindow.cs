@@ -165,6 +165,8 @@ namespace SimpleFuzzy.View
             button3.BackColor = DefaultBackColor;
             lastControlEnum = null;
             lastButton = null;
+            button1.Enabled = true;
+            button2.Enabled = true;
         }
 
         private bool IsSecondMenu(UserControlsEnum? control)

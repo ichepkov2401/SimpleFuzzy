@@ -5,13 +5,20 @@ namespace SimpleFuzzy.SimpleModule
     public class MembershipFunc : IMembershipFunction
     {
         public bool Active { get; set; }
-        public string Name { get; } = "Membership Function";
-
-        public Type InputType => typeof(byte);
+        public string Name { get; private set; }
+        private readonly double a, b, c, d;
+        public Type InputType => typeof(double);
+        public MembershipFunc(string name, double a, double b, double c, double d)
+        {
+            Name = name;
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+        }
 
         public double MembershipFunction(object elem)
         {
-            byte[] values = { 25, 50, 75, 100 };
             if (elem == null)
             {
                 throw new ArgumentNullException(nameof(elem));
@@ -26,25 +33,25 @@ namespace SimpleFuzzy.SimpleModule
             {
                 throw new ArgumentException("Unable to convert input to double", nameof(elem), ex);
             }
+
             double result;
-            if (doubleElem <= values[0] || doubleElem >= values[3])
+            if (doubleElem <= a || doubleElem >= d)
             {
                 result = 0;
             }
-            else if (doubleElem > values[0] && doubleElem <= values[1])
+            else if (doubleElem > a && doubleElem <= b)
             {
-                result = (doubleElem - values[0]) / (values[1] - values[0]);
+                result = (doubleElem - a) / (b - a);
             }
-            else if (doubleElem > values[1] && doubleElem < values[2])
+            else if (doubleElem > b && doubleElem < c)
             {
                 result = 1;
             }
-            else // doubleElem >= values[2] && doubleElem < values[3]
+            else // doubleElem >= c && doubleElem < d
             {
-                result = (values[3] - doubleElem) / (values[3] - values[2]);
+                result = (d - doubleElem) / (d - c);
             }
 
-            // Гарантируем, что результат находится в промежутке [0, 1]
             return Math.Max(0, Math.Min(1, result));
 
         }

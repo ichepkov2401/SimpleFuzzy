@@ -123,7 +123,7 @@ namespace SimpleFuzzy.View
         private void button12_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
-            aboutBox.ShowDialog();
+            aboutBox.Show();
 
         }
         public void Locked()
@@ -212,7 +212,7 @@ namespace SimpleFuzzy.View
         private void button13_Click(object sender, EventArgs e)
         {
             HelpWindow help = new HelpWindow();
-            help.ShowDialog();
+            help.Show();
         }
 
         private void timer1_Tick(object sender, EventArgs e)

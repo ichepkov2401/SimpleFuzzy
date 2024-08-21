@@ -22,25 +22,16 @@ namespace SimpleFuzzy.View
                 MessageBox.Show(ex.Message);
                 return;
             }
-            if (Parent is MainWindow parent)
-            {
-                parent.OpenButtons();
-                parent.OpenLoader();
-            }
+            button2_Click(sender, e);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) 
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
-                parent.OpenButtons(); 
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
-            Parent.Controls.Remove(this);
-        }
-
-        private void ConfirmRename_Load(object sender, EventArgs e)
-        {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            else { Parent.Controls.Remove(this); }
         }
     }
 }

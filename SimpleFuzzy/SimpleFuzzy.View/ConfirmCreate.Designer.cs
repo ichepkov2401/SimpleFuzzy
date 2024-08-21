@@ -42,7 +42,7 @@
             // button1
             // 
             button1.Highlight = false;
-            button1.Location = new Point(653, 24);
+            button1.Location = new Point(445, 24);
             button1.Name = "button1";
             button1.Size = new Size(202, 29);
             button1.Style = MetroFramework.MetroColorStyle.Blue;
@@ -69,7 +69,7 @@
             // button3
             // 
             button3.Highlight = false;
-            button3.Location = new Point(445, 24);
+            button3.Location = new Point(653, 24);
             button3.Name = "button3";
             button3.Size = new Size(202, 29);
             button3.Style = MetroFramework.MetroColorStyle.Blue;
@@ -107,7 +107,6 @@
             textBox2.Style = MetroFramework.MetroColorStyle.Blue;
             textBox2.StyleManager = null;
             textBox2.TabIndex = 4;
-            textBox2.Text = "";
             textBox2.Theme = MetroFramework.MetroThemeStyle.Light;
             textBox2.UseStyleColors = false;
             // 

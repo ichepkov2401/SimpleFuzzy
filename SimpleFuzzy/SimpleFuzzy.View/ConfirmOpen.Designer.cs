@@ -146,6 +146,7 @@
             Controls.Add(groupBox1);
             Name = "ConfirmOpen";
             Size = new Size(721, 379);
+            Load += ConfirmOpen_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

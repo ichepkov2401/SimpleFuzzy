@@ -50,9 +50,9 @@ namespace SimpleFuzzy.View
             logoBox = new PictureBox();
             toolTip1 = new ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            metroLabel1 = new MetroLabel();
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
-            metroLabel1 = new MetroLabel();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -100,8 +100,7 @@ namespace SimpleFuzzy.View
             // 
             button5.Enabled = false;
             button5.Name = "button5";
-            button5.Size = new Size(67, 24);
-            button5.Size = new Size(107, 39);
+            button5.Size = new Size(123, 24);
             button5.Text = "Сохранить как";
             button5.Click += button5_Click;
             // 
@@ -200,7 +199,6 @@ namespace SimpleFuzzy.View
             metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
             metroLabel1.StyleManager = null;
             metroLabel1.TabIndex = 13;
-            metroLabel1.Text = "";
             metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
             metroLabel1.UseStyleColors = false;
             // 

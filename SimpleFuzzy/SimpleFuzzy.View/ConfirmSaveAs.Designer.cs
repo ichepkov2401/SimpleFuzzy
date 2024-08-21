@@ -69,7 +69,6 @@
             textBox1.Style = MetroFramework.MetroColorStyle.Blue;
             textBox1.StyleManager = null;
             textBox1.TabIndex = 2;
-            textBox1.Text = "";
             textBox1.Theme = MetroFramework.MetroThemeStyle.Light;
             textBox1.UseStyleColors = false;
             // 
@@ -161,7 +160,6 @@
             Controls.Add(groupBox1);
             Name = "ConfirmSaveAs";
             Size = new Size(901, 113);
-            Load += ConfirmCopy_Load;
             ResumeLayout(false);
             PerformLayout();
         }

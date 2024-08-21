@@ -15,19 +15,25 @@ namespace SimpleFuzzy.View
         private ToolStripMenuItem[] workspaceButtons;
         bool IsShownToolTip1 = true;
         public bool isContainSimulator = false;
+
+        public UserControlsEnum? currentControlEnum;
+        public UserControlsEnum? lastControlEnum;
+        public ToolStripMenuItem lastButton;
+        public ToolStripMenuItem currentButton;
         public MainWindow()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             // Инициализация массива кнопок рабочего пространства
-            workspaceButtons = new ToolStripMenuItem[] { button7, button8, button9, button10, button11 };
+            workspaceButtons = new ToolStripMenuItem[] { button1, button2, button3, button4, button5, button7, button8, 
+                button9, button10, button11 };
 
             UserControls.Add(UserControlsEnum.Create, () => new ConfirmCreate());
             UserControls.Add(UserControlsEnum.Open, () => new ConfirmOpen());
             UserControls.Add(UserControlsEnum.Delete, () => new ConfirmDelete());
             UserControls.Add(UserControlsEnum.Rename, () => new ConfirmRename());
-            UserControls.Add(UserControlsEnum.Copy, () => new ConfirmSaveAs());
+            UserControls.Add(UserControlsEnum.SaveAs, () => new ConfirmSaveAs());
             UserControls.Add(UserControlsEnum.Loader, () => new LoaderForm());
             UserControls.Add(UserControlsEnum.Fasification, () => new FasificationForm());
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
@@ -58,27 +64,27 @@ namespace SimpleFuzzy.View
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            SwichUserControl(UserControlsEnum.Create);
+            SwichUserControl(UserControlsEnum.Create, button1);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SwichUserControl(UserControlsEnum.Open);
+            SwichUserControl(UserControlsEnum.Open, button2);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            SwichUserControl(UserControlsEnum.Delete);
+            SwichUserControl(UserControlsEnum.Delete, button3);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            SwichUserControl(UserControlsEnum.Rename);
+            SwichUserControl(UserControlsEnum.Rename, button4);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            SwichUserControl(UserControlsEnum.Copy);
+            SwichUserControl(UserControlsEnum.SaveAs, button5);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -88,44 +94,37 @@ namespace SimpleFuzzy.View
         }
         private void button7_Click(object sender, EventArgs e)
         {
-            SwitchWorkspace(UserControlsEnum.Loader, button7);
+            SwichUserControl(UserControlsEnum.Loader, button7);
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            SwitchWorkspace(UserControlsEnum.Fasification, button8);
+            SwichUserControl(UserControlsEnum.Fasification, button8);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            SwitchWorkspace(UserControlsEnum.Inference, button9);
+            SwichUserControl(UserControlsEnum.Inference, button9);
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            SwitchWorkspace(UserControlsEnum.Defasification, button10);
+            SwichUserControl(UserControlsEnum.Defasification, button10);
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            SwitchWorkspace(UserControlsEnum.Simulation, button11);
+            SwichUserControl(UserControlsEnum.Simulation, button11);
         }
         public void OpenLoader()
         {
-            SwitchWorkspace(UserControlsEnum.Loader, button7);
+            SwichUserControl(UserControlsEnum.Loader, button7);
         }
         private void button12_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
             aboutBox.ShowDialog();
 
-        }
-        private void SwitchWorkspace(UserControlsEnum workspace, ToolStripMenuItem clickedButton)
-        {
-            foreach (var item in workspaceButtons) { item.Enabled = true; }
-            clickedButton.Enabled = false;
-            if (!isContainSimulator) button11.Enabled = false;
-            SwichUserControl(workspace);
         }
         public void Locked()
         {
@@ -154,42 +153,44 @@ namespace SimpleFuzzy.View
                 if (isContainSimulator) button11.Enabled = true;
             }
         }
-        public void BlockButtons()
-        {
-            button1.Enabled = false;
-            button2.Enabled = false;
-            button3.Enabled = false;
-            button4.Enabled = false;
-            button5.Enabled = false;
-            button6.Enabled = false;
-            button7.Enabled = false;
-            button8.Enabled = false;
-            button9.Enabled = false;
-            button10.Enabled = false;
-            button11.Enabled = false;
-        }
-        public void OpenButtons()
-        {
-            button1.Enabled = true;
-            button2.Enabled = true;
-            button3.Enabled = true;
-            button4.Enabled = true;
-            button5.Enabled = true;
-            button6.Enabled = true;
-            button7.Enabled = true;
-            button8.Enabled = true;
-            button9.Enabled = true;
-            button10.Enabled = true;
-            if (isContainSimulator) button11.Enabled = true;
-        }
 
         public void EnableSimulationsButton(bool enable)
         {
             this.button11.Enabled = enable;
         }
-
-        public void SwichUserControl(UserControlsEnum? newWindowName)
+        public void ColorDelete()
         {
+            button1.BackColor = DefaultBackColor;
+            button2.BackColor = DefaultBackColor;
+            button3.BackColor = DefaultBackColor;
+            lastControlEnum = null;
+            lastButton = null;
+        }
+
+        private bool IsSecondMenu(UserControlsEnum? control)
+        {
+            if (control == UserControlsEnum.Create || control == UserControlsEnum.Open ||
+                control == UserControlsEnum.Delete || control == UserControlsEnum.Rename ||
+                control == UserControlsEnum.SaveAs) return false;
+            else return true;
+        }
+
+        public void SwichUserControl(UserControlsEnum? newWindowName, ToolStripMenuItem clickedButton)
+        {
+            foreach (var item in workspaceButtons)
+            {
+                item.Enabled = true;
+                item.BackColor = DefaultBackColor;
+            }
+            clickedButton.BackColor = Color.LightBlue;
+            clickedButton.Enabled = false;
+            if (!isContainSimulator) button11.Enabled = false;
+            if (IsSecondMenu(currentControlEnum))
+            {
+                lastControlEnum = currentControlEnum;
+                lastButton = currentButton;
+            }
+
             var toRemove = this;
             if (currentControl != null)
             {
@@ -199,9 +200,10 @@ namespace SimpleFuzzy.View
             if (newWindowName.HasValue)
             {
                 currentControl = UserControls[newWindowName.Value]();
+                currentControlEnum = newWindowName;
+                currentButton = clickedButton;
                 toRemove.Controls.Add(currentControl);
                 currentControl.Location = new Point(0, 120);
-
             }
         }
 

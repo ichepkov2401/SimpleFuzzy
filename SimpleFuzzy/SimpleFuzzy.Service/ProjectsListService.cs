@@ -55,7 +55,7 @@ namespace SimpleFuzzy.Service
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(GivePath(CurrentProjectName, true) + name);
-                var root = doc.DocumentElement;
+                var root = doc.DocumentElement.SelectSingleNode("saves");
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
                     Action<XmlNodeList> action;
@@ -64,6 +64,9 @@ namespace SimpleFuzzy.Service
                         action(root.ChildNodes[i].ChildNodes);
                     }
                 }
+                var linguisticroot = doc.DocumentElement.SelectSingleNode("ListofLinguisticVariable");
+                var listLinguistic = LoadLinguisticVariable(linguisticroot);
+                repository.GetCollection<LinguisticVariable>().AddRange(listLinguistic);
             }
         }
 
@@ -277,8 +280,11 @@ namespace SimpleFuzzy.Service
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("saves");
             doc.AppendChild(root);
+            XmlNode linguistic = null;
+            SaveAllLinguisticVariable(ref linguistic);
             XmlElement activeModules = doc.CreateElement("activeModules");
             root.AppendChild(activeModules);
+            root.AppendChild(linguistic);
             // методы сохранения
             SaveActiveModulesXML(activeModules);
             // сохранение xml файла
@@ -309,6 +315,13 @@ namespace SimpleFuzzy.Service
                 module.Attributes.Append(assemblyNameXML);
 
                 module.InnerText = active;
+            }
+        }
+        private void SaveAllLinguisticVariable(ref XmlNode xmlNode)
+        {
+            foreach (var linguistic in repository.GetCollection<LinguisticVariable>())
+            {
+                linguistic.Save(ref xmlNode);
             }
         }
         public List<LinguisticVariable> LoadLinguisticVariable(XmlNode xmlParent)

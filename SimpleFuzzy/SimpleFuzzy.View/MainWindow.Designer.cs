@@ -233,7 +233,6 @@ namespace SimpleFuzzy.View
             MainMenuStrip = menuStrip1;
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
-            MouseMove += MainWindow_MouseMove;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             menuStrip2.ResumeLayout(false);

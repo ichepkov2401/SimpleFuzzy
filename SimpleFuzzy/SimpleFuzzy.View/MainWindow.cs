@@ -256,27 +256,24 @@ namespace SimpleFuzzy.View
             {
                 if (!IsShownToolTip1 && projectList.CurrentProjectName != null && !isContainSimulator)
                 {
-                    toolTip1.Show("Симуляция не загружена в проект или отключена в окне загрузчика", menuStrip2);
+                    toolTip1.SetToolTip(menuStrip2, "Симуляция не загружена в проект или отключена в окне загрузчика");
+                    string tipstring = toolTip1.GetToolTip(menuStrip2);
+                    toolTip1.Show(tipstring, menuStrip2, menuStrip2.Width / 2, menuStrip2.Height / 2);
                     IsShownToolTip1 = true;
                 }
             }
             else
             {
-                if (IsShownToolTip1)
-                {
-                    toolTip1.Hide(menuStrip2);
-                    IsShownToolTip1 = false;
-                }
+                toolTip1.Hide(menuStrip2);
+                IsShownToolTip1 = false;
+                toolTip1.SetToolTip(menuStrip2, null);
             }
-        }
 
-        private void MainWindow_MouseMove(object sender, MouseEventArgs e)
-        {
-            Control ctrl = GetChildAtPoint(e.Location);
-
-            if (ctrl != null)
+            var t = new Point(MousePosition.X - (Location.X + Right.Location.X),
+               MousePosition.Y - (Location.Y + Right.Location.Y));
+            if (t.X >= 0 && t.X <= Right.Width && t.Y >= 0 && t.Y <= Right.Height)
             {
-                if (ctrl == Right && !IsShownToolTip2 && !isContainSimulator && projectList.CurrentProjectName != null && Right.Enabled == false)
+                if (!IsShownToolTip2 && !isContainSimulator && projectList.CurrentProjectName != null && Right.Enabled == false)
                 {
                     toolTip2.SetToolTip(Right, "Симуляция не загружена в проект или отключена в окне загрузчика");
                     string tipstring = toolTip2.GetToolTip(Right);
@@ -289,6 +286,7 @@ namespace SimpleFuzzy.View
                 toolTip2.Hide(Right);
                 IsShownToolTip2 = false;
                 toolTip2.SetToolTip(Right, null);
+
             }
         }
 

@@ -2,7 +2,7 @@
 
 namespace SimpleFuzzy.View
 {
-    public partial class DefasificationForm : MetroUserControl
+    public partial class DefasificationForm : UserControl
     {
         public DefasificationForm()
         {

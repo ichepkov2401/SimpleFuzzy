@@ -6,7 +6,7 @@ using SimpleFuzzy.Abstract;
 namespace SimpleFuzzy.View
 {
     public delegate UserControl ControlConstruct();
-    public partial class MainWindow : MetroForm
+    public partial class MainWindow : Form
     {
         Dictionary<UserControlsEnum, ControlConstruct> UserControls = new Dictionary<UserControlsEnum, ControlConstruct>();
         public UserControl currentControl = null;

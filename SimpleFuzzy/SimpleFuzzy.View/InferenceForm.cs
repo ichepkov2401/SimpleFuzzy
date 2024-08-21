@@ -5,7 +5,7 @@ using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class InferenceForm : MetroUserControl
+    public partial class InferenceForm : UserControl
     {
         public IRepositoryService? repositoryService;
         Dictionary<string, string> isUsed = new();

@@ -5,7 +5,7 @@ using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class FasificationForm : MetroUserControl
+    public partial class FasificationForm : UserControl
     {
         IRepositoryService repositoryService;
         IAssemblyLoaderService assemblyLoaderService;

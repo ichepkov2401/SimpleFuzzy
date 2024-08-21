@@ -1,5 +1,4 @@
 ﻿
-using MetroFramework.Controls;
 using System.Resources;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -52,7 +51,7 @@ namespace SimpleFuzzy.View
             timer1 = new System.Windows.Forms.Timer(components);
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
-            metroLabel1 = new MetroLabel();
+            metroLabel1 = new Label();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -190,19 +189,11 @@ namespace SimpleFuzzy.View
             // metroLabel1
             // 
             metroLabel1.AutoSize = true;
-            metroLabel1.CustomBackground = false;
-            metroLabel1.FontSize = MetroFramework.MetroLabelSize.Medium;
-            metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Light;
-            metroLabel1.LabelMode = MetroLabelMode.Default;
             metroLabel1.Location = new Point(540, 22);
             metroLabel1.Name = "metroLabel1";
             metroLabel1.Size = new Size(84, 20);
-            metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
-            metroLabel1.StyleManager = null;
             metroLabel1.TabIndex = 13;
             metroLabel1.Text = "";
-            metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
-            metroLabel1.UseStyleColors = false;
             // 
             // MainWindow
             // 
@@ -245,6 +236,6 @@ namespace SimpleFuzzy.View
         private PictureBox logoBox;
         private ToolTip toolTip1;
         private System.Windows.Forms.Timer timer1;
-        private MetroLabel metroLabel1;
+        private Label metroLabel1;
     }
 }

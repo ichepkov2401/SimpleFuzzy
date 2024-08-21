@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Loader;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 
@@ -20,6 +23,7 @@ namespace SimpleFuzzy.Service
             repository = repositoryService;
             this.loaderService = loaderService;
             pair.Add("activeModules", ChooseActive);
+            pair.Add("allLinguisticVariables", LoadLinguisticVariable);
         }
         public string? CurrentProjectName { get; set; }
         public void AddProject(string name, string path)
@@ -55,7 +59,7 @@ namespace SimpleFuzzy.Service
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(GivePath(CurrentProjectName, true) + name);
-                var root = doc.DocumentElement.SelectSingleNode("saves");
+                var root = doc.DocumentElement;
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
                     Action<XmlNodeList> action;
@@ -64,9 +68,6 @@ namespace SimpleFuzzy.Service
                         action(root.ChildNodes[i].ChildNodes);
                     }
                 }
-                var linguisticroot = doc.DocumentElement.SelectSingleNode("ListofLinguisticVariable");
-                var listLinguistic = LoadLinguisticVariable(linguisticroot);
-                repository.GetCollection<LinguisticVariable>().AddRange(listLinguistic);
             }
         }
 
@@ -98,6 +99,48 @@ namespace SimpleFuzzy.Service
                     module.Active = status;
                     continue;
                 }
+            }
+        }
+        public void LoadLinguisticVariable(XmlNodeList list)
+        {
+            foreach (XmlNode xmlLinguistic in list)
+            {
+                string namefromNode = xmlLinguistic["name"].InnerText;
+                bool inputfromNode = bool.Parse(xmlLinguistic["isInput"].InnerText);
+                bool redactfromNode = bool.Parse(xmlLinguistic["isRedact"].InnerText);
+                IObjectSet newSet = null;
+                if (xmlLinguistic["baseSet"].InnerText != "Нет базового множества") {
+                    foreach (var objectSet in repository.GetCollection<IObjectSet>())
+                    {
+                        if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
+                        {
+                            newSet = objectSet;
+                            break;
+                        }
+                    }
+                }
+                var membershipFunctions = new List<(IMembershipFunction, Color)>();
+                if (xmlLinguistic["func"].InnerText != "Нет термов")
+                {
+                    foreach (var function in repository.GetCollection<IMembershipFunction>())
+                    {
+                        foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
+                        {
+                            if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
+                            {
+                                string r = childnode.Attributes["R"].Value;
+                                string g = childnode.Attributes["G"].Value;
+                                string b = childnode.Attributes["B"].Value;
+                                if (r != null && g != null && b != null)
+                                    membershipFunctions.Add((function, Color.FromArgb(int.Parse(r), int.Parse(g), int.Parse(b))));
+                                else
+                                    membershipFunctions.Add((function, Color.Black));
+                            }
+                        }
+                    }
+                }
+                var linguistic = new LinguisticVariable(namefromNode, inputfromNode, redactfromNode, newSet, membershipFunctions);
+                repository.GetCollection<LinguisticVariable>().Add(linguistic);
             }
         }
         public void OpenProjectfromName(string name)
@@ -280,13 +323,13 @@ namespace SimpleFuzzy.Service
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("saves");
             doc.AppendChild(root);
-            XmlNode linguistic = null;
-            SaveAllLinguisticVariable(ref linguistic);
             XmlElement activeModules = doc.CreateElement("activeModules");
+            XmlElement linguistic = doc.CreateElement("allLinguisticVariables");
             root.AppendChild(activeModules);
             root.AppendChild(linguistic);
             // методы сохранения
             SaveActiveModulesXML(activeModules);
+            SaveAllLinguisticVariable(linguistic);
             // сохранение xml файла
             doc.Save(GivePath(CurrentProjectName, true) + name);
         }
@@ -317,49 +360,58 @@ namespace SimpleFuzzy.Service
                 module.InnerText = active;
             }
         }
-        private void SaveAllLinguisticVariable(ref XmlNode xmlNode)
+        
+        public void SaveAllLinguisticVariable(XmlElement parentNode)
         {
-            foreach (var linguistic in repository.GetCollection<LinguisticVariable>())
-            {
-                linguistic.Save(ref xmlNode);
-            }
-        }
-        public List<LinguisticVariable> LoadLinguisticVariable(XmlNode xmlParent)
-        {
-            var ListofLinguisticVariable = new List<LinguisticVariable>();
-            foreach (XmlNode xmlLinguistic in xmlParent.ChildNodes)
-            {
-                string namefromNode = xmlLinguistic["name"].InnerText;
-                bool redactfromNode = bool.Parse(xmlLinguistic["isRedact"].InnerText);
-                IObjectSet? newSet = null;
-                foreach (var objectSet in repository.GetCollection<IObjectSet>())
+            foreach (var linguisticVariable in repository.GetCollection<LinguisticVariable>()) {
+                XmlElement linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
+                parentNode.AppendChild(linguisticNode);
+
+                XmlElement nameNode = parentNode.OwnerDocument.CreateElement("name");
+                nameNode.InnerText = linguisticVariable.name;
+                linguisticNode.AppendChild(nameNode);
+
+                XmlElement inputNode = parentNode.OwnerDocument.CreateElement("isInput");
+                inputNode.InnerText = linguisticVariable.isInput.ToString();
+                linguisticNode.AppendChild(inputNode);
+
+                XmlElement redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
+                redactNode.InnerText = linguisticVariable.isRedact.ToString();
+                linguisticNode.AppendChild(redactNode);
+                XmlElement objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
+                if (linguisticVariable.baseSet != null)
                 {
-                    if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
+                    objectsetNode.InnerText = linguisticVariable.baseSet.GetType().FullName + " " + linguisticVariable.baseSet.GetType().Assembly.FullName;
+                }
+                else
+                {
+                    objectsetNode.InnerText = "Нет базового множества";
+                }
+                linguisticNode.AppendChild(objectsetNode);
+                XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
+                if (linguisticVariable.func.Count != 0) {
+                    foreach (var function in linguisticVariable.func)
                     {
-                        newSet = objectSet;
-                        break;
+                        XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
+                        functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
+                        funcNode.AppendChild(functionNode);
+                        XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
+                        moduleNameXML.Value = function.Item2.R.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
+                        moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
+                        moduleNameXML.Value = function.Item2.G.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
+                        moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
+                        moduleNameXML.Value = function.Item2.B.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
                     }
                 }
-                var membershipFunctions = new List<(IMembershipFunction, Color)>();
-                foreach (var function in repository.GetCollection<IMembershipFunction>())
+                else
                 {
-                    foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
-                    {
-                        if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
-                        {
-                            string r = childnode.Attributes["R"].Value;
-                            string g = childnode.Attributes["G"].Value;
-                            string b = childnode.Attributes["B"].Value;
-                            if (r != null && g != null && b != null)
-                                membershipFunctions.Add((function, Color.FromArgb(int.Parse(r), int.Parse(g), int.Parse(b))));
-                            else
-                                membershipFunctions.Add((function, Color.Black));
-                        }
-                    }
+                    funcNode.InnerText = "Нет термов";
                 }
-                ListofLinguisticVariable.Add(new LinguisticVariable(namefromNode, redactfromNode, newSet, membershipFunctions));
+                linguisticNode.AppendChild(funcNode);
             }
-            return ListofLinguisticVariable;
         }
     }
 }

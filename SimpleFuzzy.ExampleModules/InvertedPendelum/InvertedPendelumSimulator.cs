@@ -6,7 +6,7 @@ namespace InvertedPendelum
     {
         public bool Active { get ; set; }
 
-        public string Name { get; }
+        public string Name { get; } = "Inverted Pendelum";
 
         public object GetVisualObject()
         {

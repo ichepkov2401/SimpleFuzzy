@@ -33,10 +33,10 @@ namespace SimpleFuzzy.View
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
             tableLayoutPanel = new TableLayoutPanel();
             logoPictureBox = new PictureBox();
-            labelProductName = new MetroFramework.Controls.MetroLabel();
-            labelVersion = new MetroFramework.Controls.MetroLabel();
-            labelCopyright = new MetroFramework.Controls.MetroLabel();
-            labelCompanyName = new MetroFramework.Controls.MetroLabel();
+            labelProductName = new Label();
+            labelVersion = new Label();
+            labelCopyright = new Label();
+            labelCompanyName = new Label();
             okButton = new MetroFramework.Controls.MetroButton();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logoPictureBox).BeginInit();
@@ -82,94 +82,62 @@ namespace SimpleFuzzy.View
             // 
             // labelProductName
             // 
-            labelProductName.CustomBackground = false;
             labelProductName.Dock = DockStyle.Fill;
-            labelProductName.FontSize = MetroLabelSize.Medium;
-            labelProductName.FontWeight = MetroLabelWeight.Bold;
-            labelProductName.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
             labelProductName.Location = new Point(191, 0);
             labelProductName.Margin = new Padding(8, 0, 4, 0);
             labelProductName.MaximumSize = new Size(0, 26);
             labelProductName.Name = "labelProductName";
             labelProductName.Size = new Size(361, 26);
-            labelProductName.Style = MetroColorStyle.Blue;
-            labelProductName.StyleManager = null;
             labelProductName.TabIndex = 19;
             labelProductName.Text = "Название продукта";
             labelProductName.TextAlign = ContentAlignment.MiddleLeft;
-            labelProductName.Theme = MetroThemeStyle.Light;
-            labelProductName.UseStyleColors = false;
             // 
             // labelVersion
             // 
-            labelVersion.CustomBackground = false;
             labelVersion.Dock = DockStyle.Fill;
-            labelVersion.FontSize = MetroLabelSize.Medium;
-            labelVersion.FontWeight = MetroLabelWeight.Regular;
-            labelVersion.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
             labelVersion.Location = new Point(191, 36);
             labelVersion.Margin = new Padding(8, 0, 4, 0);
             labelVersion.MaximumSize = new Size(0, 26);
             labelVersion.Name = "labelVersion";
             labelVersion.Size = new Size(361, 26);
-            labelVersion.Style = MetroColorStyle.Blue;
-            labelVersion.StyleManager = null;
             labelVersion.TabIndex = 0;
             labelVersion.Text = "Версия";
             labelVersion.TextAlign = ContentAlignment.MiddleLeft;
-            labelVersion.Theme = MetroThemeStyle.Light;
-            labelVersion.UseStyleColors = false;
             // 
             // labelCopyright
             // 
-            labelCopyright.CustomBackground = false;
             labelCopyright.Dock = DockStyle.Fill;
-            labelCopyright.FontSize = MetroLabelSize.Medium;
-            labelCopyright.FontWeight = MetroLabelWeight.Regular;
-            labelCopyright.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
             labelCopyright.Location = new Point(191, 72);
             labelCopyright.Margin = new Padding(8, 0, 4, 0);
             labelCopyright.MaximumSize = new Size(0, 26);
             labelCopyright.Name = "labelCopyright";
             labelCopyright.Size = new Size(361, 26);
-            labelCopyright.Style = MetroColorStyle.Blue;
-            labelCopyright.StyleManager = null;
             labelCopyright.TabIndex = 21;
             labelCopyright.Text = "Авторские права";
             labelCopyright.TextAlign = ContentAlignment.MiddleLeft;
-            labelCopyright.Theme = MetroThemeStyle.Light;
-            labelCopyright.UseStyleColors = false;
             // 
             // labelCompanyName
             // 
-            labelCompanyName.CustomBackground = false;
             labelCompanyName.Dock = DockStyle.Fill;
-            labelCompanyName.FontSize = MetroLabelSize.Medium;
-            labelCompanyName.FontWeight = MetroLabelWeight.Regular;
-            labelCompanyName.LabelMode = MetroFramework.Controls.MetroLabelMode.Default;
             labelCompanyName.Location = new Point(191, 108);
             labelCompanyName.Margin = new Padding(8, 0, 4, 0);
             labelCompanyName.MaximumSize = new Size(0, 26);
             labelCompanyName.Name = "labelCompanyName";
             labelCompanyName.Size = new Size(361, 26);
-            labelCompanyName.Style = MetroColorStyle.Blue;
-            labelCompanyName.StyleManager = null;
             labelCompanyName.TabIndex = 22;
             labelCompanyName.Text = "Название организации";
             labelCompanyName.TextAlign = ContentAlignment.MiddleLeft;
-            labelCompanyName.Theme = MetroThemeStyle.Light;
-            labelCompanyName.UseStyleColors = false;
             // 
             // okButton
             // 
             okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             okButton.DialogResult = DialogResult.Cancel;
-            okButton.Highlight = true;
+            okButton.Highlight = false;
             okButton.Location = new Point(452, 329);
             okButton.Margin = new Padding(4, 5, 4, 5);
             okButton.Name = "okButton";
             okButton.Size = new Size(100, 27);
-            okButton.Style = MetroColorStyle.Green;
+            okButton.Style = MetroColorStyle.Blue;
             okButton.StyleManager = null;
             okButton.TabIndex = 24;
             okButton.Text = "&ОК";
@@ -182,7 +150,6 @@ namespace SimpleFuzzy.View
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(580, 435);
             Controls.Add(tableLayoutPanel);
-            Location = new Point(0, 0);
             Margin = new Padding(4, 5, 4, 5);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -200,11 +167,11 @@ namespace SimpleFuzzy.View
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.PictureBox logoPictureBox;
-        private MetroFramework.Controls.MetroLabel labelProductName;
-        private MetroFramework.Controls.MetroLabel labelVersion;
-        private MetroFramework.Controls.MetroLabel labelCopyright;
-        private MetroFramework.Controls.MetroLabel labelCompanyName;
-        private MetroFramework.Controls.MetroTextBox textBoxDescription;
+        private System.Windows.Forms.Label labelProductName;
+        private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.Label labelCopyright;
+        private System.Windows.Forms.Label labelCompanyName;
+        private System.Windows.Forms.TextBox textBoxDescription;
         private MetroFramework.Controls.MetroButton okButton;
     }
 }

@@ -1,10 +1,9 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmDelete : MetroUserControl
+    public partial class ConfirmDelete : UserControl
     {
         IProjectListService projectList;
         public ConfirmDelete()

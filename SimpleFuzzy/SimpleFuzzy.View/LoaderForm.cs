@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
 using System.Runtime.Loader;
 using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class LoaderForm : MetroUserControl
+    public partial class LoaderForm : UserControl
     {
         public IAssemblyLoaderService moduleLoaderService;
         public IRepositoryService repositoryService;

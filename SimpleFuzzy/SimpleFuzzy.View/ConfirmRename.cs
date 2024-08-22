@@ -1,9 +1,8 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmRename : MetroUserControl
+    public partial class ConfirmRename : UserControl
     {
         IProjectListService projectList;
         public ConfirmRename()

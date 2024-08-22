@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime.Tree;
-using MetroFramework.Controls;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Legends;
@@ -9,7 +8,7 @@ using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
-    public partial class GenerationMembershipUI : MetroUserControl
+    public partial class GenerationMembershipUI : UserControl
     {
         private List<(TextBox Condition, TextBox Value)> conditionControls = new List<(TextBox, TextBox)>();
         private IGenerationMembershipFunctionService generator;

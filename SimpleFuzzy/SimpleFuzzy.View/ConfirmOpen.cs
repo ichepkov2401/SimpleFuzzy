@@ -1,9 +1,8 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmOpen : MetroUserControl
+    public partial class ConfirmOpen : UserControl
     {
         IProjectListService projectList;
         public ConfirmOpen()

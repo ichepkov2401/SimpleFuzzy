@@ -40,12 +40,27 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
             UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
             UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
-
-            toolTip1.AutoPopDelay = 5000;
-            toolTip1.InitialDelay = 1000;
-            toolTip1.ReshowDelay = 500;
+            AllButtonsEnable();
             Locked();
             timer1.Start();
+        }
+        //////////////////// Выбор цвета
+        private Color EnabledColor() { return Color.LightGray; }
+        private Color ActiveColor() { return Color.LightBlue; }
+        //////////////////// Вспомогательные функции
+        private void AllButtonsEnable()
+        {
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            button4.Enabled = true;
+            button5.Enabled = true;
+            button6.Enabled = true;
+            button7.Enabled = true;
+            button8.Enabled = true;
+            button9.Enabled = true;
+            button10.Enabled = true;
+            button11.Enabled = true;
         }
 
         private UserControl AddSimulation()
@@ -63,125 +78,39 @@ namespace SimpleFuzzy.View
             if (projectList.CurrentProjectName != null) label1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
             else label1.Text = "";
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Create, button1);
-            Left.Enabled = false;
-            Right.Enabled = false;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Open, button2);
-            Left.Enabled = false;
-            Right.Enabled = false;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Delete, button3);
-            Left.Enabled = false;
-            Right.Enabled = false;
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Rename, button4);
-            Left.Enabled = false;
-            Right.Enabled = false;
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.SaveAs, button5);
-            Left.Enabled = false;
-            Right.Enabled = false;
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            projectList.SaveAll();
-            // сохранение
-        }
-        private void button7_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Loader, button7);
-            Left.Enabled = false;
-            Right.Enabled = true;
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Fasification, button8);
-            Left.Enabled = true;
-            Right.Enabled = true;
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Inference, button9);
-            Left.Enabled = true;
-            Right.Enabled = true;
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Defasification, button10);
-            Left.Enabled = true;
-            if (isContainSimulator) Right.Enabled = true;
-            else { Right.Enabled = false; }
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-            SwichUserControl(UserControlsEnum.Simulation, button11);
-            Left.Enabled = true;
-            Right.Enabled = false;
-        }
         public void OpenLoader()
         {
             if (projectList.CurrentProjectName != null) label1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
             SwichUserControl(UserControlsEnum.Loader, button7);
-            Left.Enabled = false;
-            Right.Enabled = true;
-        }
-        private void button12_Click(object sender, EventArgs e)
-        {
-            AboutBox aboutBox = new AboutBox();
-            aboutBox.Show();
-
-        }
-        private void menuStrip2_GotFocus(object sender, EventArgs e)
-        {
-
         }
         public void Locked()
         {
             if (projectList.CurrentProjectName == null)
             {
-                button3.Enabled = false;
-                button4.Enabled = false;
-                button5.Enabled = false;
-                button6.Enabled = false;
-                button7.Enabled = false;
-                button8.Enabled = false;
-                button9.Enabled = false;
-                button10.Enabled = false;
-                button11.Enabled = false;
+                button3.BackColor = EnabledColor();
+                button4.BackColor = EnabledColor();
+                button5.BackColor = EnabledColor();
+                button6.BackColor = EnabledColor();
+                button7.BackColor = EnabledColor();
+                button8.BackColor = EnabledColor();
+                button9.BackColor = EnabledColor();
+                button10.BackColor = EnabledColor();
+                button11.BackColor = EnabledColor();
                 Left.Enabled = false;
                 Right.Enabled = false;
             }
             else
             {
-                button3.Enabled = true;
-                button4.Enabled = true;
-                button5.Enabled = true;
-                button6.Enabled = true;
-                button7.Enabled = true;
-                button8.Enabled = true;
-                button9.Enabled = true;
-                button10.Enabled = true;
-                if (isContainSimulator) button11.Enabled = true;
+                button3.BackColor = DefaultBackColor;
+                button4.BackColor = DefaultBackColor;
+                button5.BackColor = DefaultBackColor;
+                button6.BackColor = DefaultBackColor;
+                button7.BackColor = DefaultBackColor;
+                button8.BackColor = DefaultBackColor;
+                button9.BackColor = DefaultBackColor;
+                button10.BackColor = DefaultBackColor;
+                if (isContainSimulator) button11.BackColor = DefaultBackColor;
+                else button11.BackColor = EnabledColor();
                 Left.Enabled = true;
                 Right.Enabled = true;
             }
@@ -189,17 +118,16 @@ namespace SimpleFuzzy.View
 
         public void EnableSimulationsButton(bool enable)
         {
-            this.button11.Enabled = enable;
+            if (enable) button11.BackColor = DefaultBackColor;
+            else button11.BackColor = EnabledColor();
         }
         public void ColorDelete()
         {
             button1.BackColor = DefaultBackColor;
             button2.BackColor = DefaultBackColor;
-            button3.BackColor = DefaultBackColor;
+            button3.BackColor = EnabledColor();
             lastControlEnum = null;
             lastButton = null;
-            button1.Enabled = true;
-            button2.Enabled = true;
         }
 
         private bool IsSecondMenu(UserControlsEnum? control)
@@ -209,17 +137,129 @@ namespace SimpleFuzzy.View
                 control == UserControlsEnum.SaveAs) return false;
             else return true;
         }
+        ////////////////////// Нажатие кнопок на menuStrip
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (button1.BackColor != EnabledColor() && button1.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Create, button1);
+                Left.Enabled = false;
+                Right.Enabled = false;
+            }
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (button2.BackColor != EnabledColor() && button2.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Open, button2);
+                Left.Enabled = false;
+                Right.Enabled = false;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (button3.BackColor != EnabledColor() && button3.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Delete, button3);
+                Left.Enabled = false;
+                Right.Enabled = false;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (button4.BackColor != EnabledColor() && button4.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Rename, button4);
+                Left.Enabled = false;
+                Right.Enabled = false;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (button5.BackColor != EnabledColor() && button5.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.SaveAs, button5);
+                Left.Enabled = false;
+                Right.Enabled = false;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (button6.BackColor != EnabledColor())
+            {
+                projectList.SaveAll();
+            }
+            // сохранение
+        }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (button7.BackColor != EnabledColor() && button7.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Loader, button7);
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (button8.BackColor != EnabledColor() && button8.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Fasification, button8);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (button9.BackColor != EnabledColor() && button9.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Inference, button9);
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (button10.BackColor != EnabledColor() && button10.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Defasification, button10);
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (button11.BackColor != EnabledColor() && button11.BackColor != ActiveColor())
+            {
+                SwichUserControl(UserControlsEnum.Simulation, button11);
+            }
+        }
+        private void button12_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.Show();
+
+        }
+        private void button13_Click(object sender, EventArgs e)
+        {
+            HelpWindow help = new HelpWindow();
+            help.Show();
+        }
+
+        ////////////////// Переход между элементами управления
         public void SwichUserControl(UserControlsEnum? newWindowName, ToolStripMenuItem clickedButton)
         {
             foreach (var item in workspaceButtons)
             {
-                item.Enabled = true;
                 item.BackColor = DefaultBackColor;
+                if (isContainSimulator) button11.BackColor = DefaultBackColor;
+                else button11.BackColor = EnabledColor();
             }
-            clickedButton.BackColor = Color.LightBlue;
-            clickedButton.Enabled = false;
-            if (!isContainSimulator) button11.Enabled = false;
+            clickedButton.BackColor = ActiveColor();
+            if (!isContainSimulator) button11.BackColor = EnabledColor()
+                    
+                    ;
             if (IsSecondMenu(currentControlEnum))
             {
                 lastControlEnum = currentControlEnum;
@@ -240,14 +280,39 @@ namespace SimpleFuzzy.View
                 toRemove.Controls.Add(currentControl);
                 currentControl.Location = new Point(0, 140);
             }
+            RightLeftEnable(newWindowName);
         }
 
-        private void button13_Click(object sender, EventArgs e)
+        private void RightLeftEnable(UserControlsEnum? newWindowName)
         {
-            HelpWindow help = new HelpWindow();
-            help.Show();
+            if (newWindowName == UserControlsEnum.Loader)
+            {
+                Left.Enabled = false;
+                Right.Enabled = true;
+                return;
+            }
+            if (newWindowName == UserControlsEnum.Inference || newWindowName == UserControlsEnum.Fasification)
+            {
+                Left.Enabled = true;
+                Right.Enabled = true;
+                return;
+            }
+            if (newWindowName == UserControlsEnum.Defasification)
+            {
+                Left.Enabled = true;
+                if (isContainSimulator) Right.Enabled = true;
+                else { Right.Enabled = false; }
+                return;
+            }
+            if (newWindowName == UserControlsEnum.Simulation)
+            {
+                Left.Enabled = true;
+                Right.Enabled = false;
+                return;
+            }
         }
 
+        //////////////////// Подсветка подсказки симулятора
         private void timer1_Tick(object sender, EventArgs e)
         {
             var v = new Point(MousePosition.X - (Location.X + menuStrip2.Location.X + button11.Bounds.Location.X),
@@ -289,27 +354,27 @@ namespace SimpleFuzzy.View
 
             }
         }
-
+        //////////////////// Кнопки вправо влево
         private void Left_Click(object sender, EventArgs e)
         {
-            if (button8.Enabled == false)
+            if (button8.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Loader, button7);
                 Left.Enabled = false;
                 return;
             }
-            if (button9.Enabled == false)
+            if (button9.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Fasification, button8);
                 return;
             }
-            if (button10.Enabled == false)
+            if (button10.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Inference, button9);
                 Right.Enabled = true;
                 return;
             }
-            if (button11.Enabled == false && isContainSimulator == true)
+            if (button11.BackColor == ActiveColor() && isContainSimulator == true)
             {
                 SwichUserControl(UserControlsEnum.Defasification, button10);
                 Right.Enabled = true;
@@ -319,27 +384,24 @@ namespace SimpleFuzzy.View
 
         private void Right_Click(object sender, EventArgs e)
         {
-            if (button7.Enabled == false)
+            if (button7.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Fasification, button8);
-                Left.Enabled = true;
                 return;
             }
-            if (button8.Enabled == false)
+            if (button8.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Inference, button9);
                 return;
             }
-            if (button9.Enabled == false)
+            if (button9.BackColor == ActiveColor())
             {
                 SwichUserControl(UserControlsEnum.Defasification, button10);
-                if (!isContainSimulator) Right.Enabled = false;
                 return;
             }
-            if (button10.Enabled == false && isContainSimulator == true)
+            if (button10.BackColor == ActiveColor() && isContainSimulator == true)
             {
                 SwichUserControl(UserControlsEnum.Simulation, button11);
-                Right.Enabled = false;
                 return;
             }
         }

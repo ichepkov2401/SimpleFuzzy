@@ -138,7 +138,6 @@ namespace SimpleFuzzy.View
             menuStrip2.Size = new Size(914, 28);
             menuStrip2.TabIndex = 1;
             menuStrip2.Text = "menuStrip2";
-            menuStrip2.GotFocus += menuStrip2_GotFocus;
             // 
             // button7
             // 
@@ -188,6 +187,7 @@ namespace SimpleFuzzy.View
             // 
             // timer1
             // 
+            timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
             // Left

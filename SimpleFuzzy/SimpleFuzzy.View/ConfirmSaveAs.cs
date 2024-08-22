@@ -29,7 +29,7 @@ namespace SimpleFuzzy.View
                 MessageBox.Show("Введите новое имя проекта");
                 return;
             }
-            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text); }
+            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

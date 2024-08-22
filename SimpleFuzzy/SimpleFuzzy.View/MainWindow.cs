@@ -262,7 +262,7 @@ namespace SimpleFuzzy.View
                 currentControlEnum = newWindowName;
                 currentButton = clickedButton;
                 toRemove.Controls.Add(currentControl);
-                currentControl.Location = new Point(0, 140);
+                currentControl.Location = new Point(0, 150);
             }
             RightLeftEnable(newWindowName);
         }

@@ -85,7 +85,6 @@ namespace SimpleFuzzy.View
             // 
             // button3
             // 
-            button3.Enabled = false;
             button3.Name = "button3";
             button3.Size = new Size(79, 24);
             button3.Text = "Удалить";
@@ -93,7 +92,6 @@ namespace SimpleFuzzy.View
             // 
             // button4
             // 
-            button4.Enabled = false;
             button4.Name = "button4";
             button4.Size = new Size(135, 24);
             button4.Text = "Переименовать";
@@ -101,7 +99,6 @@ namespace SimpleFuzzy.View
             // 
             // button5
             // 
-            button5.Enabled = false;
             button5.Name = "button5";
             button5.Size = new Size(123, 24);
             button5.Text = "Сохранить как";
@@ -109,7 +106,6 @@ namespace SimpleFuzzy.View
             // 
             // button6
             // 
-            button6.Enabled = false;
             button6.Name = "button6";
             button6.Size = new Size(97, 24);
             button6.Text = "Сохранить";

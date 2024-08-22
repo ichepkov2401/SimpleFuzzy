@@ -40,7 +40,6 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
             UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
             UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
-            AllButtonsEnable();
             Locked();
             timer1.Start();
         }
@@ -48,21 +47,6 @@ namespace SimpleFuzzy.View
         private Color EnabledColor() { return Color.LightGray; }
         private Color ActiveColor() { return Color.LightBlue; }
         //////////////////// Вспомогательные функции
-        private void AllButtonsEnable()
-        {
-            button1.Enabled = true;
-            button2.Enabled = true;
-            button3.Enabled = true;
-            button4.Enabled = true;
-            button5.Enabled = true;
-            button6.Enabled = true;
-            button7.Enabled = true;
-            button8.Enabled = true;
-            button9.Enabled = true;
-            button10.Enabled = true;
-            button11.Enabled = true;
-        }
-
         private UserControl AddSimulation()
         {
             ISimulator simulator = repositoryService.GetCollection<ISimulator>().FirstOrDefault(t => t.Active);

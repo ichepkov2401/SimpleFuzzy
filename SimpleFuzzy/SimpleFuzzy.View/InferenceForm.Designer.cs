@@ -68,7 +68,6 @@
             // 
             // stringsListView
             // 
-            stringsListView.Columns.AddRange(new ColumnHeader[] { stringsListViewСolumnHeader, StringsCloseButtons });
             stringsListView.FullRowSelect = true;
             stringsListView.Location = new Point(188, 169);
             stringsListView.Name = "stringsListView";
@@ -88,7 +87,6 @@
             // 
             // columnsListView
             // 
-            columnsListView.Columns.AddRange(new ColumnHeader[] { columnsListViewСolumnHeader, columnsCloseButtons });
             columnsListView.FullRowSelect = true;
             columnsListView.Location = new Point(481, 169);
             columnsListView.Name = "columnsListView";

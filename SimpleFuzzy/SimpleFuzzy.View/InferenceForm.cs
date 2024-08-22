@@ -16,6 +16,18 @@ namespace SimpleFuzzy.View
             foreach (var linguisticVariable in variableList) isUsed[linguisticVariable.Name] = "false";
             RefreshAll();
             InitializeComponent();
+            stringsListView.Columns.AddRange(new ColumnHeader[] { stringsListViewСolumnHeader, StringsCloseButtons });
+            ListViewExtender stringExtender = new ListViewExtender(stringsListView);
+            ListViewButtonColumn stringButtonAction = new ListViewButtonColumn(1);
+            stringButtonAction.Click += StringOnButtonActionClick;
+            stringButtonAction.FixedWidth = true;
+            stringExtender.AddColumn(stringButtonAction);
+            columnsListView.Columns.AddRange(new ColumnHeader[] { columnsListViewСolumnHeader, columnsCloseButtons });
+            ListViewExtender columnExtender = new ListViewExtender(columnsListView);
+            ListViewButtonColumn columnButtonAction = new ListViewButtonColumn(1);
+            columnButtonAction.Click += ColumnOnButtonActionClick;
+            columnButtonAction.FixedWidth = true;
+            columnExtender.AddColumn(columnButtonAction);
         }
 
         public List<LinguisticVariable> GetLinguisticVariableList()

@@ -4,31 +4,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SimpleFuzzy.Model
 {
     public class Rule
     {
         // НА НУЛЕВОЙ ПОЗИЦИИ ВСЕГДА ТЕРМ ВЫХОДНОЙ ПЕРЕМЕННОЙ
-        private Dictionary<int, string> terms = new Dictionary<int, string>(); // Список термов методы 
-        public double relevance = 1.0; // Степень заполняемости
+        private List<IMembershipFunction> terms = new List<IMembershipFunction>(); // Список термов 
+        public double relevance = 1; // Степень заполняемости
         public bool IsActive { get; set; } // Автосвойство активности
 
-        public void AddTerm(string name, int position)
+        public Rule(int count) 
         {
-            terms.Add(position, name);
+            for (int i = 0; i < count; i++) { AddNullTerm(); }
         }
-
-        public void RedactTerm(string lastName, string newName)
+        public void AddNullTerm()
         {
-            for (int i = 0; i < terms.Count; i++)
-            {
-                if (terms[i] == lastName)
-                {
-                    terms[i] = newName;
-                    return;
-                }
-            }
+            terms.Add(null);
+        }
+        public void DeleteTerm(int position)
+        {
+            terms.RemoveAt(position);
+        }
+        public void RedactTerm(IMembershipFunction func, int position)
+        {
+            terms[position] = func;
         }
     }
 }

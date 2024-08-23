@@ -8,6 +8,7 @@ namespace SimpleFuzzy.Model
 {
     public class SetRule
     {
+        // список словарей
         public List<Rule> rules; // список правил с одной и той же выходной переменной
         public List<LinguisticVariable> inputVariables; // список входных переменных
         public LinguisticVariable outVariable; // выходная переменная
@@ -20,19 +21,27 @@ namespace SimpleFuzzy.Model
 
         public void AddInputVar(LinguisticVariable inputVar)
         {
+            // Добавляем пустые термы
+            foreach (var rule in rules) { rule.AddNullTerm(); }
+            // Добавляем ЛП
             inputVariables.Add(inputVar);
         }
 
-        public void DeleteInputVar(string name)
+        public void DeleteInputVar(string name, int position)
         {
-            foreach(LinguisticVariable var in inputVariables)
+            int index = 0;
+            // Удаляем ЛП из списка
+            for (int i = 1; i < inputVariables.Count; i++)
             {
-                if (var.Name == name)
+                if (inputVariables[i].Name == name)
                 {
-                    inputVariables.Remove(var);
+                    inputVariables.RemoveAt(i);
+                    index = i;
                     break;
                 }
             }
+            // Удаляем термы из всех правил для удаляемой ЛП
+            foreach (var rule in rules) { rule.DeleteTerm(position); }
         }
     }
 }

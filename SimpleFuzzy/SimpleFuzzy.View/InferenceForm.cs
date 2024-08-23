@@ -39,13 +39,15 @@ namespace SimpleFuzzy.View
             DataGridViewComboBoxColumn comboBox = new DataGridViewComboBoxColumn();
             comboBox.HeaderText = name;
             dataTable.Columns.Add(comboBox);
-            Rule rule = new Rule();
+            Rule rule = new Rule(1);
             currentOutputVar.listRules.rules.Add(rule);
+
+            List<string> term = new List<string>();
+            foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
+            (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = term;
+
             dataTable.Rows[0].Cells[1].Value = currentOutputVar.listRules.rules[0].relevance;
 
-            List<string> list = new List<string>();
-            foreach (IMembershipFunction func in repositoryService.GetCollection<IMembershipFunction>()) { list.Add(func.Name); }
-            (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = list;
         }
         private void OutputVariableComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -62,6 +64,7 @@ namespace SimpleFuzzy.View
                 }
             }
             currentOutputVar = temp;
+            // добавление таблицы
             SetRule setRule = new SetRule(currentOutputVar);
             currentOutputVar.listRules = setRule;
             AddTable(outputVariableComboBox.SelectedItem.ToString());
@@ -71,6 +74,7 @@ namespace SimpleFuzzy.View
         {
             inputVariablesComboBox.Text = inputVariablesComboBox.SelectedItem.ToString();
         }
+        //////////////////// Добавление столбца
         private void AddInbutton_Click(object sender, EventArgs e)
         {
             if (inputVariablesComboBox.Text != null)
@@ -84,19 +88,39 @@ namespace SimpleFuzzy.View
                         column.HeaderText = inputVariablesComboBox.Text;
                         dataTable.Columns.Insert(1, column);
                         currentOutputVar.listRules.AddInputVar(var);
+
+                        List<string> term = new List<string>();
+                        foreach (var func in currentOutputVar.func)
+                        {
+                            term.Add(func.Item1.Name);
+                        }
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = term;
+                        }
                         break;
                     }
                 }
                 inputVariablesComboBox.Items.Remove(inputVariablesComboBox.Text);
             }
         }
+        private IMembershipFunction GiveFunc(string name, LinguisticVariable variable)
+        {
+            for (int i = 0; i < variable.func.Count; i++) 
+            {
+                if (variable.func[i].Item1.Name == name) { return variable.func[i].Item1; }
+            }
+            return null; // Сюда заходить не будет (надо чтобы все пути к коду возвращали значение)
+        }
 
+        ////////////////// Изменение значений
         private void dataTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 0) { return; } // ID
             else if (e.ColumnIndex == dataTable.ColumnCount - 1) // ВЫХОДНАЯ ПЕРЕМЕНННАЯ
             {
-
+                IMembershipFunction func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar);
+                currentOutputVar.listRules.rules[e.RowIndex].RedactTerm(func, 0);
             }
             else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
             {
@@ -105,9 +129,50 @@ namespace SimpleFuzzy.View
                 {
                     currentOutputVar.listRules.rules[e.RowIndex].relevance = n;
                 }
-                else { 
+                else
+                {
                     MessageBox.Show("Релевантность должна находиться в диапазоне [0, 1]");
                     dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
+                }
+            }
+            else // СТОЛБЦЫ С ВХОДНЫМИ ПЕРЕМЕННЫМИ
+            {
+                IMembershipFunction func = null;
+                for (int i = 0; i < currentOutputVar.listRules.inputVariables.Count; i++)
+                {
+                    if (currentOutputVar.listRules.inputVariables[i].Name == dataTable.Columns[e.ColumnIndex].Name)
+                    {
+                        func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar.listRules.inputVariables[i]);
+                        break;
+                    }
+                }
+                currentOutputVar.listRules.rules[e.RowIndex].RedactTerm(func, e.ColumnIndex);
+            }
+        }
+        //////////////////// Добавление строк
+        private void dataTable_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            if (Id != 1)
+            {
+                dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
+                Id++;
+                Rule rule = new Rule(dataTable.ColumnCount - 2);
+                currentOutputVar.listRules.rules.Add(rule);
+            }
+            for (int i = 0; i < dataTable.ColumnCount - 2; i++) 
+            {
+                List<string> term = new List<string>();
+                foreach (var func in currentOutputVar.func)
+                {
+                    term.Add(func.Item1.Name);
+                }
+                if (i == 0)
+                {
+                    (dataTable.Columns[dataTable.ColumnCount - 1] as DataGridViewComboBoxColumn).DataSource = term;
+                }
+                else
+                {
+                    (dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = term;
                 }
             }
         }

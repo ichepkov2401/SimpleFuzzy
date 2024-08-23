@@ -59,7 +59,7 @@ namespace SimpleFuzzy.View
             // 
             // AddInbutton
             // 
-            AddInbutton.Location = new Point(370, 95);
+            AddInbutton.Location = new Point(381, 95);
             AddInbutton.Name = "AddInbutton";
             AddInbutton.Size = new Size(152, 29);
             AddInbutton.TabIndex = 3;
@@ -70,7 +70,7 @@ namespace SimpleFuzzy.View
             // inputVariablesComboBox
             // 
             inputVariablesComboBox.FormattingEnabled = true;
-            inputVariablesComboBox.Location = new Point(170, 95);
+            inputVariablesComboBox.Location = new Point(181, 95);
             inputVariablesComboBox.Name = "inputVariablesComboBox";
             inputVariablesComboBox.Size = new Size(194, 28);
             inputVariablesComboBox.TabIndex = 4;
@@ -79,7 +79,7 @@ namespace SimpleFuzzy.View
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(3, 95);
+            label1.Location = new Point(14, 95);
             label1.Name = "label1";
             label1.Size = new Size(164, 20);
             label1.TabIndex = 5;
@@ -112,6 +112,7 @@ namespace SimpleFuzzy.View
             dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
+            dataTable.RowsAdded += dataTable_RowsAdded;
             // 
             // InferenceForm
             // 

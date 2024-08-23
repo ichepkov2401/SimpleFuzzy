@@ -21,9 +21,9 @@ namespace SimpleFuzzy.View
 
         private void InitializeComponent()
         {
-            TreeNode treeNode1 = new TreeNode("Термы");
-            TreeNode treeNode2 = new TreeNode("Базовые множества");
-            TreeNode treeNode3 = new TreeNode("Симуляции");
+            TreeNode treeNode4 = new TreeNode("Термы");
+            TreeNode treeNode5 = new TreeNode("Базовые множества");
+            TreeNode treeNode6 = new TreeNode("Симуляции");
             filePathTextBox = new TextBox();
             browseButton = new Button();
             loadButton = new Button();
@@ -79,13 +79,13 @@ namespace SimpleFuzzy.View
             treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Name = "";
-            treeNode1.Text = "Термы";
-            treeNode2.Name = "";
-            treeNode2.Text = "Базовые множества";
-            treeNode3.Name = "";
-            treeNode3.Text = "Симуляции";
-            treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
+            treeNode4.Name = "";
+            treeNode4.Text = "Термы";
+            treeNode5.Name = "";
+            treeNode5.Text = "Базовые множества";
+            treeNode6.Name = "";
+            treeNode6.Text = "Симуляции";
+            treeView1.Nodes.AddRange(new TreeNode[] { treeNode4, treeNode5, treeNode6 });
             treeView1.ShowNodeToolTips = true;
             treeView1.Size = new Size(398, 227);
             treeView1.TabIndex = 0;
@@ -97,7 +97,7 @@ namespace SimpleFuzzy.View
             dllListView.Location = new Point(10, 23);
             dllListView.Name = "dllListView";
             dllListView.ShowItemToolTips = true;
-            dllListView.Size = new Size(881, 186);
+            dllListView.Size = new Size(881, 181);
             dllListView.TabIndex = 6;
             dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.View = System.Windows.Forms.View.Details;
@@ -116,7 +116,7 @@ namespace SimpleFuzzy.View
             groupBoxLoader.Controls.Add(browseButton);
             groupBoxLoader.Controls.Add(loadButton);
             groupBoxLoader.Controls.Add(messageTextBox);
-            groupBoxLoader.Location = new Point(430, 3);
+            groupBoxLoader.Location = new Point(423, 3);
             groupBoxLoader.Name = "groupBoxLoader";
             groupBoxLoader.Size = new Size(483, 256);
             groupBoxLoader.TabIndex = 0;
@@ -126,7 +126,7 @@ namespace SimpleFuzzy.View
             // groupBoxModules
             // 
             groupBoxModules.Controls.Add(treeView1);
-            groupBoxModules.Location = new Point(10, 3);
+            groupBoxModules.Location = new Point(3, 3);
             groupBoxModules.Name = "groupBoxModules";
             groupBoxModules.Size = new Size(414, 256);
             groupBoxModules.TabIndex = 1;
@@ -136,21 +136,21 @@ namespace SimpleFuzzy.View
             // groupBoxDLL
             // 
             groupBoxDLL.Controls.Add(dllListView);
-            groupBoxDLL.Location = new Point(10, 265);
+            groupBoxDLL.Location = new Point(3, 265);
             groupBoxDLL.Name = "groupBoxDLL";
-            groupBoxDLL.Size = new Size(903, 215);
+            groupBoxDLL.Size = new Size(903, 210);
             groupBoxDLL.TabIndex = 7;
             groupBoxDLL.TabStop = false;
             groupBoxDLL.Text = "Загруженные DLL файлы";
             // 
             // LoaderForm
             // 
-            BackColor = Color.White;
+            BackColor = Color.Transparent;
             Controls.Add(groupBoxLoader);
             Controls.Add(groupBoxModules);
             Controls.Add(groupBoxDLL);
             Name = "LoaderForm";
-            Size = new Size(916, 490);
+            Size = new Size(916, 486);
             groupBoxLoader.ResumeLayout(false);
             groupBoxLoader.PerformLayout();
             groupBoxModules.ResumeLayout(false);

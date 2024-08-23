@@ -15,7 +15,6 @@
 
         private void InitializeComponent()
         {
-
             txtFirst = new TextBox();
             txtStep = new TextBox();
             txtLast = new TextBox();
@@ -33,36 +32,44 @@
             // 
             // txtFirst
             // 
+            txtFirst.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtFirst.Location = new Point(187, 34);
             txtFirst.Margin = new Padding(4, 5, 4, 5);
             txtFirst.Name = "txtFirst";
             txtFirst.Size = new Size(132, 27);
             txtFirst.TabIndex = 1;
+            txtFirst.TextChanged += ValidateInput;
             // 
             // txtStep
             // 
+            txtStep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtStep.Location = new Point(187, 80);
             txtStep.Margin = new Padding(4, 5, 4, 5);
             txtStep.Name = "txtStep";
             txtStep.Size = new Size(132, 27);
             txtStep.TabIndex = 3;
+            txtStep.TextChanged += ValidateInput;
             // 
             // txtLast
             // 
+            txtLast.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtLast.Location = new Point(187, 126);
             txtLast.Margin = new Padding(4, 5, 4, 5);
             txtLast.Name = "txtLast";
             txtLast.Size = new Size(132, 27);
             txtLast.TabIndex = 5;
+            txtLast.TextChanged += ValidateInput;
             // 
             // btnGenerate
             // 
+            btnGenerate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnGenerate.Location = new Point(187, 172);
             btnGenerate.Margin = new Padding(4, 5, 4, 5);
             btnGenerate.Name = "btnGenerate";
             btnGenerate.Size = new Size(133, 35);
             btnGenerate.TabIndex = 6;
             btnGenerate.Text = "Создать";
+            btnGenerate.Click += ButtonGenerate_Click;
             // 
             // lblError
             // 
@@ -76,7 +83,7 @@
             // 
             // txtGeneratedCode
             // 
-            txtGeneratedCode.Dock = DockStyle.Fill;
+            txtGeneratedCode.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtGeneratedCode.Location = new Point(4, 25);
             txtGeneratedCode.Margin = new Padding(4, 5, 4, 5);
             txtGeneratedCode.Multiline = true;
@@ -118,6 +125,7 @@
             // 
             // grpInput
             // 
+            grpInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             grpInput.Controls.Add(lblFirst);
             grpInput.Controls.Add(txtFirst);
             grpInput.Controls.Add(lblStep);
@@ -137,6 +145,7 @@
             // 
             // grpOutput
             // 
+            grpOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpOutput.Controls.Add(txtGeneratedCode);
             grpOutput.Location = new Point(16, 308);
             grpOutput.Margin = new Padding(4, 5, 4, 5);
@@ -155,6 +164,7 @@
             Controls.Add(grpInput);
             Controls.Add(grpOutput);
             Margin = new Padding(4, 5, 4, 5);
+            MinimumSize = new Size(397, 675);
             Name = "GenerationObjectSetUI";
             Text = "Генератор ObjectSet";
             grpInput.ResumeLayout(false);
@@ -162,11 +172,6 @@
             grpOutput.ResumeLayout(false);
             grpOutput.PerformLayout();
             ResumeLayout(false);
-
-            this.txtFirst.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.txtStep.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.txtLast.TextChanged += new System.EventHandler(this.ValidateInput);
-            this.btnGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
         }
 
         private System.Windows.Forms.TextBox txtFirst;

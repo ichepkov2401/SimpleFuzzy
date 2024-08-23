@@ -200,8 +200,8 @@ namespace SimpleFuzzy.View
             {
                 currentControl = UserControls[newWindowName.Value]();
                 toRemove.Controls.Add(currentControl);
-                currentControl.Location = new Point(0, 120);
-
+                currentControl.Location = new Point(Width/2 - currentControl.Width / 2, 120);
+                currentControl.Anchor = AnchorStyles.Top;
             }
         }
 

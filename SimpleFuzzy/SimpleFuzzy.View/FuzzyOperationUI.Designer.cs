@@ -155,7 +155,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ControlLightLight;
+            BackColor = Color.Transparent;
             Controls.Add(pictureBox1);
             Controls.Add(cancelButton);
             Controls.Add(okButton);

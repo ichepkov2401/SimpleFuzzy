@@ -77,7 +77,7 @@ namespace SimpleFuzzy.View
             // 
             // nameTextBox
             // 
-            nameTextBox.Location = new Point(0, 24);
+            nameTextBox.Location = new Point(8, 24);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.Size = new Size(200, 27);
             nameTextBox.TabIndex = 1;
@@ -86,7 +86,7 @@ namespace SimpleFuzzy.View
             // baseSetLabel
             // 
             baseSetLabel.AutoSize = true;
-            baseSetLabel.Location = new Point(0, 48);
+            baseSetLabel.Location = new Point(8, 48);
             baseSetLabel.Name = "baseSetLabel";
             baseSetLabel.Size = new Size(152, 20);
             baseSetLabel.TabIndex = 2;
@@ -97,7 +97,7 @@ namespace SimpleFuzzy.View
             baseSetComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             baseSetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             baseSetComboBox.ItemHeight = 23;
-            baseSetComboBox.Location = new Point(0, 68);
+            baseSetComboBox.Location = new Point(8, 68);
             baseSetComboBox.Name = "baseSetComboBox";
             baseSetComboBox.Size = new Size(200, 29);
             baseSetComboBox.TabIndex = 3;
@@ -106,7 +106,7 @@ namespace SimpleFuzzy.View
             // termsLabel
             // 
             termsLabel.AutoSize = true;
-            termsLabel.Location = new Point(0, 98);
+            termsLabel.Location = new Point(8, 98);
             termsLabel.Name = "termsLabel";
             termsLabel.Size = new Size(59, 20);
             termsLabel.TabIndex = 4;
@@ -117,14 +117,14 @@ namespace SimpleFuzzy.View
             termsComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             termsComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             termsComboBox.ItemHeight = 23;
-            termsComboBox.Location = new Point(0, 118);
+            termsComboBox.Location = new Point(8, 118);
             termsComboBox.Name = "termsComboBox";
             termsComboBox.Size = new Size(200, 29);
             termsComboBox.TabIndex = 5;
             // 
             // addTermButton
             // 
-            addTermButton.Location = new Point(0, 148);
+            addTermButton.Location = new Point(8, 148);
             addTermButton.Name = "addTermButton";
             addTermButton.Size = new Size(200, 33);
             addTermButton.TabIndex = 6;
@@ -151,7 +151,7 @@ namespace SimpleFuzzy.View
             termsListView.Columns.AddRange(new ColumnHeader[] { TermName, TermColor, CloseButton });
             termsListView.FullRowSelect = true;
             termsListView.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            termsListView.Location = new Point(0, 186);
+            termsListView.Location = new Point(8, 186);
             termsListView.Margin = new Padding(3, 2, 3, 2);
             termsListView.Name = "termsListView";
             termsListView.Size = new Size(200, 242);
@@ -216,7 +216,7 @@ namespace SimpleFuzzy.View
             // 
             // GenerateMembershipFunction
             // 
-            GenerateMembershipFunction.Location = new Point(206, 118);
+            GenerateMembershipFunction.Location = new Point(214, 118);
             GenerateMembershipFunction.Name = "GenerateMembershipFunction";
             GenerateMembershipFunction.Size = new Size(38, 29);
             GenerateMembershipFunction.TabIndex = 15;
@@ -225,7 +225,7 @@ namespace SimpleFuzzy.View
             // 
             // GenerateBaseSet
             // 
-            GenerateBaseSet.Location = new Point(206, 68);
+            GenerateBaseSet.Location = new Point(214, 68);
             GenerateBaseSet.Name = "GenerateBaseSet";
             GenerateBaseSet.Size = new Size(38, 29);
             GenerateBaseSet.TabIndex = 16;

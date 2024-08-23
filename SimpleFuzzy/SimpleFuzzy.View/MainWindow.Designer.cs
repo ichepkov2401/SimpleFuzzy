@@ -49,9 +49,9 @@ namespace SimpleFuzzy.View
             logoBox = new PictureBox();
             toolTip1 = new ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            metroLabel1 = new Label();
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
-            metroLabel1 = new Label();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -99,8 +99,7 @@ namespace SimpleFuzzy.View
             // 
             button5.Enabled = false;
             button5.Name = "button5";
-            button5.Size = new Size(67, 24);
-            button5.Size = new Size(107, 39);
+            button5.Size = new Size(123, 24);
             button5.Text = "Сохранить как";
             button5.Click += button5_Click;
             // 
@@ -193,7 +192,6 @@ namespace SimpleFuzzy.View
             metroLabel1.Name = "metroLabel1";
             metroLabel1.Size = new Size(84, 20);
             metroLabel1.TabIndex = 13;
-            metroLabel1.Text = "";
             // 
             // MainWindow
             // 
@@ -203,8 +201,8 @@ namespace SimpleFuzzy.View
             Controls.Add(menuStrip2);
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
-            Location = new Point(0, 0);
             MainMenuStrip = menuStrip1;
+            MinimumSize = new Size(932, 647);
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
             menuStrip1.ResumeLayout(false);

@@ -153,6 +153,7 @@ namespace SimpleFuzzy.View
             Margin = new Padding(4, 5, 4, 5);
             MaximizeBox = false;
             MinimizeBox = false;
+            MinimumSize = new Size(598, 482);
             Name = "AboutBox";
             Padding = new Padding(12, 60, 12, 14);
             ShowIcon = false;

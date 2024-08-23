@@ -9,7 +9,7 @@ namespace SimpleFuzzy.View
     {
         public IRepositoryService? repositoryService;
         public LinguisticVariable currentOutputVar;
-        private int ID = 0;
+        private int Id = 1;
         public InferenceForm()
         {
             InitializeComponent();
@@ -29,6 +29,8 @@ namespace SimpleFuzzy.View
             if (dataTable != null) dataTable.Columns.Clear();
             dataTable.Columns.Add("", "ID");
             dataTable.Columns[0].ReadOnly = true;
+            dataTable.Rows[0].Cells[0].Value = Id;
+            Id++;
 
             DataGridViewTextBoxColumn textBox = new DataGridViewTextBoxColumn();
             textBox.HeaderText = "Релевантность";
@@ -37,9 +39,12 @@ namespace SimpleFuzzy.View
             DataGridViewComboBoxColumn comboBox = new DataGridViewComboBoxColumn();
             comboBox.HeaderText = name;
             dataTable.Columns.Add(comboBox);
+            Rule rule = new Rule();
+            currentOutputVar.listRules.rules.Add(rule);
+            dataTable.Rows[0].Cells[1].Value = currentOutputVar.listRules.rules[0].relevance;
 
             List<string> list = new List<string>();
-            foreach (IMembershipFunction func in  repositoryService.GetCollection<IMembershipFunction>()) { list.Add(func.Name); }
+            foreach (IMembershipFunction func in repositoryService.GetCollection<IMembershipFunction>()) { list.Add(func.Name); }
             (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = list;
         }
         private void OutputVariableComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -57,10 +62,10 @@ namespace SimpleFuzzy.View
                 }
             }
             currentOutputVar = temp;
-            AddTable(outputVariableComboBox.SelectedItem.ToString());
-            outputVariableComboBox.Items.Remove(outputVariableComboBox.SelectedItem);
             SetRule setRule = new SetRule(currentOutputVar);
             currentOutputVar.listRules = setRule;
+            AddTable(outputVariableComboBox.SelectedItem.ToString());
+            outputVariableComboBox.Items.Remove(outputVariableComboBox.SelectedItem);
         }
         private void inputVariablesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -86,26 +91,24 @@ namespace SimpleFuzzy.View
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void dataTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
+            if (e.ColumnIndex == 0) { return; } // ID
+            else if (e.ColumnIndex == dataTable.ColumnCount - 1) // ВЫХОДНАЯ ПЕРЕМЕНННАЯ
             {
-                var.isInput = true;
+
             }
-            foreach (LinguisticVariable variable in repositoryService.GetCollection<LinguisticVariable>())
+            else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
             {
-                if (!variable.IsInput) outputVariableComboBox.Items.Add(variable.Name);
-                else inputVariablesComboBox.Items.Add(variable.Name);
-            }
-        }
-        ////////////////////////////////////////////////
-        private void dataTable_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridViewCell cell = dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell is DataGridViewComboBoxCell)
-            {
-                dataTable.BeginEdit(false);
-                (dataTable.EditingControl as DataGridViewComboBoxEditingControl).DroppedDown = true;
+                double n;
+                if (double.TryParse(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), out n) && n >= 0 && n <= 1)
+                {
+                    currentOutputVar.listRules.rules[e.RowIndex].relevance = n;
+                }
+                else { 
+                    MessageBox.Show("Релевантность должна находиться в диапазоне [0, 1]");
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
+                }
             }
         }
     }

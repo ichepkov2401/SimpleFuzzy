@@ -9,15 +9,26 @@ namespace SimpleFuzzy.Model
 {
     public class Rule
     {
-        public List<IMembershipFunction> terms; // Список термов
-        public double relevance; // Степень заполняемости
+        // НА НУЛЕВОЙ ПОЗИЦИИ ВСЕГДА ТЕРМ ВЫХОДНОЙ ПЕРЕМЕННОЙ
+        private Dictionary<int, string> terms = new Dictionary<int, string>(); // Список термов методы 
+        public double relevance = 1.0; // Степень заполняемости
         public bool IsActive { get; set; } // Автосвойство активности
-        public Rule(IMembershipFunction outVar, List<IMembershipFunction> inpitVar, double relevanse)
+
+        public void AddTerm(string name, int position)
         {
-            terms.Add(outVar);
-            foreach(IMembershipFunction function in inpitVar) { terms.Add(function); }
-            relevance = relevanse;
+            terms.Add(position, name);
         }
 
+        public void RedactTerm(string lastName, string newName)
+        {
+            for (int i = 0; i < terms.Count; i++)
+            {
+                if (terms[i] == lastName)
+                {
+                    terms[i] = newName;
+                    return;
+                }
+            }
+        }
     }
 }

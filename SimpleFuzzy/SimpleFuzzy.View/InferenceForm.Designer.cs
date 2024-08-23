@@ -1,4 +1,6 @@
-﻿namespace SimpleFuzzy.View
+﻿using System.DirectoryServices.ActiveDirectory;
+
+namespace SimpleFuzzy.View
 {
     partial class InferenceForm
     {
@@ -17,6 +19,8 @@
 
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             outputVariableComboBox = new ComboBox();
             outputVariableLabel = new Label();
             windowHeaderLabel = new Label();
@@ -24,7 +28,6 @@
             inputVariablesComboBox = new ComboBox();
             label1 = new Label();
             dataTable = new DataGridView();
-            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataTable).BeginInit();
             SuspendLayout();
             // 
@@ -84,29 +87,36 @@
             // 
             // dataTable
             // 
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataTable.DefaultCellStyle = dataGridViewCellStyle2;
             dataTable.Location = new Point(3, 129);
             dataTable.Name = "dataTable";
+            dataTable.RowHeadersVisible = false;
             dataTable.RowHeadersWidth = 51;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(651, 345);
+            dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(805, 64);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 8;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            dataTable.CellValueChanged += dataTable_CellValueChanged;
             // 
             // InferenceForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(button1);
             Controls.Add(dataTable);
             Controls.Add(label1);
             Controls.Add(inputVariablesComboBox);
@@ -130,6 +140,5 @@
         private ComboBox inputVariablesComboBox;
         private Label label1;
         private DataGridView dataTable;
-        private Button button1;
     }
 }

@@ -50,7 +50,7 @@ namespace SimpleFuzzy.Service
         {
                 foreach (string fileName in Directory.GetFiles(path))
                 {
-                    if (fileName.Split('\\')[^1] != "Save.xml" && fileName.Split('\\')[^1] != "SaveCopy.xml") loaderService.AssemblyLoader(fileName);
+                    if (fileName.Split('.')[^1] == "dll") loaderService.AssemblyLoader(fileName);
                 }
         }
 

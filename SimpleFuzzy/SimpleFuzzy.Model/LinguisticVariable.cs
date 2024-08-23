@@ -1,22 +1,48 @@
-﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Abstract;
 using System.Text;
+using System.Drawing;
+using System.Xml;
+
 
 namespace SimpleFuzzy.Model
 {
     public class LinguisticVariable
     {
         public string name; // Имя лингвистической переменной
+        public bool isInput; // входная или выходная переменная
+        public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
-        public List<IMembershipFunction> func = new List<IMembershipFunction>(); // Список термов
+        public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
         private Dictionary<IMembershipFunction, List<object>> coreCache = new Dictionary<IMembershipFunction, List<object>>();
 
-        public LinguisticVariable(bool isRedact)
+        public LinguisticVariable(bool isRedact, bool isInput)
         {
             this.isRedact = isRedact;
+            this.isInput = isInput;
+        }
+        public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
+        {
+            this.name = name;
+            this.isInput = isInput;
+            this.isRedact = isRedact;
+            this.baseSet = baseSet;
+            this.func = func;
+        }
+
+        public void UnloadingHandler(object sender, EventArgs e)
+        {
+            string context = sender as string;
+            if (baseSet != null && baseSet.GetType().Assembly.Location == context)
+                baseSet = null;
+            func.RemoveAll(t => t.Item1.GetType().Assembly.Location == context);
+            heightCache.Clear();
+            typeCache.Clear();
+            areaOfInfluenceCache.Clear();
+            coreCache.Clear();
         }
 
         public string Name
@@ -25,57 +51,82 @@ namespace SimpleFuzzy.Model
             set { if (isRedact == true) { name = value; } }
         }
 
+        public bool IsInput
+        {
+            get { return isInput; }
+            set { if (isRedact == true) { isInput = value; } }
+        }
+
         public IObjectSet BaseSet
         {
             get { return baseSet; }
-            set { if (isRedact == true) { baseSet = value; } }
-        }
-
-        public void AddTerm(IMembershipFunction term)
-        {
-            Type Type1 = baseSet.Extraction().GetType(), Type2 = func[0].GetType(); // Проверка типов данных
-            if (Type1 != Type2)
+            set
             {
-                throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают");
-            }
-            else
-            {
-                func.Add(term);
+                if (isRedact == true)
+                    if (func.Count == 0) { baseSet = value; }
+                    else
+                    {
+                        if (func[0].Item1.InputType == value.Extraction().GetType()) { baseSet = value; }
+                        else { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+                    }
             }
         }
 
-        public void DeleteTerm(IMembershipFunction term) => func.Remove(term);
-
-        public Dictionary<object, List<double>> Graphic()  // Создание массива списков для графика
+        public void AddTerm((IMembershipFunction, Color) term)
         {
-            var graphicList = new Dictionary<object, List<double>>();
+            if (baseSet == null)
+            {
+                if (func.Count == 0) { func.Add(term); }
+                else if (term.Item1.InputType == func[0].Item1.InputType) { func.Add(term); }
+                else { throw new InvalidOperationException("Тип данных добавляемого терма не совпадает с уже имеющимися термами в списке"); }
+            }
+            else if (baseSet.Extraction().GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+            else { func.Add(term); } // Проверка типов данных
+        }
+
+        public void DeleteTerm(IMembershipFunction term) => func.RemoveAll(t => t.Item1 == term);
+
+        public bool ContainsFunc(IMembershipFunction term) => func.Count(t => t.Item1 == term) > 0;
+
+        public Color GetColor(IMembershipFunction term) => func.FirstOrDefault(t => t.Item1 == term).Item2;
+
+        public void SetColor(IMembershipFunction term, Color color) => func[func.FindIndex(t => t.Item1 == term)] = (term, color);
+
+        public int CountFunc => func.Count;
+
+        public IMembershipFunction this[int index] => func[index].Item1;
+
+        public double[] Fazzification(object elementBaseSet)
+        {
+            var list = new double[func.Count];
+            for (int i = 0; i < func.Count; i++)
+            {
+                list[i] = (func[i].Item1.MembershipFunction(elementBaseSet));
+            }
+            return list;
+        }
+
+        public List<(object, double[])> Graphic()
+        {
+            var graphicList = new List<(object, double[])>();
             baseSet.ToFirst();
             while (!baseSet.IsEnd())
             {
-                graphicList.Add(baseSet.Extraction(), Fazzification(baseSet.Extraction()));
+                graphicList.Add((baseSet.Extraction(), Fazzification(baseSet.Extraction())));
                 baseSet.MoveNext();
             }
             return graphicList;
         }
 
-        public List<double> Fazzification(object elementBaseSet)
-        {
-            var list = new List<double>();
-            foreach (var function in func)
-            {
-                list.Add(function.MembershipFunction(elementBaseSet));
-            }
-            return list;
-        }
-
-        public string GetResultofFuzzy(List<double> list)
+        public string GetResultofFuzzy(double[] list)
         {
             string result = "";
             var toStringList = new (string, double)[func.Count];
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Length; i++)
             {
-                toStringList[i] = (func[i].Name, list[i]);
+                toStringList[i] = (func[i].Item1.Name, list[i]);
             }
+            toStringList = toStringList.OrderByDescending(x => x.Item2).ToArray();
             double sum = 0;
             foreach (var zeroValue in toStringList)
             {
@@ -88,23 +139,24 @@ namespace SimpleFuzzy.Model
             var listofRange = new (string, double[])[8]
             {
                 ("Точно", new double[2]{1.01, 1}),
-                ("Почти точно", new double[2] { 0.99, 0.9 }),
-                ("Скорее", new double[2] { 0.89, 0.8 }),
-                ("Не совсем", new double[2] { 0.79, 0.6 }),
-                ("Наполовину", new double[2] { 0.59, 0.4 }),
-                ("Немного", new double[2] { 0.39, 0.2 }),
-                ("Совсем немного", new double[2] { 0.19, 0.1 }),
-                ("Едва ли", new double[2] { 0.09, 0.01 })
+                ("Почти точно", new double[2] { 1, 0.9 }),
+                ("Скорее", new double[2] { 0.9, 0.8 }),
+                ("Не совсем", new double[2] { 0.8, 0.6 }),
+                ("Наполовину", new double[2] { 0.6, 0.4 }),
+                ("Немного", new double[2] { 0.4, 0.2 }),
+                ("Совсем немного", new double[2] { 0.2, 0.1 }),
+                ("Едва ли", new double[2] { 0.1, 0.01 })
             };
             int countTerms = 0;
-            foreach (var range in listofRange)
+            foreach (var pair in toStringList)
             {
-                foreach (var pair in toStringList)
+                foreach (var range in listofRange)
                 {
-                    if (range.Item2[0] >= pair.Item2 && pair.Item2 >= range.Item2[1])
+                    if (range.Item2[0] > pair.Item2 && pair.Item2 >= range.Item2[1])
                     {
                         result += $"{range.Item1} {pair.Item1}, ";
                         countTerms++;
+                        break;
                     }
                 }
             }
@@ -118,8 +170,11 @@ namespace SimpleFuzzy.Model
             }
             return result;
         }
+
         //Расчет свойств нечеткого множества
+
         public Tuple<double,string,string,string,string> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+
 
             if (!heightCache.ContainsKey(term))
             {

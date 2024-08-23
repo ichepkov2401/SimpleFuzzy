@@ -2,12 +2,10 @@
 
 namespace SimpleFuzzy.View
 {
-    public partial class HelpWindow : MetroForm
+    public partial class HelpWindow : Form
     {
-        MainWindow window;
-        public HelpWindow(MainWindow mainWindow)
+        public HelpWindow()
         {
-            window = mainWindow;
             InitializeComponent();
         }
     }

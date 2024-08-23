@@ -5,7 +5,7 @@ using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class FasificationForm : MetroUserControl
+    public partial class FasificationForm : UserControl
     {
         IRepositoryService repositoryService;
         IAssemblyLoaderService assemblyLoaderService;
@@ -81,7 +81,7 @@ namespace SimpleFuzzy.View
                         MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                    LinguisticVariable newVariable =  new LinguisticVariable(true) { Name = variableName };
+                    LinguisticVariable newVariable =  new LinguisticVariable(true, true) { Name = variableName };
                     assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
@@ -118,7 +118,8 @@ namespace SimpleFuzzy.View
             foreach (var variable in linguisticVariables)
             {
                 ListViewItem item = new ListViewItem(variable.Name);
-                item.SubItems.Add("X");
+                if (variable.isRedact)
+                    item.SubItems.Add("X");
                 listView1.Items.Add(item);
             }
         }

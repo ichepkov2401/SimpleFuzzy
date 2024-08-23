@@ -4,7 +4,7 @@ using SimpleFuzzy.Service;
 
 namespace SimpleFuzzy.View
 {
-    public partial class GenerationObjectSetUI : MetroForm
+    public partial class GenerationObjectSetUI : Form
     {
         IGenerationObjectSetService service;
         ICompileService serviceCompile;

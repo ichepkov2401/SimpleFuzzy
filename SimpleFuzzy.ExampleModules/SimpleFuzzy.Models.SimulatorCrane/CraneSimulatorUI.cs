@@ -25,7 +25,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             try
             {
                 string spritesPath = Path.Combine(System.Windows.Forms.Application.StartupPath, "assets", "sprites");
-                backgroundImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "port2.png"));
+                backgroundImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "port.png"));
                 cartImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "carriage.png"));
                 containerImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cable and weight.png"));
                 constructImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "construct.png"));
@@ -57,14 +57,14 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             // Каретка
             float cartWidth = 40; // Ширина каретки
             float cartX = (float)(craneSimulator.x / craneSimulator.beamSize * (craneWidth - cartWidth) + leftBoundary);
-            g.DrawImage(cartImage, cartX, 110, cartWidth, 30);
+            g.DrawImage(cartImage, cartX, 150, cartWidth, 30);
 
             // Кран
-            g.DrawImage(constructImage, -100, -40, 600, 400);
+            g.DrawImage(constructImage, -130, -100, 800, 658);
 
             // Трос
             float ropeStartX = cartX + 20;
-            float ropeStartY = 140;
+            float ropeStartY = 180;
             float ropeEndX = (float)(ropeStartX + Math.Sin(craneSimulator.y) * visualLength);
             float ropeEndY = (float)(ropeStartY + Math.Cos(craneSimulator.y) * visualLength);
             g.DrawLine(new Pen(Color.Black, 2), ropeStartX, ropeStartY, ropeEndX, ropeEndY);
@@ -73,13 +73,13 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             g.DrawImage(containerImage, ropeEndX - 20, ropeEndY - 15, 40, 30);
 
             // Грузовой корабль
-            g.DrawImage(cargoImage, 320, 110, Width, Height);
+            g.DrawImage(cargoImage, 440, 110, Width, Height);
 
             // Платформа
             float platformWidth = 70;
             float platformHeight = 25;
-            float platformX = (float)(craneSimulator.platformPosition / craneSimulator.beamSize * craneWidth + leftBoundary);
-            float platformY = Height - 35;
+            float platformX = (float)(craneSimulator.platformPosition / craneSimulator.beamSize * craneWidth + leftBoundary+15);
+            float platformY = Height - 45;
             g.DrawImage(platformImage, platformX, platformY, platformWidth, platformHeight);
 
             // Отображение текущих параметров

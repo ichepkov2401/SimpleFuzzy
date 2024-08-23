@@ -4,7 +4,7 @@ using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class DefasificationForm : MetroUserControl
+    public partial class DefasificationForm : UserControl
     {
         IRepositoryService repositoryService;
         DefasificationUI defasificationUI;

@@ -1,9 +1,8 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmCreate : MetroUserControl
+    public partial class ConfirmCreate : UserControl
     {
         IRepositoryService repositoryService;
         IProjectListService projectList;
@@ -26,7 +25,6 @@ namespace SimpleFuzzy.View
             projectList.OpenProjectfromName(projectList.CurrentProjectName);
             if (Parent is MainWindow parent)
             {
-                parent.OpenButtons();
                 parent.Locked();
                 parent.OpenLoader();
             }
@@ -44,17 +42,20 @@ namespace SimpleFuzzy.View
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent)
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
-                parent.OpenButtons();
-                parent.Locked();
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
-            Parent.Controls.Remove(this);
+            else if (Parent is MainWindow parent1) 
+            {
+                parent1.ColorDelete();
+                Parent.Controls.Remove(this); 
+            }
         }
 
         private void ConfirmCreate_Load(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            if (Parent is MainWindow parent) parent.Locked();
         }
     }
 }

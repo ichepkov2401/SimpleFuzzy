@@ -1,5 +1,4 @@
-﻿using MetroFramework.Forms;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Windows.Forms;
 
 namespace SimpleFuzzy.View
 {
-    public partial class NewMembershipDialogForm : MetroForm
+    public partial class NewMembershipDialogForm : Form
     {
         IObjectSet ObjectSet { get; set; }
         FuzzyOperation FuzzyOperation { get; set; }

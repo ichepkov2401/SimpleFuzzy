@@ -1,10 +1,9 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmDelete : MetroUserControl
+    public partial class ConfirmDelete : UserControl
     {
         IProjectListService projectList;
         public ConfirmDelete()
@@ -22,24 +21,20 @@ namespace SimpleFuzzy.View
             }
             if (Parent is MainWindow parent)
             {
-                parent.OpenButtons();
-                parent.Locked();
                 parent.ChangeNameOfProject();
+                parent.Locked();
+                parent.ColorDelete();
             }
             Parent.Controls.Remove(this);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) { parent.OpenButtons(); }
-            Parent.Controls.Remove(this);
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
+            {
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
+            }
+            else { Parent.Controls.Remove(this); }
         }
-
-        private void ConfirmDelete_Load(object sender, EventArgs e)
-        {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
-        }
-
-
     }
 }

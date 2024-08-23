@@ -36,6 +36,7 @@
             // 
             // graphPictureBox
             // 
+            graphPictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             graphPictureBox.Location = new Point(405, 0);
             graphPictureBox.Name = "graphPictureBox";
             graphPictureBox.Size = new Size(430, 221);
@@ -44,6 +45,7 @@
             // 
             // ResultDef
             // 
+            ResultDef.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ResultDef.Location = new Point(659, 233);
             ResultDef.Name = "ResultDef";
             ResultDef.Size = new Size(125, 27);
@@ -51,6 +53,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Location = new Point(460, 236);
             label1.Name = "label1";

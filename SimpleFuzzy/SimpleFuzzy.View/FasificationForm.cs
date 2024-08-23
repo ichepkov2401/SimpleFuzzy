@@ -137,6 +137,8 @@ namespace SimpleFuzzy.View
                     variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList);
                     Controls.Add(variableUI);
                     variableUI.Location = new Point(325, 0);
+                    variableUI.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                    variableUI.Size = new Size(Width - 325, Height);
                 }
             }
         }

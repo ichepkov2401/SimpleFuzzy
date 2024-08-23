@@ -34,6 +34,7 @@
             // 
             // metroRadioButton1
             // 
+            metroRadioButton1.Anchor = AnchorStyles.Top;
             metroRadioButton1.AutoSize = true;
             metroRadioButton1.Checked = true;
             metroRadioButton1.Location = new Point(14, 16);
@@ -48,6 +49,7 @@
             // 
             // metroRadioButton2
             // 
+            metroRadioButton2.Anchor = AnchorStyles.Top;
             metroRadioButton2.AutoSize = true;
             metroRadioButton2.Location = new Point(346, 16);
             metroRadioButton2.Margin = new Padding(3, 4, 3, 4);

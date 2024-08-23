@@ -137,7 +137,7 @@
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
             Name = "InferenceForm";
-            Size = new Size(941, 490);
+            Size = new Size(962, 549);
             ResumeLayout(false);
             PerformLayout();
         }

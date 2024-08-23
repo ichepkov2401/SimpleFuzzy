@@ -38,6 +38,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(button2);
             groupBox1.Controls.Add(button1);
@@ -52,7 +53,8 @@
             // 
             // button2
             // 
-            button2.Location = new Point(146, 80);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.Location = new Point(310, 79);
             button2.Name = "button2";
             button2.Size = new Size(134, 29);
             button2.TabIndex = 3;
@@ -61,7 +63,8 @@
             // 
             // button1
             // 
-            button1.Location = new Point(6, 80);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.Location = new Point(170, 79);
             button1.Name = "button1";
             button1.Size = new Size(134, 29);
             button1.TabIndex = 2;
@@ -74,17 +77,16 @@
             label1.AutoSize = true;
             label1.Location = new Point(6, 23);
             label1.Name = "label1";
-            label1.Size = new Size(134, 20);
+            label1.Size = new Size(144, 20);
             label1.TabIndex = 1;
             label1.Text = "Введите новое имя";
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Location = new Point(6, 46);
-            textBox1.Multiline = false;
             textBox1.Name = "textBox1";
-            textBox1.SelectedText = "";
-            textBox1.Size = new Size(438, 28);
+            textBox1.Size = new Size(438, 27);
             textBox1.TabIndex = 0;
             // 
             // ConfirmRename

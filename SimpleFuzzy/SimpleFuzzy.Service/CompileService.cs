@@ -20,14 +20,15 @@ namespace SimpleFuzzy.Service
                 "System.Collections.Generic"
             };
 
-        private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
+        private static string runtimePath = Directory.GetCurrentDirectory();
 
         private static readonly IEnumerable<MetadataReference> DefaultReferences =
             new[]
             {
                 MetadataReference.CreateFromFile(string.Format(runtimePath, "mscorlib")),
                 MetadataReference.CreateFromFile(string.Format(runtimePath, "System")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core"))
+                MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core")),
+                MetadataReference.CreateFromFile(string.Format(runtimePath, "SimpleFuzzy.Abstract"))
             };
 
         private static readonly CSharpCompilationOptions DefaultCompilationOptions =

@@ -142,7 +142,7 @@ namespace SimpleFuzzy.Model
 
             List<object> section = CalculateSection(term, sectionHeight);
 
-            return Tuple.Create( heightCache[term], typeCache[term], areaOfInfluenceCache[term], coreCache[term], section);
+            return Tuple.Create( heightCache[term], typeCache[term],RemoveSequences(areaOfInfluenceCache[term]), RemoveSequences(coreCache[term]), RemoveSequences(section));
         }
         private double CalculateHeight(IMembershipFunction term) {
             double maxHeight = 0;
@@ -241,6 +241,53 @@ namespace SimpleFuzzy.Model
             }
             return section;
         }
+        List<object> RemoveSequences(List<object> input)
+        {
+            if (input == null || input.Count <= 1)
+            {
+                return input;
+            }
+
+            List<object> output = new List<object>();
+            int start = 0;
+
+            for (int i = 1; i < input.Count; i++)
+            {
+                if ((int)input[i] != (int)input[i - 1] + 1)
+                {
+                    if (i - start > 1)
+                    {
+                        output.Add("[");
+                        output.Add(input[start]);
+                        output.Add(",");
+                        output.Add(input[i - 1]);
+                        output.Add("]");
+                    }
+                    else
+                    {
+                        output.Add(input[start]);
+                    }
+                    start = i;
+                }
+            }
+
+            // Обработка последней последовательности 
+            if (input.Count - start > 1)
+            {
+                output.Add("[");
+                output.Add(input[start]);
+                output.Add(",");
+                output.Add(input[input.Count - 1]);
+                output.Add("]");
+            }
+            else
+            {
+                output.Add(input[start]);
+            }
+
+            return output;
+        }
+
     }
 }
 

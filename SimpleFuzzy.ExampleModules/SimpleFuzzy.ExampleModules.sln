@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleFuzzy.SimpleModule", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleFuzzy.Models.SimulatorCrane", "SimpleFuzzy.Models.SimulatorCrane\SimpleFuzzy.Models.SimulatorCrane.csproj", "{AC5C1471-B2F8-41C6-938A-AE8C1ADAA702}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvertedPendelum", "InvertedPendelum\InvertedPendelum.csproj", "{D1230633-0DF9-494A-A403-B54DB26E84B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +23,10 @@ Global
 		{AC5C1471-B2F8-41C6-938A-AE8C1ADAA702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC5C1471-B2F8-41C6-938A-AE8C1ADAA702}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC5C1471-B2F8-41C6-938A-AE8C1ADAA702}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA405FB8-2BA6-43C1-8C57-D1E592F86ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA405FB8-2BA6-43C1-8C57-D1E592F86ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA405FB8-2BA6-43C1-8C57-D1E592F86ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA405FB8-2BA6-43C1-8C57-D1E592F86ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1230633-0DF9-494A-A403-B54DB26E84B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1230633-0DF9-494A-A403-B54DB26E84B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1230633-0DF9-494A-A403-B54DB26E84B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1230633-0DF9-494A-A403-B54DB26E84B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

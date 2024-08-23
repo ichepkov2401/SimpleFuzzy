@@ -27,7 +27,7 @@ namespace SimpleFuzzy.SimpleModule
                 throw new ArgumentException("Unable to convert input to double", nameof(elem), ex);
             }
             double result;
-            if (doubleElem <= values[0] || doubleElem >= values[3])
+            if (doubleElem <= values[0])
             {
                 result = 0;
             }
@@ -35,7 +35,7 @@ namespace SimpleFuzzy.SimpleModule
             {
                 result = (doubleElem - values[0]) / (values[1] - values[0]);
             }
-            else if (doubleElem > values[1] && doubleElem < values[2])
+            else if (doubleElem > values[1] && doubleElem < values[2] || doubleElem >= values[3])
             {
                 result = 1;
             }

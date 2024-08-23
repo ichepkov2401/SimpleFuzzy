@@ -8,9 +8,11 @@ namespace SimpleFuzzy.Model
     {
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
+        public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
+        public SetRule listRules; // Список правил для выходной переменной
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();

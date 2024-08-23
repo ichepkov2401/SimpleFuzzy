@@ -88,7 +88,6 @@
             MinimumSize = new Size(549, 98);
             Name = "ConfirmDelete";
             Size = new Size(549, 98);
-            Load += ConfirmDelete_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

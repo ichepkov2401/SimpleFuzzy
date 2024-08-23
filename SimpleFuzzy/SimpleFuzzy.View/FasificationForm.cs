@@ -118,7 +118,8 @@ namespace SimpleFuzzy.View
             foreach (var variable in linguisticVariables)
             {
                 ListViewItem item = new ListViewItem(variable.Name);
-                item.SubItems.Add("X");
+                if (variable.isRedact)
+                    item.SubItems.Add("X");
                 listView1.Items.Add(item);
             }
         }

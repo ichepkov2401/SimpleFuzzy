@@ -43,10 +43,7 @@
             // 
             // operand1
             // 
-            operand1.DrawMode = DrawMode.OwnerDrawFixed;
-            operand1.DropDownStyle = ComboBoxStyle.DropDownList;
             operand1.FormattingEnabled = true;
-            operand1.ItemHeight = 23;
             operand1.Location = new Point(3, 100);
             operand1.Margin = new Padding(3, 4, 3, 4);
             operand1.Name = "operand1";
@@ -99,8 +96,6 @@
             // 
             // operations
             // 
-            operations.DrawMode = DrawMode.OwnerDrawFixed;
-            operations.DropDownStyle = ComboBoxStyle.DropDownList;
             operations.FormattingEnabled = true;
             operations.ItemHeight = 23;
             operations.Location = new Point(149, 100);
@@ -112,8 +107,6 @@
             // 
             // operand2
             // 
-            operand2.DrawMode = DrawMode.OwnerDrawFixed;
-            operand2.DropDownStyle = ComboBoxStyle.DropDownList;
             operand2.FormattingEnabled = true;
             operand2.ItemHeight = 23;
             operand2.Location = new Point(295, 100);

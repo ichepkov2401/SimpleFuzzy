@@ -8,6 +8,7 @@ namespace SimpleFuzzy.Model
     {
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
+        public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
@@ -16,13 +17,15 @@ namespace SimpleFuzzy.Model
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
         private Dictionary<IMembershipFunction, List<object>> coreCache = new Dictionary<IMembershipFunction, List<object>>();
 
-        public LinguisticVariable(bool isRedact)
+        public LinguisticVariable(bool isRedact, bool isInput)
         {
             this.isRedact = isRedact;
+            this.isInput = isInput;
         }
-        public LinguisticVariable(string name, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
+        public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
             this.name = name;
+            this.isInput = isInput;
             this.isRedact = isRedact;
             this.baseSet = baseSet;
             this.func = func;
@@ -31,7 +34,7 @@ namespace SimpleFuzzy.Model
         public void UnloadingHandler(object sender, EventArgs e)
         {
             string context = sender as string;
-            if (baseSet.GetType().Assembly.Location == context)
+            if (baseSet != null && baseSet.GetType().Assembly.Location == context)
                 baseSet = null;
             func.RemoveAll(t => t.Item1.GetType().Assembly.Location == context);
             heightCache.Clear();
@@ -289,46 +292,6 @@ namespace SimpleFuzzy.Model
                 baseSet.MoveNext();
             }
             return section;
-        }
-        public void Save(ref XmlNode parentNode)
-        {
-            if (parentNode == null)
-            {
-                XmlDocument doc = new XmlDocument();
-                parentNode = doc.CreateElement("ListofLinguisticVariable");
-            }
-            XmlNode linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
-            parentNode.AppendChild(linguisticNode);
-
-            XmlNode nameNode = parentNode.OwnerDocument.CreateElement("name");
-            nameNode.InnerText = name;
-            linguisticNode.AppendChild(nameNode);
-
-            XmlNode redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
-            redactNode.InnerText = isRedact.ToString();
-            linguisticNode.AppendChild(redactNode);
-
-            XmlNode objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
-            objectsetNode.InnerText = baseSet.GetType().FullName + " " + baseSet.GetType().Assembly.FullName;
-            linguisticNode.AppendChild(objectsetNode);
-
-            XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
-            foreach (var function in func)
-            {
-                XmlNode functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
-                functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
-                funcNode.AppendChild(functionNode);
-                XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
-                moduleNameXML.Value = function.Item2.R.ToString();
-                functionNode.Attributes.Append(moduleNameXML);
-                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
-                moduleNameXML.Value = function.Item2.G.ToString();
-                functionNode.Attributes.Append(moduleNameXML);
-                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
-                moduleNameXML.Value = function.Item2.B.ToString();
-                functionNode.Attributes.Append(moduleNameXML);
-            }
-            linguisticNode.AppendChild(funcNode);
         }
     }
 }

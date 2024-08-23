@@ -1,9 +1,8 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmRename : MetroUserControl
+    public partial class ConfirmRename : UserControl
     {
         IProjectListService projectList;
         public ConfirmRename()
@@ -22,25 +21,17 @@ namespace SimpleFuzzy.View
                 MessageBox.Show(ex.Message);
                 return;
             }
-            if (Parent is MainWindow parent)
-            {
-                parent.OpenButtons();
-                parent.OpenLoader();
-            }
+            button2_Click(sender, e);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) 
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
-                parent.OpenButtons(); 
+                parent.ChangeNameOfProject();
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
-            Parent.Controls.Remove(this);
-        }
-
-        private void ConfirmRename_Load(object sender, EventArgs e)
-        {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            else { Parent.Controls.Remove(this); }
         }
     }
 }

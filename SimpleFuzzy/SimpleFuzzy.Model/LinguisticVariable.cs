@@ -8,6 +8,7 @@ namespace SimpleFuzzy.Model
     {
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
+        public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования

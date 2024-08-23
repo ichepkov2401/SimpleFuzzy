@@ -11,8 +11,6 @@ namespace SimpleFuzzy.View
     {
 
         private TextBox nameTextBox;
-        private ComboBox baseSetComboBox;
-        private ComboBox termsComboBox;
         private Button addTermButton;
         private PictureBox graphPictureBox;
         private ListView termsListView;
@@ -34,9 +32,7 @@ namespace SimpleFuzzy.View
             nameLabel = new Label();
             nameTextBox = new TextBox();
             baseSetLabel = new Label();
-            baseSetComboBox = new ComboBox();
             termsLabel = new Label();
-            termsComboBox = new ComboBox();
             addTermButton = new Button();
             graphLabel = new Label();
             graphPictureBox = new PictureBox();
@@ -49,6 +45,10 @@ namespace SimpleFuzzy.View
             FazificationDescription = new Label();
             GenerateMembershipFunction = new Button();
             GenerateBaseSet = new Button();
+            baseSetComboBox = new ComboBox();
+            termsComboBox = new ComboBox();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)graphPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)NumericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar).BeginInit();
@@ -71,7 +71,7 @@ namespace SimpleFuzzy.View
             nameLabel.AutoSize = true;
             nameLabel.Location = new Point(0, 0);
             nameLabel.Name = "nameLabel";
-            nameLabel.Size = new Size(258, 20);
+            nameLabel.Size = new Size(205, 15);
             nameLabel.TabIndex = 0;
             nameLabel.Text = "Имя лингвистической переменной:";
             // 
@@ -79,52 +79,31 @@ namespace SimpleFuzzy.View
             // 
             nameTextBox.Location = new Point(0, 24);
             nameTextBox.Name = "nameTextBox";
-            nameTextBox.Size = new Size(200, 27);
+            nameTextBox.Size = new Size(200, 23);
             nameTextBox.TabIndex = 1;
             nameTextBox.LostFocus += NameChangedHandler;
             // 
             // baseSetLabel
             // 
             baseSetLabel.AutoSize = true;
-            baseSetLabel.Location = new Point(0, 48);
+            baseSetLabel.Location = new Point(0, 75);
             baseSetLabel.Name = "baseSetLabel";
-            baseSetLabel.Size = new Size(152, 20);
+            baseSetLabel.Size = new Size(119, 15);
             baseSetLabel.TabIndex = 2;
             baseSetLabel.Text = "Базовое множество:";
-            // 
-            // baseSetComboBox
-            // 
-            baseSetComboBox.DrawMode = DrawMode.OwnerDrawFixed;
-            baseSetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            baseSetComboBox.ItemHeight = 23;
-            baseSetComboBox.Location = new Point(0, 68);
-            baseSetComboBox.Name = "baseSetComboBox";
-            baseSetComboBox.Size = new Size(200, 29);
-            baseSetComboBox.TabIndex = 3;
-            baseSetComboBox.SelectedIndexChanged += BaseSetChange;
             // 
             // termsLabel
             // 
             termsLabel.AutoSize = true;
-            termsLabel.Location = new Point(0, 98);
+            termsLabel.Location = new Point(0, 119);
             termsLabel.Name = "termsLabel";
-            termsLabel.Size = new Size(59, 20);
+            termsLabel.Size = new Size(47, 15);
             termsLabel.TabIndex = 4;
             termsLabel.Text = "Термы:";
             // 
-            // termsComboBox
-            // 
-            termsComboBox.DrawMode = DrawMode.OwnerDrawFixed;
-            termsComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            termsComboBox.ItemHeight = 23;
-            termsComboBox.Location = new Point(0, 118);
-            termsComboBox.Name = "termsComboBox";
-            termsComboBox.Size = new Size(200, 29);
-            termsComboBox.TabIndex = 5;
-            // 
             // addTermButton
             // 
-            addTermButton.Location = new Point(0, 148);
+            addTermButton.Location = new Point(0, 166);
             addTermButton.Name = "addTermButton";
             addTermButton.Size = new Size(200, 33);
             addTermButton.TabIndex = 6;
@@ -151,10 +130,10 @@ namespace SimpleFuzzy.View
             termsListView.Columns.AddRange(new ColumnHeader[] { TermName, TermColor, CloseButton });
             termsListView.FullRowSelect = true;
             termsListView.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            termsListView.Location = new Point(0, 186);
+            termsListView.Location = new Point(0, 204);
             termsListView.Margin = new Padding(3, 2, 3, 2);
             termsListView.Name = "termsListView";
-            termsListView.Size = new Size(200, 242);
+            termsListView.Size = new Size(200, 253);
             termsListView.TabIndex = 1;
             termsListView.UseCompatibleStateImageBehavior = false;
             termsListView.View = System.Windows.Forms.View.Details;
@@ -163,7 +142,7 @@ namespace SimpleFuzzy.View
             // 
             // HeightLabel
             // 
-            HeightLabel.Location = new Point(260, 291);
+            HeightLabel.Location = new Point(260, 311);
             HeightLabel.Name = "HeightLabel";
             HeightLabel.Size = new Size(70, 20);
             HeightLabel.TabIndex = 10;
@@ -174,10 +153,10 @@ namespace SimpleFuzzy.View
             // 
             NumericUpDown1.DecimalPlaces = 2;
             NumericUpDown1.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            NumericUpDown1.Location = new Point(336, 289);
+            NumericUpDown1.Location = new Point(336, 309);
             NumericUpDown1.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
             NumericUpDown1.Name = "NumericUpDown1";
-            NumericUpDown1.Size = new Size(150, 27);
+            NumericUpDown1.Size = new Size(150, 23);
             NumericUpDown1.TabIndex = 11;
             NumericUpDown1.Value = new decimal(new int[] { 5, 0, 0, 65536 });
             NumericUpDown1.Visible = false;
@@ -185,7 +164,7 @@ namespace SimpleFuzzy.View
             // 
             // SetProperty
             // 
-            SetProperty.Location = new Point(260, 319);
+            SetProperty.Location = new Point(260, 339);
             SetProperty.Name = "SetProperty";
             SetProperty.Size = new Size(430, 100);
             SetProperty.TabIndex = 9;
@@ -195,54 +174,96 @@ namespace SimpleFuzzy.View
             trackBar.Location = new Point(260, 230);
             trackBar.Maximum = 100;
             trackBar.Name = "trackBar";
-            trackBar.Size = new Size(215, 56);
+            trackBar.Size = new Size(215, 45);
             trackBar.TabIndex = 12;
             trackBar.Value = 50;
             trackBar.ValueChanged += FazificationObjectChaged;
             // 
             // ObjectSetLabel
             // 
-            ObjectSetLabel.Location = new Point(471, 230);
+            ObjectSetLabel.Location = new Point(481, 230);
             ObjectSetLabel.Name = "ObjectSetLabel";
             ObjectSetLabel.Size = new Size(115, 30);
             ObjectSetLabel.TabIndex = 13;
             // 
             // FazificationDescription
             // 
-            FazificationDescription.Location = new Point(250, 263);
+            FazificationDescription.Location = new Point(260, 278);
             FazificationDescription.Name = "FazificationDescription";
-            FazificationDescription.Size = new Size(430, 20);
+            FazificationDescription.Size = new Size(430, 22);
             FazificationDescription.TabIndex = 14;
             // 
             // GenerateMembershipFunction
             // 
-            GenerateMembershipFunction.Location = new Point(206, 118);
+            GenerateMembershipFunction.Location = new Point(206, 137);
             GenerateMembershipFunction.Name = "GenerateMembershipFunction";
-            GenerateMembershipFunction.Size = new Size(38, 29);
+            GenerateMembershipFunction.Size = new Size(38, 23);
             GenerateMembershipFunction.TabIndex = 15;
             GenerateMembershipFunction.Text = "+";
             GenerateMembershipFunction.Click += GenerateMembershipFunction_Click;
             // 
             // GenerateBaseSet
             // 
-            GenerateBaseSet.Location = new Point(206, 68);
+            GenerateBaseSet.Location = new Point(206, 93);
             GenerateBaseSet.Name = "GenerateBaseSet";
-            GenerateBaseSet.Size = new Size(38, 29);
+            GenerateBaseSet.Size = new Size(38, 23);
             GenerateBaseSet.TabIndex = 16;
             GenerateBaseSet.Text = "+";
             GenerateBaseSet.Click += GenerateBaseSet_Click;
             // 
+            // baseSetComboBox
+            // 
+            baseSetComboBox.FormattingEnabled = true;
+            baseSetComboBox.Location = new Point(3, 93);
+            baseSetComboBox.Name = "baseSetComboBox";
+            baseSetComboBox.Size = new Size(197, 23);
+            baseSetComboBox.TabIndex = 17;
+            baseSetComboBox.SelectedIndexChanged += BaseSetChange;
+            // 
+            // termsComboBox
+            // 
+            termsComboBox.FormattingEnabled = true;
+            termsComboBox.Location = new Point(3, 137);
+            termsComboBox.Name = "termsComboBox";
+            termsComboBox.Size = new Size(197, 23);
+            termsComboBox.TabIndex = 18;
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(3, 53);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(70, 19);
+            radioButton1.TabIndex = 19;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Входная";
+            radioButton1.UseVisualStyleBackColor = true;
+            radioButton1.CheckedChanged += radioButton1_CheckedChanged;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(79, 53);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(79, 19);
+            radioButton2.TabIndex = 20;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "Выходная";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
             // LinguisticVariableUI
             // 
             AutoSize = true;
+            Controls.Add(radioButton2);
+            Controls.Add(radioButton1);
+            Controls.Add(termsComboBox);
+            Controls.Add(baseSetComboBox);
             Controls.Add(GenerateBaseSet);
             Controls.Add(GenerateMembershipFunction);
             Controls.Add(nameLabel);
             Controls.Add(nameTextBox);
             Controls.Add(baseSetLabel);
-            Controls.Add(baseSetComboBox);
             Controls.Add(termsLabel);
-            Controls.Add(termsComboBox);
             Controls.Add(addTermButton);
             Controls.Add(graphLabel);
             Controls.Add(graphPictureBox);
@@ -254,7 +275,7 @@ namespace SimpleFuzzy.View
             Controls.Add(ObjectSetLabel);
             Controls.Add(FazificationDescription);
             Name = "LinguisticVariableUI";
-            Size = new Size(1002, 430);
+            Size = new Size(1002, 465);
             ((System.ComponentModel.ISupportInitialize)graphPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)NumericUpDown1).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar).EndInit();
@@ -268,5 +289,9 @@ namespace SimpleFuzzy.View
         private Label graphLabel;
         private Button GenerateMembershipFunction;
         private Button GenerateBaseSet;
+        private ComboBox baseSetComboBox;
+        private ComboBox termsComboBox;
+        private RadioButton radioButton1;
+        private RadioButton radioButton2;
     }
 }

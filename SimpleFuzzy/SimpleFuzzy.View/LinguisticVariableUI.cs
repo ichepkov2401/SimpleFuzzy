@@ -44,6 +44,8 @@ namespace SimpleFuzzy.View
             extender.AddColumn(buttonAction);
             SetObjectSet();
             nameTextBox.Text = linguisticVariable.Name;
+            radioButton1.Checked = linguisticVariable.isInput;
+            radioButton2.Checked = !linguisticVariable.isInput;
             if (linguisticVariable.baseSet == null)
             {
                 if (baseSetComboBox.Items.Count > 0)
@@ -80,7 +82,10 @@ namespace SimpleFuzzy.View
             termsName.Clear();
             termsComboBox.Items.Clear();
             termsListView.Items.Clear();
-            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x => x.Active && x.InputType.IsAssignableFrom(objectSetType));
+            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x => 
+            x.Active && 
+            (x.GetType() != typeof(FuzzyOperation) || linguisticVariable.isInput) &&
+            x.InputType.IsAssignableFrom(objectSetType));
             foreach (var term in terms)
             {
                 string name = term.Name;
@@ -109,7 +114,7 @@ namespace SimpleFuzzy.View
             UpdateGraph();
             if (termsComboBox.Items.Count > 0)
                 termsComboBox.SelectedIndex = 0;
-            else termsComboBox.Focus(); // Нужно чтобы автоматически текст с комбобокса ушел (какие-то заморочки MetroFramework)
+            else termsComboBox.Text = string.Empty;
         }
 
         private void AddTermButton_Click(object sender, EventArgs e)
@@ -326,6 +331,14 @@ namespace SimpleFuzzy.View
                 inputBox.ShowDialog();
                 SetTerms();
             }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            linguisticVariable.isInput = radioButton1.Checked;
+            if (!radioButton1.Checked)
+                linguisticVariable.func = linguisticVariable.func.Where(t => t.Item1.GetType() != typeof(FuzzyOperation)).ToList();
+            SetTerms();
         }
     }
 }

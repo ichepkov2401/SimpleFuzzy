@@ -2,23 +2,16 @@
 
 namespace SimpleFuzzy.SimpleModule
 {
-    public class MembershipFunc : IMembershipFunction
+    public class Underweight : IMembershipFunction
     {
         public bool Active { get; set; }
-        public string Name { get; private set; }
-        private readonly double a, b, c, d;
-        public Type InputType => typeof(double);
-        public MembershipFunc(string name, double a, double b, double c, double d)
-        {
-            Name = name;
-            this.a = a;
-            this.b = b;
-            this.c = c;
-            this.d = d;
-        }
+        public string Name { get; } = "Недостаточный вес";
+
+        public Type InputType => typeof(int);
 
         public double MembershipFunction(object elem)
         {
+            int[] values = { 40, 40, 45, 50 };
             if (elem == null)
             {
                 throw new ArgumentNullException(nameof(elem));
@@ -33,25 +26,25 @@ namespace SimpleFuzzy.SimpleModule
             {
                 throw new ArgumentException("Unable to convert input to double", nameof(elem), ex);
             }
-
             double result;
-            if (doubleElem <= a || doubleElem >= d)
+            if (doubleElem <= values[0] || doubleElem >= values[3])
             {
                 result = 0;
             }
-            else if (doubleElem > a && doubleElem <= b)
+            else if (doubleElem > values[0] && doubleElem <= values[1])
             {
-                result = (doubleElem - a) / (b - a);
+                result = (doubleElem - values[0]) / (values[1] - values[0]);
             }
-            else if (doubleElem > b && doubleElem < c)
+            else if (doubleElem > values[1] && doubleElem < values[2])
             {
                 result = 1;
             }
-            else // doubleElem >= c && doubleElem < d
+            else // doubleElem >= values[2] && doubleElem < values[3]
             {
-                result = (d - doubleElem) / (d - c);
+                result = (values[3] - doubleElem) / (values[3] - values[2]);
             }
 
+            // Гарантируем, что результат находится в промежутке [0, 1]
             return Math.Max(0, Math.Min(1, result));
 
         }

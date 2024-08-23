@@ -5,7 +5,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
     public class CraneSimulator : ISimulator
     {
         public bool Active { get; set; }
-        public string Name { get; } = "Crane simulator";
+        public string Name { get; } = "Портовый кран";
+
+        public Func<List<object>, List<object>> GetFunc { get; set; }
 
         public double m = 1; // Масса маятника (кг)
         public double M = 5; // Масса каретки (кг)
@@ -38,5 +40,16 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             // Ограничение движения каретки
             x = Math.Max(0, Math.Min(beamSize, x));
         }
+
+        public List<LinguisticVariableDto> GetLinguisticVariables()
+            => new List<LinguisticVariableDto>()
+            {
+                new LinguisticVariableDto { Name = "Растояние до цели", BaseSet = typeof(Distance), IsInput = true },
+                new LinguisticVariableDto { Name = "Угол отклонения груза", BaseSet = typeof(Angle), IsInput = true },
+                new LinguisticVariableDto { Name = "Мощность двигателя", BaseSet = typeof(Power), IsInput = false },
+            };
+
+        public void SetController(Func<List<object>, List<object>> controller)
+            => GetFunc = controller;
     }
 }

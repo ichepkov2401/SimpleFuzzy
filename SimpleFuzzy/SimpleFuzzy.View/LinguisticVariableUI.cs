@@ -56,11 +56,18 @@ namespace SimpleFuzzy.View
                 baseSetComboBox.SelectedItem = objectSetsName.FirstOrDefault(t => t.Value == linguisticVariable.baseSet).Key;
             }
             FazificationObjectChaged(null, null);
+            if (!linguisticVariable.isRedact)
+            {
+                baseSetComboBox.Enabled = false;
+                nameTextBox.Enabled = false;
+                radioButton1.Enabled = false;
+                radioButton2.Enabled = false;
+            }
         }
 
         private void SetObjectSet()
         {
-            var baseSets = _repositoryService.GetCollection<IObjectSet>().Where(x => x.Active);
+            var baseSets = _repositoryService.GetCollection<IObjectSet>().Where(x => x.Active || !linguisticVariable.isRedact);
             foreach (var baseSet in baseSets)
             {
                 string name = baseSet.Name;

@@ -45,6 +45,8 @@
             btnPause = new Button();
             btnReset = new Button();
             lblInitialParams = new Label();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)forceTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMassPendulum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMassCart).BeginInit();
@@ -59,7 +61,7 @@
             // 
             // forceTrackBar
             // 
-            forceTrackBar.Location = new Point(625, 249);
+            forceTrackBar.Location = new Point(625, 241);
             forceTrackBar.Maximum = 100;
             forceTrackBar.Minimum = -100;
             forceTrackBar.Name = "forceTrackBar";
@@ -216,10 +218,34 @@
             lblInitialParams.TabIndex = 0;
             lblInitialParams.Text = "Параметры:";
             // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Checked = true;
+            radioButton1.Location = new Point(799, 308);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(107, 19);
+            radioButton1.TabIndex = 10;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Ручной режим";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(799, 343);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(158, 19);
+            radioButton2.TabIndex = 11;
+            radioButton2.Text = "Автоматический режим";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
             // FromOfSimulator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(radioButton2);
+            Controls.Add(radioButton1);
             Controls.Add(numPlatformPosition);
             Controls.Add(lblInitialParams);
             Controls.Add(numInitialPosition);
@@ -250,5 +276,8 @@
             ResumeLayout(false);
             PerformLayout();
         }
+
+        private RadioButton radioButton1;
+        private RadioButton radioButton2;
     }
 }

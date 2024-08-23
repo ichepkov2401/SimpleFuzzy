@@ -8,10 +8,7 @@ namespace InvertedPendelum
 
         public string Name { get; } = "Inverted Pendelum";
 
-        public List<LinguisticVariableDto> GetLinguisticVariables()
-        {
-            throw new NotImplementedException();
-        }
+        public List<LinguisticVariableDto> GetLinguisticVariables() => new List<LinguisticVariableDto>();
 
         public object GetVisualObject()
         {

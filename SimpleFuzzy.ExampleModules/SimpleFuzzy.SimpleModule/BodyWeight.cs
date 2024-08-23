@@ -11,7 +11,7 @@ public class BodyWeight : IObjectSet
 
     public object Extraction()
     {
-        return currentobject;
+        return Math.Round(currentobject,2);
     }
 
     public void MoveNext()

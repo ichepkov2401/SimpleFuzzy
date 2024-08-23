@@ -5,9 +5,11 @@ using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class FasificationForm : MetroUserControl
+    public partial class FasificationForm : UserControl
     {
         IRepositoryService repositoryService;
+        IAssemblyLoaderService assemblyLoaderService;
+        LinguisticVariableUI variableUI;
         public FasificationForm()
         {
             InitializeComponent();
@@ -17,6 +19,7 @@ namespace SimpleFuzzy.View
             buttonAction.FixedWidth = true;
             extender.AddColumn(buttonAction);
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             FillTreeView();
             RefreshLinguisticVariableList();
         }
@@ -78,8 +81,8 @@ namespace SimpleFuzzy.View
                         MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-
-                    var newVariable = new LinguisticVariable(true) { Name = variableName };
+                    LinguisticVariable newVariable =  new LinguisticVariable(true, true) { Name = variableName };
+                    assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
                     RefreshLinguisticVariableList();
@@ -88,7 +91,7 @@ namespace SimpleFuzzy.View
         }
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Вы уверенны, что хотите удалить выбранную лингвистическую переменную?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -115,8 +118,27 @@ namespace SimpleFuzzy.View
             foreach (var variable in linguisticVariables)
             {
                 ListViewItem item = new ListViewItem(variable.Name);
-                item.SubItems.Add("X");
+                if (variable.isRedact)
+                    item.SubItems.Add("X");
                 listView1.Items.Add(item);
+            }
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (variableUI != null) 
+            {
+                Controls.Remove(variableUI);
+                variableUI.Dispose();
+            }
+            if (listView1.SelectedIndices.Count == 1)
+            {
+                var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == listView1.SelectedItems[0].Text);
+                {
+                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList);
+                    Controls.Add(variableUI);
+                    variableUI.Location = new Point(325, 0);
+                }
             }
         }
     }

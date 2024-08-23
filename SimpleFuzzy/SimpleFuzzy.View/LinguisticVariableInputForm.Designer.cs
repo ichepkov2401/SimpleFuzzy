@@ -36,25 +36,28 @@
             // 
             // textBox
             // 
-            textBox.Location = new Point(34, 280);
+            textBox.Location = new Point(15, 175);
+            textBox.Margin = new Padding(2, 1, 2, 1);
             textBox.Name = "textBox";
-            textBox.Size = new Size(445, 39);
+            textBox.Size = new Size(275, 27);
             textBox.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(43, 143);
+            label1.Location = new Point(21, 49);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(78, 32);
+            label1.Size = new Size(50, 20);
             label1.TabIndex = 1;
             label1.Text = "label1";
             // 
             // buttonOK
             // 
-            buttonOK.Location = new Point(494, 273);
+            buttonOK.Location = new Point(298, 171);
+            buttonOK.Margin = new Padding(2, 1, 2, 1);
             buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(150, 46);
+            buttonOK.Size = new Size(93, 29);
             buttonOK.TabIndex = 2;
             buttonOK.Text = "Создать";
             buttonOK.UseVisualStyleBackColor = true;
@@ -62,9 +65,10 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(650, 273);
+            buttonCancel.Location = new Point(394, 171);
+            buttonCancel.Margin = new Padding(2, 1, 2, 1);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(150, 46);
+            buttonCancel.Size = new Size(93, 29);
             buttonCancel.TabIndex = 3;
             buttonCancel.Text = "Отмена";
             buttonCancel.UseVisualStyleBackColor = true;
@@ -72,13 +76,14 @@
             // 
             // LinguisticVariableInputForm
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(493, 281);
             Controls.Add(buttonCancel);
             Controls.Add(buttonOK);
             Controls.Add(label1);
             Controls.Add(textBox);
+            Margin = new Padding(2, 1, 2, 1);
             Name = "LinguisticVariableInputForm";
             Text = "LinguisticVariableInputForm";
             ResumeLayout(false);

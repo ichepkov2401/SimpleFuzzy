@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace SimpleFuzzy.View
 {
-    partial class AboutBox : MetroForm
+    partial class AboutBox : Form
     {
         public AboutBox()
         {

@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using MetroFramework.Controls;
 using SimpleFuzzy.Abstract;
 using System.Runtime.Loader;
 using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
 {
-    public partial class LoaderForm : MetroUserControl
+    public partial class LoaderForm : UserControl
     {
         public IAssemblyLoaderService moduleLoaderService;
         public IRepositoryService repositoryService;
@@ -16,6 +15,7 @@ namespace SimpleFuzzy.View
         public LoaderForm()
         {
             InitializeComponent();
+            dllListView.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
             ListViewExtender extender = new ListViewExtender(dllListView);
             ListViewButtonColumn buttonAction = new ListViewButtonColumn(1);
             buttonAction.Click += OnButtonActionClick;
@@ -187,7 +187,7 @@ namespace SimpleFuzzy.View
             foreach (TreeNode node in treeView1.Nodes[2].Nodes)
             {
                 if (node == e.Node)
-                {
+                 {
                     if (e.Node.Checked)
                     {
                         if (Parent is MainWindow parent)
@@ -212,6 +212,7 @@ namespace SimpleFuzzy.View
                                     {
                                         node1.Checked = false;
                                         modules[node1.Text].Active = false;
+                                        UnloadSimulationVariable(modules[node1.Text] as ISimulator);
                                     }
                                 }
                                 node.Checked = true;
@@ -226,12 +227,15 @@ namespace SimpleFuzzy.View
                         if (Parent is MainWindow parent)
                         {
                             parent.isContainSimulator = false;
+                            UnloadSimulationVariable(modules[node.Text] as ISimulator);
                             parent.EnableSimulationsButton(false);
                         }
                     }
                 }
             }
             modules[e.Node.Text].Active = e.Node.Checked;
+            if (modules[e.Node.Text] is ISimulator sim && e.Node.Checked)
+                LoadSimulationVariable(sim);
 
             if (e.Node.Parent != treeView1.Nodes[2])
             {
@@ -243,6 +247,31 @@ namespace SimpleFuzzy.View
                 {
                     e.Node.Parent.Checked = false;
                 }
+            }
+        }
+
+        private void LoadSimulationVariable(ISimulator simulator)
+        {
+            foreach(var variable in simulator.GetLinguisticVariables())
+            {
+                repositoryService.GetCollection<LinguisticVariable>().Add(new LinguisticVariable(
+                    variable.Name, 
+                    variable.IsInput, 
+                    false, 
+                    repositoryService.GetCollection<IObjectSet>().FirstOrDefault(t => t.GetType() == variable.BaseSet),
+                    new List<(IMembershipFunction, Color)>()));
+            }
+        }
+
+        private void UnloadSimulationVariable(ISimulator simulator)
+        {
+            foreach (var variable in simulator.GetLinguisticVariables())
+            {
+                repositoryService.GetCollection<LinguisticVariable>().RemoveAll(t => 
+                    t.Name == variable.Name && 
+                    t.IsInput == variable.IsInput &&
+                    t.baseSet.GetType() == variable.BaseSet &&
+                    !t.isRedact);
             }
         }
 

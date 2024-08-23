@@ -16,9 +16,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
             timer = new System.Windows.Forms.Timer { Interval = 16 }; // ~60 FPS
             timer.Tick += TimerTick;
-        }        
+        }
 
-        public FromOfSimulator(CraneSimulator crane) 
+        public FromOfSimulator(CraneSimulator crane)
         {
             simulator = crane;
             InitializeComponent();
@@ -31,12 +31,19 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         private void TimerTick(object sender, EventArgs e)
         {
+            if (radioButton2.Checked)
+            {
+                forceTrackBar.Value = (int)simulator.GetFunc(new List<object>() {
+                    Math.Round((double)numPlatformPosition.Value - simulator.x, 2),
+                    (int)Math.Round(simulator.y)
+                })[0];
+            }
             simulator.Step();
             if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
                 string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
-                MessageBox.Show(message); 
+                MessageBox.Show(message);
                 Reset();
             }
             visualCrane.Invalidate();
@@ -191,7 +198,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            timer.Stop(); 
+            timer.Stop();
             Reset();
             isSimulationRunning = false;
             EnableControls();

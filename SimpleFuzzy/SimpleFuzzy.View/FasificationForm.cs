@@ -81,7 +81,7 @@ namespace SimpleFuzzy.View
                         MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                    LinguisticVariable newVariable =  new LinguisticVariable(true, false) { Name = variableName };
+                    LinguisticVariable newVariable =  new LinguisticVariable(true, true) { Name = variableName };
                     assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 

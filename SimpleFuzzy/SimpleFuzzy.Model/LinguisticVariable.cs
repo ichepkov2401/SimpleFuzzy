@@ -1,4 +1,5 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Text;
 
 namespace SimpleFuzzy.Model
 {
@@ -118,7 +119,7 @@ namespace SimpleFuzzy.Model
             return result;
         }
         //Расчет свойств нечеткого множества
-        public Tuple<double,string,List<object>,List<object>,List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+        public Tuple<double,string,string,string,string> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
 
             if (!heightCache.ContainsKey(term))
             {
@@ -241,14 +242,20 @@ namespace SimpleFuzzy.Model
             }
             return section;
         }
-        List<object> RemoveSequences(List<object> input)
+        string RemoveSequences(List<object> input)
         {
-            if (input == null || input.Count <= 1)
+            if (input == null || input.Count == 0)
             {
-                return input;
+                return "{}";
             }
 
-            List<object> output = new List<object>();
+            if (input.Count == 1)
+            {
+                return $"{{{input[0]}}}";
+            }
+
+            StringBuilder output = new StringBuilder();
+            output.Append("{");
             int start = 0;
 
             for (int i = 1; i < input.Count; i++)
@@ -257,35 +264,29 @@ namespace SimpleFuzzy.Model
                 {
                     if (i - start > 1)
                     {
-                        output.Add("[");
-                        output.Add(input[start]);
-                        output.Add(",");
-                        output.Add(input[i - 1]);
-                        output.Add("]");
+                        output.Append($"[{input[start]}, {input[i - 1]}], ");
                     }
                     else
                     {
-                        output.Add(input[start]);
+                        output.Append($"{input[start]}, ");
                     }
                     start = i;
                 }
             }
 
-            // Обработка последней последовательности 
+            // Обработка последней последовательности
             if (input.Count - start > 1)
             {
-                output.Add("[");
-                output.Add(input[start]);
-                output.Add(",");
-                output.Add(input[input.Count - 1]);
-                output.Add("]");
+                output.Append($"[{input[start]}, {input[input.Count - 1]}]");
             }
             else
             {
-                output.Add(input[start]);
+                output.Append($"{input[start]}");
             }
 
-            return output;
+            output.Append("}");
+
+            return output.ToString();
         }
 
     }

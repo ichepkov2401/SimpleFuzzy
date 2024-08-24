@@ -27,7 +27,12 @@ namespace SimpleFuzzy.Model
             // Добавляем ЛП
             inputVariables.Add(inputVar);
         }
-
+        // Потом ссылки добавятся
+        public void DeleteRule(int position)
+        {
+            rules.RemoveAt(position);
+        }
+        // Потом ссылки добавятся
         public void DeleteInputVar(string name, int position)
         {
             int index = 0;
@@ -53,23 +58,24 @@ namespace SimpleFuzzy.Model
             else return false;
         }
 
-
-        // вероятно поставить на таймер тик
-        public void BlockedSameRules()
+        public void BlockedSameRules(int position)
         {
-            for (int i = rules.Count - 1; i >= 0; i--) 
+            Rule rule = rules[position];
+            for (int i = position - 1; i >= 0; i--) 
             {
-                bool isBlocked = false;
-                for (int j = i - 1; j >= 0; j--)
+                if (IsSameRules(rule, rules[i]))
                 {
-                    if (IsSameRules(rules[i], rules[j]))
-                    {
-                        rules[i].IsActive = false;
-                        isBlocked = true;
-                        continue;
-                    }
+                    rule.IsActive = false;
+                    return;
                 }
-                if (!isBlocked) rules[i].IsActive = true;
+            }
+            for (int i = position + 1; i <  rules.Count; i++)
+            {
+                if (IsSameRules(rule, rules[i]))
+                {
+                    rules[i].IsActive = false;
+                    return;
+                }
             }
         }
     }

@@ -111,8 +111,8 @@ namespace SimpleFuzzy.View
             dataTable.RowTemplate.Height = 29;
             dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
+            dataTable.CellClick += dataTable_CellClick;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
-            dataTable.RowsAdded += dataTable_RowsAdded;
             // 
             // InferenceForm
             // 

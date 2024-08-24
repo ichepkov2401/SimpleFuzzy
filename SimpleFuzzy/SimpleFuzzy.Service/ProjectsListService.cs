@@ -267,6 +267,21 @@ namespace SimpleFuzzy.Service
             }
             return false;
         }
+
+        public void ContainsCheckPath(string path)
+        {
+            if (!IsContainsPath(path))
+            {
+                AddProject(path.Split('\\')[^1].Split('.')[0], path);
+            }
+        }
+
+        public void ContainsCheckName(string name)
+        {
+            try { GivePath(name, false); }
+            catch (InvalidOperationException e) { DeleteOnlyInList(name); }
+        }
+
         public string GivePath(string name, bool isFull) 
         {
             if (IsContainsName(name))
@@ -306,6 +321,7 @@ namespace SimpleFuzzy.Service
                 {
                     list.Add(line);
                 }
+
             }
             reader.Close();
             file.Close();

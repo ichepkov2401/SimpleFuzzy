@@ -11,7 +11,26 @@ namespace SimpleFuzzy.View
     public partial class FuzzyOperationUI : UserControl
     {
         string[] unos = { "Нечеткое дополнение" };
-        string[] bins = { "Нечеткое пересечение" };
+        string[] bins = {
+            "Нечеткое пересечение",
+            "Нечеткое \"И\"",
+            "Нечеткое \"ИЛИ\"",
+            "Гамма - оператор",
+            "Min-Max \"И\"",
+            "Min-Max \"ИЛИ\"",
+            "\"Усиленное\" произведение",
+            "\"Усиленная\" сумма",
+            "Лукашевич \"И\"",
+            "Лукашевич \"ИЛИ\"",
+            "Эйнштейновское \"И\"",
+            "Эйнштейновское \"ИЛИ\"",
+            "Алгебраическое \"И\"",
+            "Алгебраическое \"ИЛИ\"",
+            "Хамахеровское \"И\"",
+            "Хамахеровское \"ИЛИ\"",
+            "T - оператор Ягера",
+            "S - оператор Ягера"
+        };
         IRepositoryService repositoryService;
         IAssemblyLoaderService assemblyLoaderService;
         FuzzyOperation fuzzyOperation;

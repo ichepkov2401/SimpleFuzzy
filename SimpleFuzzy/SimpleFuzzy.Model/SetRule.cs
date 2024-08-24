@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleFuzzy.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,34 @@ namespace SimpleFuzzy.Model
             }
             // Удаляем термы из всех правил для удаляемой ЛП
             foreach (var rule in rules) { rule.DeleteTerm(position); }
+        }
+
+        private bool IsSameRules(Rule rule1, Rule rule2)
+        {
+            List<IMembershipFunction> list1 = rule1.GiveList();
+            List<IMembershipFunction> list2 = rule1.GiveList();
+            if (list1.Equals(list2)) return true;
+            else return false;
+        }
+
+
+        // вероятно поставить на таймер тик
+        public void BlockedSameRules()
+        {
+            for (int i = rules.Count - 1; i >= 0; i--) 
+            {
+                bool isBlocked = false;
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    if (IsSameRules(rules[i], rules[j]))
+                    {
+                        rules[i].IsActive = false;
+                        isBlocked = true;
+                        continue;
+                    }
+                }
+                if (!isBlocked) rules[i].IsActive = true;
+            }
         }
     }
 }

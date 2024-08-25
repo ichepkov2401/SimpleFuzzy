@@ -132,7 +132,6 @@
             MinimumSize = new Size(681, 113);
             Name = "ConfirmSaveAs";
             Size = new Size(881, 113);
-            Load += ConfirmCopy_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

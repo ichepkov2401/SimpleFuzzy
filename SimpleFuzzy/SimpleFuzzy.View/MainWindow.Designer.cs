@@ -217,7 +217,7 @@ namespace SimpleFuzzy.View
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1002, 600);
+            ClientSize = new Size(1002, 650);
             Controls.Add(label1);
             Controls.Add(Right);
             Controls.Add(Left);
@@ -225,7 +225,7 @@ namespace SimpleFuzzy.View
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
             MainMenuStrip = menuStrip1;
-            MinimumSize = new Size(932, 647);
+            MinimumSize = new Size(1020, 677);
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
             menuStrip1.ResumeLayout(false);

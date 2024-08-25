@@ -12,7 +12,7 @@ namespace SimpleFuzzy.Model
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
-        public SetRule listRules; // Список правил для выходной переменной
+        public SetRule ListRules { get; set; } // Список правил для выходной переменной
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
@@ -22,6 +22,7 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
             this.isInput = isInput;
+            this.ListRules = new SetRule(this);
         }
         public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
@@ -101,6 +102,18 @@ namespace SimpleFuzzy.Model
             for (int i = 0; i < func.Count; i++)
             {
                 list[i] = (func[i].Item1.MembershipFunction(elementBaseSet));
+            }
+            return list;
+        }
+
+        public List<object> ObjectSetToList()
+        {
+            var list = new List<object>();
+            baseSet.ToFirst();
+            while (!baseSet.IsEnd())
+            {
+                list.Add(baseSet.Extraction());
+                baseSet.MoveNext();
             }
             return list;
         }

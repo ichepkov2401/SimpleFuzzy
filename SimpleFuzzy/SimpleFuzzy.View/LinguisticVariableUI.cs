@@ -134,18 +134,6 @@ namespace SimpleFuzzy.View
             }
         }
 
-        private List<object> ObjectSetToList(IObjectSet objectSet)
-        {
-            var list = new List<object>();
-            objectSet.ToFirst();
-            while (!objectSet.IsEnd())
-            {
-                list.Add(objectSet.Extraction());
-                objectSet.MoveNext();
-            }
-            return list;
-        }
-
         private void UpdateGraph()
         {
             if (linguisticVariable.BaseSet == null)
@@ -156,7 +144,7 @@ namespace SimpleFuzzy.View
 
             var plotModel = new PlotModel { Title = "Лингвистическая переменная" };
 
-            var baseSetValues = ObjectSetToList(linguisticVariable.BaseSet);
+            var baseSetValues = linguisticVariable.ObjectSetToList();
             var data = linguisticVariable.Graphic();
 
             LineSeries[] lineSeries = new LineSeries[linguisticVariable.CountFunc];

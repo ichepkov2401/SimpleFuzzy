@@ -77,6 +77,8 @@ namespace SimpleFuzzy.View
             foreach (var value in repositoryService.GetCollection<IObjectSet>())
             {
                 string name = value.Name;
+                if (objectSet.GetType() == value.GetType())
+                    selectName = name;
                 if (list.Count(t => t.Name == value.Name) > 1)
                 {
                     name = $"{value.Name} - {value.GetType()}";
@@ -192,7 +194,7 @@ namespace SimpleFuzzy.View
 
                 for (baseSetValues.ToFirst(); !baseSetValues.IsEnd(); baseSetValues.MoveNext())
                 {
-                    lineSeries.Points.Add(new DataPoint((double)baseSetValues.Extraction(), function != null ? function.MembershipFunction(baseSetValues.Extraction()) : 0));
+                    lineSeries.Points.Add(new DataPoint(Convert.ToDouble(baseSetValues.Extraction()), function != null ? function.MembershipFunction(baseSetValues.Extraction()) : 0));
                 }
 
                 plotModel.Series.Add(lineSeries);

@@ -17,7 +17,8 @@ namespace SimpleFuzzy.Service
                 MetadataReference.CreateFromFile(typeof(ISimulator).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Regex).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(Regex).Assembly.Location),
+                MetadataReference.CreateFromFile(Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location), "System.Runtime.dll"))
             };
 
         private static readonly CSharpCompilationOptions DefaultCompilationOptions =
@@ -34,7 +35,7 @@ namespace SimpleFuzzy.Service
         {
             var source = exeCode;
             var parsedSyntaxTree = Parse(source, "", CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp10));
-
+            
             var compilation = CSharpCompilation.Create($"{DateTime.Now.Ticks}.dll", new SyntaxTree[] { parsedSyntaxTree }, DefaultReferences, DefaultCompilationOptions);
             using var stream = new MemoryStream();
             var result = compilation.Emit(stream);

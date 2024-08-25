@@ -1,4 +1,6 @@
-﻿namespace SimpleFuzzy.View
+﻿using System.DirectoryServices.ActiveDirectory;
+
+namespace SimpleFuzzy.View
 {
     partial class InferenceForm
     {
@@ -17,23 +19,21 @@
 
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             outputVariableComboBox = new ComboBox();
             outputVariableLabel = new Label();
             windowHeaderLabel = new Label();
-            inputVariableLabel = new Label();
-            stringsListView = new ListView();
-            stringsListViewСolumnHeader = new ColumnHeader();
-            StringsCloseButtons = new ColumnHeader();
-            columnsListView = new ListView();
-            columnsListViewСolumnHeader = new ColumnHeader();
-            columnsCloseButtons = new ColumnHeader();
-            columnsComboBox = new ComboBox();
-            stringsComboBox = new ComboBox();
+            AddInbutton = new Button();
+            inputVariablesComboBox = new ComboBox();
+            label1 = new Label();
+            dataTable = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataTable).BeginInit();
             SuspendLayout();
             // 
             // outputVariableComboBox
             // 
-            outputVariableComboBox.Location = new Point(420, 72);
+            outputVariableComboBox.Location = new Point(181, 49);
             outputVariableComboBox.Name = "outputVariableComboBox";
             outputVariableComboBox.Size = new Size(194, 28);
             outputVariableComboBox.TabIndex = 0;
@@ -42,102 +42,92 @@
             // outputVariableLabel
             // 
             outputVariableLabel.AutoSize = true;
-            outputVariableLabel.Location = new Point(242, 75);
+            outputVariableLabel.Location = new Point(3, 52);
             outputVariableLabel.Name = "outputVariableLabel";
-            outputVariableLabel.Size = new Size(172, 20);
+            outputVariableLabel.Size = new Size(175, 20);
             outputVariableLabel.TabIndex = 1;
-            outputVariableLabel.Text = "Выходная переменная:";
+            outputVariableLabel.Text = "Выходные переменные";
             // 
             // windowHeaderLabel
             // 
             windowHeaderLabel.AutoSize = true;
-            windowHeaderLabel.Location = new Point(406, 19);
+            windowHeaderLabel.Location = new Point(384, 10);
             windowHeaderLabel.Name = "windowHeaderLabel";
             windowHeaderLabel.Size = new Size(144, 20);
             windowHeaderLabel.TabIndex = 2;
             windowHeaderLabel.Text = "РЕДАКТОР ПРАВИЛ";
             // 
-            // inputVariableLabel
+            // AddInbutton
             // 
-            inputVariableLabel.AutoSize = true;
-            inputVariableLabel.Location = new Point(113, 146);
-            inputVariableLabel.Name = "inputVariableLabel";
-            inputVariableLabel.Size = new Size(161, 20);
-            inputVariableLabel.TabIndex = 3;
-            inputVariableLabel.Text = "Входная переменная:";
+            AddInbutton.Location = new Point(381, 95);
+            AddInbutton.Name = "AddInbutton";
+            AddInbutton.Size = new Size(152, 29);
+            AddInbutton.TabIndex = 3;
+            AddInbutton.Text = "Добавить ЛП";
+            AddInbutton.UseVisualStyleBackColor = true;
+            AddInbutton.Click += AddInbutton_Click;
             // 
-            // stringsListView
+            // inputVariablesComboBox
             // 
-            stringsListView.Columns.AddRange(new ColumnHeader[] { stringsListViewСolumnHeader, StringsCloseButtons });
-            stringsListView.FullRowSelect = true;
-            stringsListView.Location = new Point(188, 169);
-            stringsListView.Name = "stringsListView";
-            stringsListView.Size = new Size(246, 276);
-            stringsListView.TabIndex = 4;
-            stringsListView.UseCompatibleStateImageBehavior = false;
-            stringsListView.View = System.Windows.Forms.View.Details;
+            inputVariablesComboBox.FormattingEnabled = true;
+            inputVariablesComboBox.Location = new Point(181, 95);
+            inputVariablesComboBox.Name = "inputVariablesComboBox";
+            inputVariablesComboBox.Size = new Size(194, 28);
+            inputVariablesComboBox.TabIndex = 4;
+            inputVariablesComboBox.SelectedIndexChanged += inputVariablesComboBox_SelectedIndexChanged;
             // 
-            // stringsListViewСolumnHeader
+            // label1
             // 
-            stringsListViewСolumnHeader.Text = "Строки";
-            stringsListViewСolumnHeader.Width = 117;
+            label1.AutoSize = true;
+            label1.Location = new Point(14, 95);
+            label1.Name = "label1";
+            label1.Size = new Size(164, 20);
+            label1.TabIndex = 5;
+            label1.Text = "Входные переменные";
             // 
-            // StringsCloseButtons
+            // dataTable
             // 
-            StringsCloseButtons.Text = "";
-            // 
-            // columnsListView
-            // 
-            columnsListView.Columns.AddRange(new ColumnHeader[] { columnsListViewСolumnHeader, columnsCloseButtons });
-            columnsListView.FullRowSelect = true;
-            columnsListView.Location = new Point(481, 169);
-            columnsListView.Name = "columnsListView";
-            columnsListView.Size = new Size(244, 276);
-            columnsListView.TabIndex = 5;
-            columnsListView.UseCompatibleStateImageBehavior = false;
-            columnsListView.View = System.Windows.Forms.View.Details;
-            // 
-            // columnsListViewСolumnHeader
-            // 
-            columnsListViewСolumnHeader.Text = "Столбцы";
-            columnsListViewСolumnHeader.Width = 117;
-            // 
-            // columnsCloseButtons
-            // 
-            columnsCloseButtons.Text = "";
-            // 
-            // columnsComboBox
-            // 
-            columnsComboBox.FormattingEnabled = true;
-            columnsComboBox.Location = new Point(556, 169);
-            columnsComboBox.Name = "columnsComboBox";
-            columnsComboBox.Size = new Size(169, 28);
-            columnsComboBox.TabIndex = 6;
-            columnsComboBox.SelectedIndexChanged += ColumnsComboBox_SelectedIndexChanged;
-            // 
-            // stringsComboBox
-            // 
-            stringsComboBox.FormattingEnabled = true;
-            stringsComboBox.Location = new Point(262, 169);
-            stringsComboBox.Name = "stringsComboBox";
-            stringsComboBox.Size = new Size(172, 28);
-            stringsComboBox.TabIndex = 7;
-            stringsComboBox.SelectedIndexChanged += StringsComboBox_SelectedIndexChanged;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataTable.Location = new Point(3, 129);
+            dataTable.Name = "dataTable";
+            dataTable.RowHeadersVisible = false;
+            dataTable.RowHeadersWidth = 51;
+            dataTable.RowTemplate.Height = 29;
+            dataTable.Size = new Size(753, 345);
+            dataTable.TabIndex = 7;
+            dataTable.CellValueChanged += dataTable_CellValueChanged;
+            dataTable.RowsAdded += dataTable_RowsAdded;
             // 
             // InferenceForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(stringsComboBox);
-            Controls.Add(columnsComboBox);
-            Controls.Add(columnsListView);
-            Controls.Add(stringsListView);
-            Controls.Add(inputVariableLabel);
+            Controls.Add(dataTable);
+            Controls.Add(label1);
+            Controls.Add(inputVariablesComboBox);
+            Controls.Add(AddInbutton);
             Controls.Add(windowHeaderLabel);
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
             Name = "InferenceForm";
             Size = new Size(941, 490);
+            ((System.ComponentModel.ISupportInitialize)dataTable).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -147,14 +137,9 @@
         private ComboBox outputVariableComboBox;
         private Label outputVariableLabel;
         private Label windowHeaderLabel;
-        private Label inputVariableLabel;
-        private ListView stringsListView;
-        private ListView columnsListView;
-        private ComboBox columnsComboBox;
-        private ComboBox stringsComboBox;
-        private ColumnHeader stringsListViewСolumnHeader;
-        private ColumnHeader columnsListViewСolumnHeader;
-        private ColumnHeader StringsCloseButtons;
-        private ColumnHeader columnsCloseButtons;
+        private Button AddInbutton;
+        private ComboBox inputVariablesComboBox;
+        private Label label1;
+        private DataGridView dataTable;
     }
 }

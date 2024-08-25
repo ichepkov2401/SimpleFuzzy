@@ -7,11 +7,11 @@ namespace SimpleFuzzy.SimpleModule
         public bool Active { get; set; }
         public string Name { get; } = "Нормальный вес";
 
-        public Type InputType => typeof(int);
+        public Type InputType => typeof(double);
 
         public double MembershipFunction(object elem)
         {
-            int[] values = { 45, 50, 70, 75 };
+            double[] values = { 45, 50, 70, 75 };
             if (elem == null)
             {
                 throw new ArgumentNullException(nameof(elem));

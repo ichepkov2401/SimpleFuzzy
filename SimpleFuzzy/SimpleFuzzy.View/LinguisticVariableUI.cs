@@ -237,7 +237,30 @@ namespace SimpleFuzzy.View
 
         private void BaseSetChange(object sender, EventArgs e)
         {
-            linguisticVariable.BaseSet = objectSetsName[(string)baseSetComboBox.SelectedItem];
+            string name = "";
+            if (linguisticVariable.baseSet != null) { name = linguisticVariable.baseSet.Name; }
+            try { linguisticVariable.BaseSet = objectSetsName[(string)baseSetComboBox.SelectedItem]; }
+            catch 
+            {
+                DialogResult result = MessageBox.Show(
+                            "При изменении базового множества будут автоматически удалены все" +
+                             "выбранные термы, так как у нового множества другой тип данных. Продолжить? ",
+                            "Предупреждение",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.None,
+                            MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Yes)
+                {
+                    termsListView.Clear();
+                    linguisticVariable.func.Clear();
+                    linguisticVariable.BaseSet = objectSetsName[(string)baseSetComboBox.SelectedItem];
+                }
+                else 
+                { 
+                    baseSetComboBox.Text = name;
+                    return;
+                };
+            }
             objectSetType = linguisticVariable.BaseSet.Extraction().GetType();
             int count = 0;
             for (linguisticVariable.BaseSet.ToFirst(); !linguisticVariable.BaseSet.IsEnd(); linguisticVariable.BaseSet.MoveNext())

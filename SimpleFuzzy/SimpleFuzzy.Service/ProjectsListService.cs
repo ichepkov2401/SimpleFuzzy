@@ -15,6 +15,7 @@ namespace SimpleFuzzy.Service
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public string pathPR = Directory.GetCurrentDirectory() + "\\Projects";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
         Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
@@ -171,7 +172,6 @@ namespace SimpleFuzzy.Service
         }
         public void OpenProjectfromPath(string path) 
         {
-            ContainsCheckPath(path);
             if (IsContainsPath(path))
             {
                 // открытие проекта
@@ -312,16 +312,24 @@ namespace SimpleFuzzy.Service
 
         public void ContainsCheckPath(string path)
         {
-            if (!IsContainsPath(path))
+            var directories = Directory.GetDirectories(pathPR);
+            bool checker = false;
+            foreach (var dirPath in directories)
             {
-                AddProject(path.Split('\\')[^1].Split('.')[0], path);
+                if (dirPath == path)
+                {
+                    try { AddProject(path.Split('\\')[^1].Split('.')[0], path); break; }
+                    catch (InvalidOperationException e) {
+                        if (e.Message == "Проект с таким именем уже существует") break;
+                    }
+                }
             }
         }
 
         public bool ContainsCheckName(string name)
         {
             try { GivePath(name, true); }
-            catch (InvalidOperationException e) { DeleteOnlyInList(name); return false; }
+            catch (InvalidOperationException e) { DeleteProject(name); return false; }
             return true;
         }
 

@@ -42,9 +42,9 @@
             // button1
             // 
             button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.Location = new Point(653, 24);
+            button1.Location = new Point(445, 26);
             button1.Name = "button1";
-            button1.Size = new Size(202, 29);
+            button1.Size = new Size(202, 27);
             button1.TabIndex = 0;
             button1.Text = "Готово";
             button1.UseVisualStyleBackColor = true;
@@ -67,9 +67,9 @@
             // button3
             // 
             button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button3.Location = new Point(445, 24);
+            button3.Location = new Point(653, 26);
             button3.Name = "button3";
-            button3.Size = new Size(202, 29);
+            button3.Size = new Size(202, 27);
             button3.TabIndex = 7;
             button3.Text = "Отмена";
             button3.UseVisualStyleBackColor = true;

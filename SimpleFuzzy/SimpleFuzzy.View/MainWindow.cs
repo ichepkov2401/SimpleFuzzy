@@ -259,9 +259,9 @@ namespace SimpleFuzzy.View
             if (newWindowName.HasValue)
             {
                 currentControl = UserControls[newWindowName.Value]();
-                currentControl.Location = new Point(1020 / 2 - currentControl.Width / 2, 145);
+                currentControl.Location = new Point(1140 / 2 - currentControl.Width / 2, 145);
                 currentControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-                currentControl.Size = new Size(currentControl.Width + Width - 1020, currentControl.Height + Height - 677);
+                currentControl.Size = new Size(currentControl.Width + Width - 1140, currentControl.Height + Height - 745);
                 toRemove.Controls.Add(currentControl);
             }
             RightLeftEnable(newWindowName);

@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Runtime.Loader;
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
@@ -8,33 +11,18 @@ namespace SimpleFuzzy.Service
 {
     public class CompileService : ICompileService
     {
-        private static readonly IEnumerable<string> DefaultNamespaces =
-            new[]
-            {
-                "System",
-                "System.IO",
-                "System.Net",
-                "System.Linq",
-                "System.Text",
-                "System.Text.RegularExpressions",
-                "System.Collections.Generic"
-            };
-
-        private static string runtimePath = Directory.GetCurrentDirectory();
-
         private static readonly IEnumerable<MetadataReference> DefaultReferences =
-            new[]
+            new []
             {
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "mscorlib")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "System")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "SimpleFuzzy.Abstract"))
+                MetadataReference.CreateFromFile(typeof(ISimulator).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Regex).Assembly.Location)
             };
 
         private static readonly CSharpCompilationOptions DefaultCompilationOptions =
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                    .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
-                    .WithUsings(DefaultNamespaces);
+                    .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release);
 
         public static SyntaxTree Parse(string text, string filename = "", CSharpParseOptions options = null)
         {
@@ -42,19 +30,28 @@ namespace SimpleFuzzy.Service
             return SyntaxFactory.ParseSyntaxTree(stringText, options, filename);
         }
 
-        public static void Compile(string exeCode, string savePath)
+        public (CSharpCompilation, IModulable, AssemblyLoadContext) Compile(string exeCode)
         {
             var source = exeCode;
-            var parsedSyntaxTree = Parse(source, "", CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp6));
+            var parsedSyntaxTree = Parse(source, "", CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp10));
 
-            var compilation = CSharpCompilation.Create("Test.dll", new SyntaxTree[] { parsedSyntaxTree }, DefaultReferences, DefaultCompilationOptions);
-            string[] strings = savePath.Split('\\');
-            savePath = "";
-            for (int i = 0; i < strings.Length - 1; i++)
+            var compilation = CSharpCompilation.Create($"{DateTime.Now.Ticks}.dll", new SyntaxTree[] { parsedSyntaxTree }, DefaultReferences, DefaultCompilationOptions);
+            using var stream = new MemoryStream();
+            var result = compilation.Emit(stream);
+            if (!result.Success) 
             {
-                if (strings[i] != "") savePath = savePath + strings[i] + "\\";
+
             }
-            var result = compilation.Emit(savePath);
+            stream.Seek(0, SeekOrigin.Begin);
+            var assemblyContext = new AssemblyLoadContext(name: $"{DateTime.Now.Ticks}", isCollectible: true);
+            assemblyContext.LoadFromStream(stream);
+            var assembly = assemblyContext.Assemblies.ElementAt(0);
+            return (compilation, assembly.GetTypes()[0].GetConstructors()[0].Invoke(null) as IModulable, assemblyContext);
+        }
+
+        public void Save(string file, CSharpCompilation compilation)
+        {
+            compilation.Emit(file);
         }
     }
 }

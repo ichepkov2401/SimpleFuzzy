@@ -139,6 +139,8 @@ namespace SimpleFuzzy.View
             termsListView.View = System.Windows.Forms.View.Details;
             termsListView.SelectedIndexChanged += termView_SelectedIndexChanged;
             termsListView.MouseDoubleClick += termsListView_MouseDoubleClick;
+            termsListView.MouseLeave += termsListView_MouseLeave;
+            termsListView.MouseMove += termsListView_MouseMove;
             // 
             // HeightLabel
             // 

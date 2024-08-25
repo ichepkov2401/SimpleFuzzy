@@ -28,7 +28,7 @@ namespace SimpleFuzzy.View
         {
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             ObjectSet = objectSet;
-            GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet);
+            GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet, () => Close());
             generationMembershipUI.Location = new Point(0, 20);
             UserControl = generationMembershipUI;
             Controls.Add(generationMembershipUI);
@@ -46,7 +46,7 @@ namespace SimpleFuzzy.View
             Controls.Remove(UserControl);
             if (metroRadioButton1.Checked)
             {
-                GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet);
+                GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet, () => Close());
                 generationMembershipUI.Location = new Point(15, 40);
                 UserControl = generationMembershipUI;
                 Controls.Add(generationMembershipUI);

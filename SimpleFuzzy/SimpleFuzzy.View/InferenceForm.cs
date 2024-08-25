@@ -1,8 +1,5 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-using System.Data.Common;
-using System.Windows.Forms;
 
 namespace SimpleFuzzy.View
 {
@@ -15,6 +12,7 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            dataTable.EditMode = DataGridViewEditMode.EditOnEnter;
             foreach (LinguisticVariable variable in repositoryService.GetCollection<LinguisticVariable>())
             {
                 if (!variable.IsInput) outputVariableComboBox.Items.Add(variable.Name);
@@ -25,8 +23,27 @@ namespace SimpleFuzzy.View
                 outputVariableComboBox.SelectedIndex = 0;
             }
         }
-        private Color SetColorTerm(string name, IMembershipFunction func)
+        /// <summary>
+        /// Функция определеяет цвет терма заданной Лингвистической переменной
+        /// </summary>
+        /// <param name="name">Имя лингвитситческой переменной для которой определяется цвет</param>
+        /// <param name="func">Функция принадледности для которой определяется цвет</param>
+        /// <param name="isActive">1 - если правило активно, 2 - если не активно</param>
+        /// <returns>Цвет терма</returns>
+        private Color SetColorTerm(string name, IMembershipFunction func, byte isActive)
         {
+            if (currentOutputVar.Name == name)
+            {
+                for (int i = 0; i < currentOutputVar.func.Count; i++)
+                {
+                    if (currentOutputVar.func[i].Item1 == func)
+                    {
+                        return Color.FromArgb(currentOutputVar.func[i].Item2.R / isActive,
+                            currentOutputVar.func[i].Item2.G / isActive,
+                            currentOutputVar.func[i].Item2.B / isActive);
+                    }
+                }
+            }
             for (int i = 0; i < currentOutputVar.listRules.inputVariables.Count; i++)
             {
                 if (currentOutputVar.listRules.inputVariables[i].Name == name)
@@ -35,23 +52,26 @@ namespace SimpleFuzzy.View
                     {
                         if (currentOutputVar.listRules.inputVariables[i].func[j].Item1 == func)
                         {
-                            return currentOutputVar.listRules.inputVariables[i].func[j].Item2;
+                            return Color.FromArgb(currentOutputVar.listRules.inputVariables[i].func[j].Item2.R / isActive,
+                                currentOutputVar.listRules.inputVariables[i].func[j].Item2.G / isActive,
+                                currentOutputVar.listRules.inputVariables[i].func[j].Item2.B / isActive);
                         }
                     }
                 }
             }
             return DefaultBackColor; // Чтобы все пути к коду возвращали значение
         }
-        private Color SetColorToRelevation(double var)
+
+        /// <summary>
+        /// Функция расчитывает цвет релевантности на основе чилосвого значения и состояния активности
+        /// </summary>
+        /// <param name="var">Значение [0, 1] отображающее релвантность</param>
+        /// <param name="isActive">1 - если правило активно, 2 - если не активно</param>
+        /// <returns>Цветовая индикация релевантности</returns>
+        private Color SetColorToRelevation(double var, byte isActive)
         {
-            // Нужно переделать на плавный переход между красным и зеленым (пока так и не разобрался как)
-            
-            if (var <= 0.2) return Color.Red; // color*255 или  1-color*255
-            if (var > 0.2 && var <= 0.5) return Color.Orange;
-            if (var > 0.5 && var <= 0.7) return Color.Yellow;
-            if (var > 0.7 && var <= 0.9) return Color.LightGreen;
-            if (var > 0.9) return Color.Green;
-            return DefaultBackColor; // Чтобы все пути к коду возвращали значение
+            return Color.FromArgb((int)((var > 0.5 ? ((1 - (var - 0.5) * 2) * 255) : 255) / isActive),
+                (int)((var > 0.5 ? 255 : var * 511) / isActive), 0);
         }
 
         private void AddTable(string name)
@@ -69,6 +89,7 @@ namespace SimpleFuzzy.View
 
             DataGridViewComboBoxColumn comboBox = new DataGridViewComboBoxColumn();
             comboBox.HeaderText = name;
+            comboBox.FlatStyle = FlatStyle.Flat;
             dataTable.Columns.Add(comboBox);
             dataTable.Columns[2].Name = currentOutputVar.Name;
             Rule rule = new Rule(1);
@@ -115,19 +136,18 @@ namespace SimpleFuzzy.View
                         // добавление столбца
                         DataGridViewComboBoxColumn column = new DataGridViewComboBoxColumn();
                         column.HeaderText = inputVariablesComboBox.Text;
+                        column.FlatStyle = FlatStyle.Flat;
                         dataTable.Columns.Insert(1, column);
                         dataTable.Columns[1].Name = var.Name;
                         currentOutputVar.listRules.AddInputVar(var);
 
                         List<string> term = new List<string>();
-                        foreach (var func in currentOutputVar.func)
+                        foreach (var func in var.func)
                         {
                             term.Add(func.Item1.Name);
                         }
-                        for (int i = 0; i < dataTable.Rows.Count; i++)
-                        {
-                            (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = term;
-                        }
+                        var combobox = (dataTable.Columns[1] as DataGridViewComboBoxColumn);
+                        combobox.DataSource = term;
                         break;
                     }
                 }
@@ -154,7 +174,7 @@ namespace SimpleFuzzy.View
                 currentOutputVar.listRules.rules[e.RowIndex].RedactTerm(func, 0);
                 currentOutputVar.listRules.BlockedSameRules(e.RowIndex);
                 // Цвет уже есть, но пока не работает
-                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func);
+                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, 1);
             }
             else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
             {
@@ -162,13 +182,13 @@ namespace SimpleFuzzy.View
                 if (double.TryParse(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), out n) && n >= 0 && n <= 1)
                 {
                     currentOutputVar.listRules.rules[e.RowIndex].relevance = n;
-                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(n);
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(n, 1);
                 }
                 else
                 {
                     MessageBox.Show("Релевантность должна находиться в диапазоне [0, 1]");
                     dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
-                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(1);
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(1, 1);
                 }
             }
             else // СТОЛБЦЫ С ВХОДНЫМИ ПЕРЕМЕННЫМИ
@@ -180,7 +200,7 @@ namespace SimpleFuzzy.View
                     {
                         func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar.listRules.inputVariables[i]);
                         // Цвет уже есть, но пока не работает
-                        dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func);
+                        dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, 1);
                         break;
                     }
                 }
@@ -189,35 +209,39 @@ namespace SimpleFuzzy.View
             }
         }
         //////////////////// Добавление строк
-        private void dataTable_CellClick(object sender, DataGridViewCellEventArgs e)
+
+        private void dataTable_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             if (e.RowIndex == dataTable.RowCount - 1)
             {
-                dataTable.Rows.Add();
                 dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
                 Id++;
                 // Возможно потом добавить это условие, требуется обсуждение
-                //if (e.ColumnIndex != dataTable.Columns.Count - 2)
+                if (e.ColumnIndex != dataTable.Columns.Count - 2)
                 {
                     dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Value = currentOutputVar.listRules.rules[0].relevance;
-                    dataTable.Rows[0].Cells[1].Style.BackColor = SetColorToRelevation(1);
+                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(1, 1);
                 }
-                
+
                 Rule rule = new Rule(dataTable.ColumnCount - 2);
                 currentOutputVar.listRules.rules.Add(rule);
                 for (int i = 0; i < dataTable.ColumnCount - 2; i++)
                 {
                     List<string> term = new List<string>();
-                    foreach (var func in currentOutputVar.func)
-                    {
-                        term.Add(func.Item1.Name);
-                    }
                     if (i == 0)
                     {
+                        foreach (var func in currentOutputVar.func)
+                        {
+                            term.Add(func.Item1.Name);
+                        }
                         (dataTable.Columns[dataTable.ColumnCount - 1] as DataGridViewComboBoxColumn).DataSource = term;
                     }
                     else
                     {
+                        foreach (var func in repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(t => t.Name == dataTable.Columns[i].Name).func)
+                        {
+                            term.Add(func.Item1.Name);
+                        }
                         (dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = term;
                     }
                 }

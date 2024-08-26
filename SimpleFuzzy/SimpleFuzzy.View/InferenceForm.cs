@@ -74,6 +74,10 @@ namespace SimpleFuzzy.View
                 (int)((var > 0.5 ? 255 : var * 511) / isActive), 0);
         }
 
+        //private bool SetColorText(Color color)
+        //{
+        //    color.
+        //}
         private void AddTable(string name)
         {
             if (dataTable != null) dataTable.Columns.Clear();
@@ -93,7 +97,6 @@ namespace SimpleFuzzy.View
             dataTable.Columns.Add(comboBox);
             dataTable.Columns[2].Name = currentOutputVar.Name;
             Rule rule = new Rule(1);
-            //currentOutputVar.listRules.rules.Add(rule);
 
             List<string> term = new List<string>();
             foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
@@ -266,16 +269,9 @@ namespace SimpleFuzzy.View
                 Id++;
                 dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
 
-                if (e.ColumnIndex != dataTable.Columns.Count - 2)
-                {
-                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Value = 1;
-                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(1, 1);
-                }
-                //if (currentOutputVar.listRules.rules.Count < dataTable.RowCount) 
-                {
-                    Rule rule = new Rule(dataTable.ColumnCount - 2);
-                    currentOutputVar.listRules.rules.Add(rule);
-                }
+                Rule rule = new Rule(dataTable.ColumnCount - 2);
+                currentOutputVar.listRules.rules.Add(rule);
+
                 for (int i = 0; i < dataTable.ColumnCount - 2; i++)
                 {
                     List<string> term = new List<string>();
@@ -295,6 +291,11 @@ namespace SimpleFuzzy.View
                         }
                         (dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = term;
                     }
+                }
+                if (e.ColumnIndex != dataTable.Columns.Count - 2)
+                {
+                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Value = 1;
+                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(1, 1);
                 }
             }
         }

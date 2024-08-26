@@ -9,11 +9,14 @@ namespace SimpleFuzzy.View
     public partial class DefasificationForm : UserControl
     {
         IRepositoryService repositoryService;
+        IDefazificationService defazificationService;
         List<(LinguisticVariable, PictureBox, TrackBar, Label)> inputs = new List<(LinguisticVariable, PictureBox, TrackBar, Label)>();
+        LinguisticVariable output;
         public DefasificationForm()
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            defazificationService = AutofacIntegration.GetInstance<IDefazificationService>();
             FillComboBox();
         }
 
@@ -35,7 +38,7 @@ namespace SimpleFuzzy.View
                 Controls.Remove(variable.Item4);
             }
             inputs.Clear();
-            var output = repositoryService.GetCollection<LinguisticVariable>()
+            output = repositoryService.GetCollection<LinguisticVariable>()
                 .FirstOrDefault(t => t.Name == (string)OutputVariables.SelectedItem);
             pictureBox1.Controls.Clear();
             pictureBox1.Controls.Add(DrawInput(output));
@@ -50,6 +53,8 @@ namespace SimpleFuzzy.View
                 TrackBar trackBar = new TrackBar();
                 trackBar.Size = new Size(148, 45);
                 trackBar.Location = new Point(15, 396 + i * 250);
+                trackBar.ValueChanged += InputChanged;
+                trackBar.Maximum = newInput[i].BaseSet.Count - 1;
                 Controls.Add(trackBar);
                 Label label = new Label();
                 label.Text = newInput[i].Name;
@@ -105,6 +110,16 @@ namespace SimpleFuzzy.View
                 Model = plotModel,
                 Dock = DockStyle.Fill
             };
+        }
+
+        private void InputChanged(object sender, EventArgs e)
+        {
+            var variable = inputs.FirstOrDefault(t => t.Item3 == sender);
+            if (variable.Item1 != null)
+            {
+                variable.Item4.Text = variable.Item1.BaseSet[variable.Item3.Value].ToString();
+                MethodsOfDefasification.Text = defazificationService.Defazification(output, inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]), IDefazificationService.Methods.Max, Rule.Inference.Min).ToString();
+            }
         }
     }
 }

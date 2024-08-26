@@ -23,6 +23,7 @@ namespace SimpleFuzzy.Model
             foreach (var variable in input)
             {
                 int index = setRule.inputVariables.IndexOf(variable.Item1);
+                if (terms[index + 1] == null) return 0;
                 double fazizfication = terms[index + 1].MembershipFunction(variable.Item2);
                 if (Inference.Min == inference)
                     res = Math.Min(res, fazizfication);

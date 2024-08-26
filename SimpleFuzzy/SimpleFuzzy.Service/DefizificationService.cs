@@ -32,12 +32,11 @@ namespace SimpleFuzzy.Service
             }
             if (maxRule != null)
             {
-                output.BaseSet.ToFirst();
-                object result = output.BaseSet.Extraction();
+                object result = output.BaseSet[0];
                 max = 0;
-                for (; !output.BaseSet.IsEnd(); output.BaseSet.MoveNext())
+                for (int i = 0 ; i < output.BaseSet.Count; i++)
                 {
-                    object now = output.BaseSet.Extraction();
+                    object now = output.BaseSet[i];
                     double value = maxRule[0].MembershipFunction(now);
                     if (value > max)
                     {
@@ -49,12 +48,7 @@ namespace SimpleFuzzy.Service
             }
             else
             {
-                int count = 0;
-                for (output.BaseSet.ToFirst(); !output.BaseSet.IsEnd(); output.BaseSet.MoveNext())
-                    count++;
-                output.BaseSet.ToFirst();
-                for (int i = 0; i < count / 2; i++) output.BaseSet.MoveNext();
-                return output.BaseSet.Extraction();
+                return output.BaseSet[output.BaseSet.Count / 2];
             }
         }
     }

@@ -226,12 +226,8 @@ namespace SimpleFuzzy.View
         private void BaseSetChange(object sender, EventArgs e)
         {
             linguisticVariable.BaseSet = objectSetsName[(string)baseSetComboBox.SelectedItem];
-            objectSetType = linguisticVariable.BaseSet.Extraction().GetType();
-            int count = 0;
-            for (linguisticVariable.BaseSet.ToFirst(); !linguisticVariable.BaseSet.IsEnd(); linguisticVariable.BaseSet.MoveNext())
-                count++;
-            count--;
-            trackBar.Maximum = count;
+            objectSetType = linguisticVariable.BaseSet[0].GetType();
+            trackBar.Maximum = linguisticVariable.BaseSet.Count - 1;
             SetTerms();
         }
 
@@ -288,10 +284,7 @@ namespace SimpleFuzzy.View
         {
             if (linguisticVariable.BaseSet != null)
             {
-                linguisticVariable.BaseSet.ToFirst();
-                for (int i = 0; i < trackBar.Value; i++)
-                    linguisticVariable.BaseSet.MoveNext();
-                nowObject = linguisticVariable.BaseSet.Extraction();
+                nowObject = linguisticVariable.BaseSet[trackBar.Value];
                 ObjectSetLabel.Text = nowObject.ToString();
                 FazificationDescription.Text = linguisticVariable.GetResultofFuzzy(linguisticVariable.Fazzification(nowObject));
                 UpdateGraph();

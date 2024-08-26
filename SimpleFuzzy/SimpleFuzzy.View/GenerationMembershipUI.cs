@@ -138,8 +138,7 @@ namespace SimpleFuzzy.View
             {
                 generator.AddCondition(control.Condition.Text, control.Value.Text);
             }
-            objectSet.ToFirst();
-            string generatedCode = generator.GenerateCode(objectSet.Extraction().GetType());
+            string generatedCode = generator.GenerateCode(objectSet[0].GetType());
             compileService.Compile(generatedCode, $"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{DateTime.Now}.dll");
             textBoxGeneratedCode.Text = generatedCode;
         }

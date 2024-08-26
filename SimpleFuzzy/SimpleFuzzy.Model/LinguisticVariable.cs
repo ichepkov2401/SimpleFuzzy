@@ -66,7 +66,7 @@ namespace SimpleFuzzy.Model
                     if (func.Count == 0) { baseSet = value; }
                     else
                     {
-                        if (func[0].Item1.InputType == value.Extraction().GetType()) { baseSet = value; }
+                        if (func[0].Item1.InputType == value[0].GetType()) { baseSet = value; }
                         else { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
                     }
             }
@@ -80,7 +80,7 @@ namespace SimpleFuzzy.Model
                 else if (term.Item1.InputType == func[0].Item1.InputType) { func.Add(term); }
                 else { throw new InvalidOperationException("Тип данных добавляемого терма не совпадает с уже имеющимися термами в списке"); }
             }
-            else if (baseSet.Extraction().GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+            else if (baseSet[0].GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
             else { func.Add(term); } // Проверка типов данных
         }
 
@@ -109,11 +109,9 @@ namespace SimpleFuzzy.Model
         public List<object> ObjectSetToList()
         {
             var list = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                list.Add(baseSet.Extraction());
-                baseSet.MoveNext();
+                list.Add(baseSet[i]);
             }
             return list;
         }
@@ -121,11 +119,9 @@ namespace SimpleFuzzy.Model
         public List<(object, double[])> Graphic()
         {
             var graphicList = new List<(object, double[])>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                graphicList.Add((baseSet.Extraction(), Fazzification(baseSet.Extraction())));
-                baseSet.MoveNext();
+                graphicList.Add((baseSet[i], Fazzification(baseSet[i])));
             }
             return graphicList;
         }
@@ -212,15 +208,13 @@ namespace SimpleFuzzy.Model
         }
         private double CalculateHeight(IMembershipFunction term) {
             double maxHeight = 0;
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > maxHeight)
                 {
                     maxHeight = membershipValue;
                 }
-                baseSet.MoveNext();
             }
             return maxHeight;
         }
@@ -229,10 +223,9 @@ namespace SimpleFuzzy.Model
         {
             bool allZero = true;
             bool allOne = true;
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue != 0)
                 {
                     allZero = false;
@@ -241,7 +234,6 @@ namespace SimpleFuzzy.Model
                 {
                     allOne = false;
                 }
-                baseSet.MoveNext();
             }
             if (allZero)
             {
@@ -264,15 +256,13 @@ namespace SimpleFuzzy.Model
         private List<object> CalculateAreaOfInfluence(IMembershipFunction term)
         {
             var areaOfInfluence = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > 0)
                 {
-                    areaOfInfluence.Add(baseSet.Extraction());
+                    areaOfInfluence.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return areaOfInfluence;
         }
@@ -280,30 +270,26 @@ namespace SimpleFuzzy.Model
         private List<object> CalculateCore(IMembershipFunction term)
         {
             List<object> result = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue == 1)
                 {
-                    result.Add(baseSet.Extraction());
+                    result.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return result;
         }
         private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {
             var section = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > sectionHeight)
                 {
-                    section.Add(baseSet.Extraction());
+                    section.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return section;
         }

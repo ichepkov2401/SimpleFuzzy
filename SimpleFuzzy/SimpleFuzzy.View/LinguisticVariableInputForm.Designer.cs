@@ -83,6 +83,7 @@
             Controls.Add(buttonOK);
             Controls.Add(label1);
             Controls.Add(textBox);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Margin = new Padding(2, 1, 2, 1);
             Name = "LinguisticVariableInputForm";
             Text = "LinguisticVariableInputForm";

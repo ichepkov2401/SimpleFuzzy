@@ -34,7 +34,6 @@ namespace SimpleFuzzy.GenerateModule
     public class ObjectSet : IObjectSet
     {{
         private double initalvalue = {first.ToString().Replace(',', '.')};
-        private double currentvalue = {first.ToString().Replace(',', '.')};
         private double limitvalue = {last.ToString().Replace(',', '.')};
         private double step = {stepik.ToString().Replace(',', '.')};
 
@@ -42,19 +41,9 @@ namespace SimpleFuzzy.GenerateModule
 
         public string Name {{ get; set; }} = ""{name}"";
 
-        public object Extraction()
-        {{
-            return currentvalue;
-        }}
+        public int Count => (int)((limitvalue - initalvalue) / step) + 1;
 
-        public void MoveNext()
-        {{
-            currentvalue = Math.Round(currentvalue + step, {digits});
-        }}
-
-        public void ToFirst() => currentvalue = initalvalue;
-
-        public bool IsEnd() => currentvalue > limitvalue;
+        public object this[int index] => Math.Round(initalvalue + index * step, {digits});
     }}
 }}
 ";

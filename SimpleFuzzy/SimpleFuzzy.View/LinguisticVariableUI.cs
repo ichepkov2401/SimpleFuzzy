@@ -18,7 +18,8 @@ namespace SimpleFuzzy.View
         Action treeChange;
         IMembershipFunction nowFunction;
         object nowObject;
-
+        LineSeries xLine = new LineSeries();
+        LineSeries yLine = new LineSeries();
         Type objectSetType;
 
         public LinguisticVariableUI()
@@ -171,22 +172,21 @@ namespace SimpleFuzzy.View
                 {
                     lineSeries[j].Points.Add(new DataPoint(Convert.ToDouble(baseSetValues[i]), data[i].Item2[j]));
                 }
-                if (baseSetValues[i].Equals(nowObject))
-                {
-                    LineSeries line = new LineSeries
-                    {
-                        Color = OxyColor.FromRgb(0, 0, 0)
-                    };
-                    line.Points.Add(new DataPoint(Convert.ToDouble(baseSetValues[i]), 0));
-                    line.Points.Add(new DataPoint(Convert.ToDouble(baseSetValues[i]), 1));
-                    plotModel.Series.Add(line);
-                }
             }
+
+            xLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
+            xLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[trackBar.Value]), 0));
+            xLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[trackBar.Value]), 1));
+            yLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0), LineStyle = LineStyle.Dash };
+            yLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[0]), (double)NumericUpDown1.Value));
+            yLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[^1]), (double)NumericUpDown1.Value));
 
             foreach (var value in lineSeries)
             {
                 plotModel.Series.Add(value);
             }
+            plotModel.Series.Add(xLine);
+            plotModel.Series.Add(yLine);
 
             ScatterSeries series = new ScatterSeries();
             series.Points.Add(new ScatterPoint(Convert.ToDouble(baseSetValues[0]), 0, 0));
@@ -203,6 +203,30 @@ namespace SimpleFuzzy.View
 
             graphPictureBox.Controls.Clear();
             graphPictureBox.Controls.Add(plotView);
+        }
+
+        private void DrawX()
+        {
+            if (linguisticVariable.BaseSet != null && graphPictureBox.Controls.Count > 0)
+            {
+                var plot = graphPictureBox.Controls[0] as PlotView;
+                xLine.Points.Clear();
+                xLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[trackBar.Value]), 0));
+                xLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[trackBar.Value]), 1));
+                plot.InvalidatePlot(true);
+            }
+        }
+
+        private void DrawY()
+        {
+            if (linguisticVariable.BaseSet != null && graphPictureBox.Controls.Count > 0)
+            {
+                var plot = graphPictureBox.Controls[0] as PlotView;
+                yLine.Points.Clear();
+                yLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[0]), (double)NumericUpDown1.Value));
+                yLine.Points.Add(new DataPoint(Convert.ToDouble(linguisticVariable.BaseSet[^1]), (double)NumericUpDown1.Value));
+                plot.InvalidatePlot(true);
+            }
         }
 
         private Color GetColor(int index)
@@ -282,6 +306,7 @@ namespace SimpleFuzzy.View
                     $"\n{value.Item3.AsQueryable().Aggregate("Область влияния нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
                     $"\n{value.Item4.AsQueryable().Aggregate("Ядро нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
                     $"\n{value.Item5.AsQueryable().Aggregate($"Сечение на выстое {(double)NumericUpDown1.Value}: ", (x, y) => x + " " + y.ToString())}";
+                DrawY();
             }
             else
             {
@@ -299,7 +324,8 @@ namespace SimpleFuzzy.View
                 nowObject = linguisticVariable.BaseSet[trackBar.Value];
                 ObjectSetLabel.Text = nowObject.ToString();
                 FazificationDescription.Text = linguisticVariable.GetResultofFuzzy(linguisticVariable.Fazzification(nowObject));
-                UpdateGraph();
+                //UpdateGraph();
+                DrawX();
             }
         }
 

@@ -50,47 +50,53 @@ namespace SimpleFuzzy.View
         private void loadButton_Click(object sender, EventArgs e)
         {
             string filePath = filePathTextBox.Text;
-            if (string.IsNullOrWhiteSpace(filePath))
+            filePath = filePath.TrimEnd('/');//Для пути
+            filePath = filePath.TrimEnd('.');
+            if (FilesPathsNamesValidator.IsValidDirectoryName(filePath))
             {
-                messageTextBox.Text = "Пожалуйста, укажите путь к файлу.";
+                try
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        throw new FileNotFoundException("Указанный файл не существует.", filePath);
+                    }
+
+                    if (Path.GetExtension(filePath).ToLower() != ".dll")
+                    {
+                        throw new FileFormatException("Файл должен иметь расширение .dll");
+                    }
+                    moduleLoaderService.AssemblyLoader(filePath);
+                    foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
+                    {
+                        if (assemblyLoadContext.AssemblyName == filePath)
+                        {
+                            messageTextBox.Text = assemblyLoadContext.AssemblyName;
+                        }
+                    }
+                    File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1]);
+                    RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
+                    TreeViewShow();
+                }
+                catch (FileNotFoundException ex)
+                {
+                    messageTextBox.Text = $"Ошибка: Файл не найден. {ex.Message}";
+                }
+                catch (FileFormatException ex)
+                {
+                    messageTextBox.Text = $"Ошибка: Неверный формат файла. {ex.Message}";
+                }
+                catch (Exception ex)
+                {
+                    messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неверный путь к файлу!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            try
-            {
-                if (!File.Exists(filePath))
-                {
-                    throw new FileNotFoundException("Указанный файл не существует.", filePath);
-                }
-
-                if (Path.GetExtension(filePath).ToLower() != ".dll")
-                {
-                    throw new FileFormatException("Файл должен иметь расширение .dll");
-                }
-                moduleLoaderService.AssemblyLoader(filePath);
-                foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
-                {
-                    if (assemblyLoadContext.AssemblyName == filePath)
-                    {
-                        messageTextBox.Text = assemblyLoadContext.AssemblyName;
-                    }
-                }
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1]);
-                RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
-                TreeViewShow();
-            }
-            catch (FileNotFoundException ex)
-            {
-                messageTextBox.Text = $"Ошибка: Файл не найден. {ex.Message}";
-            }
-            catch (FileFormatException ex)
-            {
-                messageTextBox.Text = $"Ошибка: Неверный формат файла. {ex.Message}";
-            }
-            catch (Exception ex)
-            {
-                messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
-            }
+            
         }
 
         private void TreeViewShow()

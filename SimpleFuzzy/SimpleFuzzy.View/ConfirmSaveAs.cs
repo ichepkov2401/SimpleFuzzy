@@ -23,17 +23,25 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (metroTextBox1 == null)
+            metroTextBox1.Text = metroTextBox1.Text.TrimEnd('.');// Для файла
+            metroTextBox1.Text = metroTextBox1.Text.Trim(' ');
+            textBox1.Text = textBox1.Text.TrimEnd('/');//Для пути
+            textBox1.Text = textBox1.Text.TrimEnd('.');
+            if (FilesPathsNamesValidator.IsValidFileName(metroTextBox1.Text) && FilesPathsNamesValidator.IsValidDirectoryName(textBox1.Text))
             {
-                MessageBox.Show("Введите новое имя проекта");
+                try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неверное имя файла!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
+            
             button3_Click(sender, e);
         }
 

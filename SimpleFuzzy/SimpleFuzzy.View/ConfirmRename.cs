@@ -12,15 +12,26 @@ namespace SimpleFuzzy.View
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            try
+            textBox1.Text = textBox1.Text.TrimEnd('.');// Для файла
+            textBox1.Text = textBox1.Text.Trim(' ');
+            if (FilesPathsNamesValidator.IsValidFileName(textBox1.Text))
             {
-                projectList.RenameProject(textBox1.Text);
+                try
+                {
+                    projectList.RenameProject(textBox1.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Неверное имя файла!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
             button2_Click(sender, e);
         }
 

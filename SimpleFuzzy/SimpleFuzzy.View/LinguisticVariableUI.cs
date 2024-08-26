@@ -218,9 +218,9 @@ namespace SimpleFuzzy.View
 
         private void NameChangedHandler(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(nameTextBox.Text))
+            if (!FilesPathsNamesValidator.IsValidFileName(nameTextBox.Text) || string.IsNullOrEmpty(nameTextBox.Text))
             {
-                MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Неверное имя переменной!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (_repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)

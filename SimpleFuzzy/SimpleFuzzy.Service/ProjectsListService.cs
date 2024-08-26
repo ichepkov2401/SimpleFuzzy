@@ -34,8 +34,8 @@ namespace SimpleFuzzy.Service
             for (int i = 0; i < list.Length; i++)
             {
                 if (i % 3 == 0) ContainsCheckName(list[i]);
-                else if(i % 3 == 1) ContainsCheckPath(list[i]);
             }
+            ContainsCheckPath();
         }
 
         public void AddProject(string name, string path)
@@ -172,6 +172,7 @@ namespace SimpleFuzzy.Service
         }
         public void OpenProjectfromPath(string path) 
         {
+            ContainsCheckPath();
             if (IsContainsPath(path))
             {
                 // открытие проекта
@@ -310,18 +311,16 @@ namespace SimpleFuzzy.Service
             return false;
         }
 
-        public void ContainsCheckPath(string path)
+        public void ContainsCheckPath()
         {
             var directories = Directory.GetDirectories(pathPR);
             bool checker = false;
             foreach (var dirPath in directories)
             {
-                if (dirPath == path)
-                {
-                    try { AddProject(path.Split('\\')[^1].Split('.')[0], path); break; }
-                    catch (InvalidOperationException e) {
-                        if (e.Message == "Проект с таким именем уже существует") break;
-                    }
+                Console.WriteLine(dirPath);
+                try { AddProject(dirPath.Split('\\')[^1].Split('.')[0], dirPath);}
+                catch (InvalidOperationException e) {
+                    if (e.Message == "Проект с таким именем уже существует") continue;
                 }
             }
         }

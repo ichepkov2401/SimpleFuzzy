@@ -10,13 +10,39 @@ namespace SimpleFuzzy.Model
 {
     public class Rule
     {
+
+        public enum Inference
+        {
+            Min,
+            Prod
+        }
+
+        public double CalcRule((LinguisticVariable, object)[] input, Inference inference)
+        {
+            double res = relevance;
+            foreach (var variable in input)
+            {
+                int index = setRule.inputVariables.IndexOf(variable.Item1);
+                double fazizfication = terms[index + 1].MembershipFunction(variable.Item2);
+                if (Inference.Min == inference)
+                    res = Math.Min(res, fazizfication);
+                else
+                    res *= fazizfication;
+            }
+            return res;
+        }
+
+        public IMembershipFunction this[int index] => terms[index];
+
         // НА НУЛЕВОЙ ПОЗИЦИИ ВСЕГДА ТЕРМ ВЫХОДНОЙ ПЕРЕМЕННОЙ
         private List<IMembershipFunction> terms = new List<IMembershipFunction>(); // Список термов 
         public double relevance = 1; // Степень заполняемости
         public bool IsActive { get; set; } // Автосвойство активности
+        private SetRule setRule;
 
-        public Rule(int count) 
+        public Rule(int count, SetRule setRule) 
         {
+            this.setRule = setRule;
             for (int i = 0; i < count; i++) { AddNullTerm(); }
         }
         public void AddNullTerm()

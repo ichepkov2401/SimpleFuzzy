@@ -162,8 +162,7 @@ namespace SimpleFuzzy.View
             {
                 AddCondition(control.Condition.Text, control.Value.Text);
             }
-            objectSet.ToFirst();
-            string generatedCode = generator.GenerateCode(objectSet.Extraction().GetType(), textBox1.Text, _conditions);
+            string generatedCode = generator.GenerateCode(objectSet[0].GetType(), textBox1.Text, _conditions);
             var compile = compileService.Compile(generatedCode);
             compilation = compile.Item1;
             VisualizeFunction(compile.Item2 as IMembershipFunction);
@@ -192,9 +191,9 @@ namespace SimpleFuzzy.View
 
                 var baseSetValues = objectSet;
 
-                for (baseSetValues.ToFirst(); !baseSetValues.IsEnd(); baseSetValues.MoveNext())
+                for (int i = 0; i < baseSetValues.Count; i++)
                 {
-                    lineSeries.Points.Add(new DataPoint(Convert.ToDouble(baseSetValues.Extraction()), function != null ? function.MembershipFunction(baseSetValues.Extraction()) : 0));
+                    lineSeries.Points.Add(new DataPoint(Convert.ToDouble(baseSetValues[i]), function != null ? function.MembershipFunction(baseSetValues[i]) : 0));
                 }
 
                 plotModel.Series.Add(lineSeries);

@@ -5,28 +5,7 @@ public class BodyWeight : IObjectSet
     public bool Active { get; set; }
     public string Name { get; } = "Масса тела";
 
-    private double currentobject;
+    public int Count => 901;
 
-    public BodyWeight() => currentobject = 40;
-
-    public object Extraction()
-    {
-        return Math.Round(currentobject,2);
-    }
-
-    public void MoveNext()
-    {
-        if (IsEnd())
-        {
-            throw new InvalidOperationException("Текущий элемент последний. Переход к следующему невозможен");
-        }
-        else
-        {
-            currentobject+=0.1;
-        }
-    }
-
-    public void ToFirst() => currentobject = 40;
-
-    public bool IsEnd() => currentobject > 130;
+    public object this[int index] => Math.Round(40 + index * 0.1, 1);
 }

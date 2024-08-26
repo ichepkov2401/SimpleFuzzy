@@ -85,6 +85,8 @@
             Controls.Add(textBox);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Margin = new Padding(2, 1, 2, 1);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "LinguisticVariableInputForm";
             Text = "LinguisticVariableInputForm";
             ResumeLayout(false);

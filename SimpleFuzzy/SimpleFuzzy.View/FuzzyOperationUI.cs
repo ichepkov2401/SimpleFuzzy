@@ -10,9 +10,13 @@ namespace SimpleFuzzy.View
 {
     public partial class FuzzyOperationUI : UserControl
     {
-        string[] unos = { "Нечеткое дополнение" };
+        string[] unos = {
+            "Нечеткое дополнение",
+            "Концентрация",
+            "Расширение",
+            "Контраст",
+        };
         string[] bins = {
-            "Нечеткое пересечение",
             "Нечеткое \"И\"",
             "Нечеткое \"ИЛИ\"",
             "Гамма - оператор",

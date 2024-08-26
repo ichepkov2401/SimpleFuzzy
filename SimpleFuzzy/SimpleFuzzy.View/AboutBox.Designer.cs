@@ -166,5 +166,6 @@
         private System.Windows.Forms.Label labelCompanyName;
         private System.Windows.Forms.TextBox textBoxDescription;
         private Button okButton;
+        public const bool isChangableSize = false;
     }
 }

@@ -96,5 +96,6 @@
         private Label label1;
         private Button buttonOK;
         private Button buttonCancel;
+        public const bool isChangablesize = false;
     }
 }

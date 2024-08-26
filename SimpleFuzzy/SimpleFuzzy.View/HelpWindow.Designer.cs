@@ -109,6 +109,7 @@
 
         #endregion
 
+        public const bool isChangableSize = true;
         private TreeView treeView1;
     }
 }

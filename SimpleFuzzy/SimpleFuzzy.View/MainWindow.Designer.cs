@@ -261,5 +261,6 @@ namespace SimpleFuzzy.View
         private Button Left;
         private Button Right;
         private Label label1;
+        public const bool isChangableSize = true;
     }
 }

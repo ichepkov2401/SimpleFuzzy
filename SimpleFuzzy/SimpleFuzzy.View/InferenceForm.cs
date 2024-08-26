@@ -7,7 +7,7 @@ namespace SimpleFuzzy.View
     {
         public IRepositoryService? repositoryService;
         public LinguisticVariable currentOutputVar;
-        public int Id = 1;
+        public int Id = 0;
         public InferenceForm()
         {
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace SimpleFuzzy.View
             dataTable.Columns.Add(comboBox);
             dataTable.Columns[2].Name = currentOutputVar.Name;
             Rule rule = new Rule(1);
-            currentOutputVar.listRules.rules.Add(rule);
+            //currentOutputVar.listRules.rules.Add(rule);
 
             List<string> term = new List<string>();
             foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
@@ -163,32 +163,80 @@ namespace SimpleFuzzy.View
             }
             return null; // Сюда заходить не будет (надо чтобы все пути к коду возвращали значение)
         }
+        private void ChangeActiveRules(int row)
+        {
+            ChangeRule(row, 2);
+            ChangeRule(row, 1);
+            ChangeRule(row, 3);
+        }
+        private void ChangeRule(int row, byte active)
+        {
+            int position;
+            if (active == 1) position = currentOutputVar.listRules.OpenThisRule(row);
+            else if (active == 2) position = currentOutputVar.listRules.BlockedSameRules(row);
+            else 
+            {
+                position = currentOutputVar.listRules.OpenOtherRule(row);
+                if (position == -1) return;//
+                active -= 2;
+            }
+            if (position != -1)
+            {
+                for (int i = 1; i < dataTable.Columns.Count - 2; i++)
+                {
+                        dataTable.Rows[position].Cells[i].Style.BackColor = SetColorTerm(dataTable.Columns[i].Name,
+                        GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.listRules.inputVariables[i - 1]), active);
+                }
+                double n;
+                if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
+                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
+                string name = dataTable.Columns[dataTable.Columns.Count - 1].Name;
+                string text = dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value.ToString();
+                LinguisticVariable var = currentOutputVar.listRules.outVariable;
+                IMembershipFunction func = GiveFunc(text, var);
+                dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
+            }
+        }
 
         ////////////////// Изменение значений
         private void dataTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0) { return; } // ID
+            if (dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null) return; // Иногда событие срабатывает до введения значения
+            if (e.ColumnIndex == 0) return; // ID
             else if (e.ColumnIndex == dataTable.ColumnCount - 1) // ВЫХОДНАЯ ПЕРЕМЕНННАЯ
             {
                 IMembershipFunction func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar);
                 currentOutputVar.listRules.rules[e.RowIndex].RedactTerm(func, 0);
-                currentOutputVar.listRules.BlockedSameRules(e.RowIndex);
-                // Цвет уже есть, но пока не работает
-                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, 1);
+                ChangeActiveRules(e.RowIndex);
+                byte active = 1;
+                if (!currentOutputVar.listRules.rules[e.RowIndex].IsActive) active = 2; 
+                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
             }
             else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
             {
+                string rel = dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                string newRel = "";
+                for (int i = 0; i < rel.Length; i++) 
+                {
+                    if (rel[i] == '.') newRel += ','; 
+                    else newRel += rel[i];
+                }
+                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = newRel;
                 double n;
-                if (double.TryParse(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), out n) && n >= 0 && n <= 1)
+                if (double.TryParse(newRel, out n) && n >= 0 && n <= 1)
                 {
                     currentOutputVar.listRules.rules[e.RowIndex].relevance = n;
-                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(n, 1);
+                    byte active = 1;
+                    if (!currentOutputVar.listRules.rules[e.RowIndex].IsActive) active = 2;
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(n, active);
                 }
                 else
                 {
                     MessageBox.Show("Релевантность должна находиться в диапазоне [0, 1]");
                     dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
-                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(1, 1);
+                    byte active = 1;
+                    if (!currentOutputVar.listRules.rules[e.RowIndex].IsActive) active = 2;
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorToRelevation(1, active);
                 }
             }
             else // СТОЛБЦЫ С ВХОДНЫМИ ПЕРЕМЕННЫМИ
@@ -199,32 +247,35 @@ namespace SimpleFuzzy.View
                     if (currentOutputVar.listRules.inputVariables[i].Name == dataTable.Columns[e.ColumnIndex].Name)
                     {
                         func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar.listRules.inputVariables[i]);
-                        // Цвет уже есть, но пока не работает
-                        dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, 1);
+                        byte active = 1;
+                        if (!currentOutputVar.listRules.rules[e.RowIndex].IsActive) active = 2;
+                        dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
                         break;
                     }
                 }
                 currentOutputVar.listRules.rules[e.RowIndex].RedactTerm(func, e.ColumnIndex);
-                currentOutputVar.listRules.BlockedSameRules(e.RowIndex);
+                ChangeActiveRules(e.RowIndex);
             }
         }
         //////////////////// Добавление строк
 
         private void dataTable_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (e.RowIndex == dataTable.RowCount - 1)
+            if (e.RowIndex == dataTable.RowCount - 1 && Id != dataTable.RowCount)
             {
-                dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
                 Id++;
-                // Возможно потом добавить это условие, требуется обсуждение
+                dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
+
                 if (e.ColumnIndex != dataTable.Columns.Count - 2)
                 {
-                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Value = currentOutputVar.listRules.rules[0].relevance;
+                    dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Value = 1;
                     dataTable.Rows[e.RowIndex].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(1, 1);
                 }
-
-                Rule rule = new Rule(dataTable.ColumnCount - 2);
-                currentOutputVar.listRules.rules.Add(rule);
+                //if (currentOutputVar.listRules.rules.Count < dataTable.RowCount) 
+                {
+                    Rule rule = new Rule(dataTable.ColumnCount - 2);
+                    currentOutputVar.listRules.rules.Add(rule);
+                }
                 for (int i = 0; i < dataTable.ColumnCount - 2; i++)
                 {
                     List<string> term = new List<string>();

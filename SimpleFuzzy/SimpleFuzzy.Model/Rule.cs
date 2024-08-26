@@ -35,7 +35,7 @@ namespace SimpleFuzzy.Model
         public void RedactTerm(IMembershipFunction func, int position)
         {
             terms[position] = func;
-            foreach (var term in terms) 
+            foreach (IMembershipFunction term in terms) 
             {
                 if (term == null)
                 {

@@ -53,30 +53,60 @@ namespace SimpleFuzzy.Model
         private bool IsSameRules(Rule rule1, Rule rule2)
         {
             List<IMembershipFunction> list1 = rule1.GiveList();
-            List<IMembershipFunction> list2 = rule1.GiveList();
-            if (list1.Equals(list2)) return true;
+            List<IMembershipFunction> list2 = rule2.GiveList();
+            for (int i = 0; i < list1.Count; i++) { if (list1[i] != list2[i]) return false; }
+            return true;
+        }
+
+        private bool WasSameRules(Rule rule1, Rule rule2)
+        {
+            int count = 0;
+            List<IMembershipFunction> list1 = rule1.GiveList();
+            List<IMembershipFunction> list2 = rule2.GiveList();
+            for (int i = 0; i < list1.Count; i++) 
+            {
+                if (list1[i] != list2[i]) count++;
+            }
+            if (count == 1) return true;
             else return false;
         }
 
-        public void BlockedSameRules(int position)
+        public int OpenOtherRule(int position)
         {
-            Rule rule = rules[position];
+            for (int i = position + 1; i < rules.Count - 1; i++)
+            {
+                if (WasSameRules(rules[position], rules[i]) && !rules[i].IsActive) return i;
+            }
+            return -1; 
+        }
+        public int OpenThisRule(int position)
+        {
+            for (int i = position - 1; i >= 0; i--)
+            {
+                if (IsSameRules(rules[position], rules[i])) return -1;
+            }
+            rules[position].IsActive = true;
+            return position;
+        }
+        public int BlockedSameRules(int position)
+        {
             for (int i = position - 1; i >= 0; i--) 
             {
-                if (IsSameRules(rule, rules[i]))
+                if (IsSameRules(rules[position], rules[i]))
                 {
-                    rule.IsActive = false;
-                    return;
+                    rules[position].IsActive = false;
+                    return position;
                 }
             }
-            for (int i = position + 1; i <  rules.Count; i++)
+            for (int i = position + 1; i < rules.Count - 1; i++)
             {
-                if (IsSameRules(rule, rules[i]))
+                if (IsSameRules(rules[position], rules[i]))
                 {
                     rules[i].IsActive = false;
-                    return;
+                    return i;
                 }
             }
+            return -1; // Сюда заходить не должен, надо чтоб возвращали все пути
         }
     }
 }

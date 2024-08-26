@@ -13,14 +13,8 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         public string Name => "Мощность";
 
-        sbyte i = -100;
+        public int Count => 201;
 
-        public object Extraction() => i;
-
-        public bool IsEnd() => i > 100;
-
-        public void MoveNext() => i++;
-
-        public void ToFirst() => i = 0;
+        public object this[int index] => index - 100;
     }
 }

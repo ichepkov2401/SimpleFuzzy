@@ -93,7 +93,15 @@ namespace SimpleFuzzy.View
 
         private void TreeViewShow()
         {
-            foreach (TreeNode node in treeView1.Nodes) { node.Nodes.Clear(); }
+            RadioTree radioTree = new RadioTree();
+            groupBoxModules.Controls.Add(radioTree);
+            radioTree.Location = treeView1.Location;
+            radioTree.Size = treeView1.Size;
+            groupBoxModules.Controls.Remove(treeView1);
+            treeView1 = radioTree;
+            treeView1.BaseSetCheckedChange += BaseSetCheck;
+            treeView1.TermCheckedChange += TermCheck;
+            treeView1.SimulatorCheckedChange += SimulatorCheck;
             modules.Clear();
             List<IMembershipFunction> list1 = repositoryService.GetCollection<IMembershipFunction>();
             for (int i = 0; i < list1.Count; i++)

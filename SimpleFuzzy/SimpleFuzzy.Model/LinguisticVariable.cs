@@ -144,7 +144,7 @@ namespace SimpleFuzzy.Model
                 ("Наполовину", new double[2] { 0.6, 0.4 }),
                 ("Немного", new double[2] { 0.4, 0.2 }),
                 ("Совсем немного", new double[2] { 0.2, 0.1 }),
-                ("Едва ли", new double[2] { 0.1, 1e-12 })
+                ("Едва ли", new double[2] { 0.1, Double.Epsilon })
             };
             int countTerms = 0;
             foreach (var pair in toStringList)

@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
+using System.Data;
 
 namespace SimpleFuzzy.Service
 {
@@ -169,6 +170,7 @@ namespace SimpleFuzzy.Service
                     throw new InvalidOperationException("Проекта с таким именем не существует");
                 }
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void OpenProjectfromPath(string path) 
         {
@@ -215,6 +217,7 @@ namespace SimpleFuzzy.Service
                     else { File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml"); }
                 }
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void DeleteProject(string name)
         {
@@ -240,6 +243,7 @@ namespace SimpleFuzzy.Service
                 }
                 else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void DeleteOnlyInList(string name)
         {
@@ -257,6 +261,7 @@ namespace SimpleFuzzy.Service
                 writer.Close();
                 file.Close();
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void RenameProject(string name)
         {
@@ -272,7 +277,8 @@ namespace SimpleFuzzy.Service
                 {
                     File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
                 }
-             }
+            }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public bool IsContainsName(string name)
         {

@@ -1,5 +1,4 @@
-﻿using MetroFramework.Forms;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace SimpleFuzzy.View
 {

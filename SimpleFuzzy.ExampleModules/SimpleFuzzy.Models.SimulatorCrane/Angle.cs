@@ -13,14 +13,8 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         public string Name => "Угол";
 
-        public sbyte i = -90;
+        public int Count => 181;
 
-        public object Extraction() => i;
-
-        public bool IsEnd() => i > 90;
-
-        public void MoveNext() => i++;
-
-        public void ToFirst() => i = -90;
+        public object this[int index] => index - 90;
     }
 }

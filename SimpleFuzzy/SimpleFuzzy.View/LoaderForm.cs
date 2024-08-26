@@ -308,17 +308,17 @@ namespace SimpleFuzzy.View
                 s = "";
                 s += repositoryService.GetCollection<IObjectSet>().
                         Where(t => t.GetType().Assembly.Location == dll.AssemblyName).AsQueryable().
-                        Aggregate("Базовые множества:\n", (x, y) => x + "    " + y.GetType().Name + "\n");
+                        Aggregate("Базовые множества:\n", (x, y) => x + "    " + y.Name + "\n");
                 if (s != "Базовые множества:\n") dllInfo += s;
                 s = "";
                 s += repositoryService.GetCollection<IMembershipFunction>().
                         Where(t => t.GetType().Assembly.Location == dll.AssemblyName).AsQueryable().
-                        Aggregate("Термы:\n", (x, y) => x + "    " + y.GetType().Name + "\n");
+                        Aggregate("Термы:\n", (x, y) => x + "    " + y.Name + "\n");
                 if (s != "Термы:\n") dllInfo += s;
                 s = "";
                 s += repositoryService.GetCollection<ISimulator>().
                         Where(t => t.GetType().Assembly.Location == dll.AssemblyName).AsQueryable().
-                        Aggregate("Симуляции:\n", (x, y) => x + "    " + y.GetType().Name + "\n");
+                        Aggregate("Симуляции:\n", (x, y) => x + "    " + y.Name + "\n");
                 if (s != "Симуляции:\n") dllInfo += s;
                 //----------------------------------------------------------------------------------
                 item.ToolTipText = dllInfo;

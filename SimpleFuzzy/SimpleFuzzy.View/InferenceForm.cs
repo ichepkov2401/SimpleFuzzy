@@ -1,145 +1,179 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-
+using System.Windows.Forms;
 
 namespace SimpleFuzzy.View
 {
     public partial class InferenceForm : UserControl
     {
         public IRepositoryService? repositoryService;
-        Dictionary<string, string> isUsed = new();
+        public LinguisticVariable currentOutputVar;
+        private int Id = 1;
         public InferenceForm()
         {
-            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
-            var variableList = GetLinguisticVariableList();
-            foreach (var linguisticVariable in variableList) isUsed[linguisticVariable.Name] = "false";
-            RefreshAll();
             InitializeComponent();
-        }
-
-        public List<LinguisticVariable> GetLinguisticVariableList()
-        {
-            return repositoryService.GetCollection<LinguisticVariable>();
-        }
-
-        public void RefreshAll()
-        {
-            RefreshOutputVariables(GetLinguisticVariableList());
-            RefreshInputStringVariables(GetLinguisticVariableList());
-            RefreshInputColumnVariables(GetLinguisticVariableList());
-        }
-
-        public void RefreshInputVariables()
-        {
-            RefreshInputStringVariables(GetLinguisticVariableList());
-            RefreshInputColumnVariables(GetLinguisticVariableList());
-        }
-
-        public void RefreshOutputVariables(List<LinguisticVariable> linguisticVariableList)
-        {
-            if (outputVariableComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (!linguisticVariable.isInput) outputVariableComboBox?.Items.Add(linguisticVariable.Name);
-        }
-
-
-        public void RefreshInputStringVariables(List<LinguisticVariable> linguisticVariableList)
-        {
-            if (stringsComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") stringsComboBox?.Items.Add(linguisticVariable.Name);
-        }
-
-        public void RefreshInputColumnVariables(List<LinguisticVariable> linguisticVariableList)
-        {
-            if (columnsComboBox != null) outputVariableComboBox.Items.Clear();
-            foreach (var linguisticVariable in linguisticVariableList) if (linguisticVariable.isInput && isUsed[linguisticVariable.Name] == "false") columnsComboBox?.Items.Add(linguisticVariable.Name);
-        }
-
-        private void ColumnOnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
-        {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
-            const string caption = "Удаление элемента";
-            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            foreach (LinguisticVariable variable in repositoryService.GetCollection<LinguisticVariable>())
             {
-                isUsed[e.Item.Text] = "false";
-                columnsListView.Items.Remove(e.Item);
-                RefreshInputVariables();
+                if (!variable.IsInput) outputVariableComboBox.Items.Add(variable.Name);
+                else inputVariablesComboBox.Items.Add(variable.Name);
+            }
+            if (outputVariableComboBox.Items.Count > 0)
+            {
+                outputVariableComboBox.SelectedIndex = 0;
             }
         }
-        private void StringOnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
+        private void AddTable(string name)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
-            const string caption = "Удаление элемента";
-            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-                isUsed[e.Item.Text] = "false";
-                stringsListView.Items.Remove(e.Item);
-                RefreshInputVariables();
-            }
-        }
+            if (dataTable != null) dataTable.Columns.Clear();
+            dataTable.Columns.Add("", "ID");
+            dataTable.Columns[0].ReadOnly = true;
+            dataTable.Rows[0].Cells[0].Value = Id;
+            Id++;
 
-        private void StringsComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            string selectedItem = (string)comboBox.SelectedItem;
-            var linguisticVariableList = GetLinguisticVariableList();
-            foreach (var linguisticVariable in linguisticVariableList)
-            {
-                if (linguisticVariable.Name == selectedItem) isUsed[linguisticVariable.Name] = "isString"; break;
-            }
-            RefreshInputVariables();
-            RefreshStringsListView(linguisticVariableList);
-        }
+            DataGridViewTextBoxColumn textBox = new DataGridViewTextBoxColumn();
+            textBox.HeaderText = "Релевантность";
+            dataTable.Columns.Add(textBox);
 
-        private void ColumnsComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            string selectedItem = (string)comboBox.SelectedItem;
-            var linguisticVariableList = GetLinguisticVariableList();
-            foreach (var linguisticVariable in linguisticVariableList)
-            {
-                if (linguisticVariable.Name == selectedItem) isUsed[linguisticVariable.Name] = "isColumn"; break;
-            }
-            RefreshInputVariables();
-            RefreshColumnsListView(linguisticVariableList);
-        }
+            DataGridViewComboBoxColumn comboBox = new DataGridViewComboBoxColumn();
+            comboBox.HeaderText = name;
+            dataTable.Columns.Add(comboBox);
+            Rule rule = new Rule(1, currentOutputVar.ListRules);
+            currentOutputVar.ListRules.rules.Add(rule);
 
-        public void RefreshStringsListView(List<LinguisticVariable> linguisticVariableList)
-        {
-            foreach (var linguisticVariable in linguisticVariableList)
-            {
-                if (isUsed[linguisticVariable.Name] == "isString")
-                {
-                    ListViewItem listViewItem = stringsListView.Items.Add(linguisticVariable.Name);
-                    listViewItem.SubItems.Add("X");
-                }
-            }
-        }
+            List<string> term = new List<string>();
+            foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
+            (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = term;
 
-        public void RefreshColumnsListView(List<LinguisticVariable> linguisticVariableList)
-        {
-            foreach (var linguisticVariable in linguisticVariableList)
-            {
-                if (isUsed[linguisticVariable.Name] == "isColumn")
-                {
-                    ListViewItem listViewItem = columnsListView.Items.Add(linguisticVariable.Name);
-                    listViewItem.SubItems.Add("X");
-                }
-            }
-        }
+            dataTable.Rows[0].Cells[1].Value = currentOutputVar.ListRules.rules[0].relevance;
 
+        }
         private void OutputVariableComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            string selectedItem = (string)comboBox.SelectedItem;
-            var linguisticVariableList = GetLinguisticVariableList();
-            foreach (var linguisticVariable in linguisticVariableList)
+            LinguisticVariable temp = null;
+            foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
             {
-                if (linguisticVariable.Name == selectedItem) isUsed[linguisticVariable.Name] = "isOutput"; break;
+                if (currentOutputVar != null && var == currentOutputVar)
+                {
+                    outputVariableComboBox.Items.Add(var.Name);
+                }
+                if (var.Name == outputVariableComboBox.SelectedItem.ToString())
+                {
+                    temp = var;
+                }
             }
-            RefreshOutputVariables(linguisticVariableList);
+            currentOutputVar = temp;
+            // добавление таблицы
+            SetRule setRule = new SetRule(currentOutputVar);
+            currentOutputVar.ListRules = setRule;
+            AddTable(outputVariableComboBox.SelectedItem.ToString());
+            outputVariableComboBox.Items.Remove(outputVariableComboBox.SelectedItem);
+        }
+        private void inputVariablesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            inputVariablesComboBox.Text = inputVariablesComboBox.SelectedItem.ToString();
+        }
+        //////////////////// Добавление столбца
+        private void AddInbutton_Click(object sender, EventArgs e)
+        {
+            if (inputVariablesComboBox.Text != null)
+            {
+                foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
+                {
+                    if (var.Name == inputVariablesComboBox.Text)
+                    {
+                        // добавление столбца
+                        DataGridViewComboBoxColumn column = new DataGridViewComboBoxColumn();
+                        column.HeaderText = inputVariablesComboBox.Text;
+                        dataTable.Columns.Insert(1, column);
+                        currentOutputVar.ListRules.AddInputVar(var);
+
+                        List<string> term = new List<string>();
+                        foreach (var func in currentOutputVar.func)
+                        {
+                            term.Add(func.Item1.Name);
+                        }
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = term;
+                        }
+                        break;
+                    }
+                }
+                inputVariablesComboBox.Items.Remove(inputVariablesComboBox.Text);
+            }
+        }
+        private IMembershipFunction GiveFunc(string name, LinguisticVariable variable)
+        {
+            for (int i = 0; i < variable.func.Count; i++) 
+            {
+                if (variable.func[i].Item1.Name == name) { return variable.func[i].Item1; }
+            }
+            return null; // Сюда заходить не будет (надо чтобы все пути к коду возвращали значение)
+        }
+
+        ////////////////// Изменение значений
+        private void dataTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0) { return; } // ID
+            else if (e.ColumnIndex == dataTable.ColumnCount - 1) // ВЫХОДНАЯ ПЕРЕМЕНННАЯ
+            {
+                IMembershipFunction func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar);
+                currentOutputVar.ListRules.rules[e.RowIndex].RedactTerm(func, 0);
+            }
+            else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
+            {
+                double n;
+                if (double.TryParse(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), out n) && n >= 0 && n <= 1)
+                {
+                    currentOutputVar.ListRules.rules[e.RowIndex].relevance = n;
+                }
+                else
+                {
+                    MessageBox.Show("Релевантность должна находиться в диапазоне [0, 1]");
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
+                }
+            }
+            else // СТОЛБЦЫ С ВХОДНЫМИ ПЕРЕМЕННЫМИ
+            {
+                IMembershipFunction func = null;
+                for (int i = 0; i < currentOutputVar.ListRules.inputVariables.Count; i++)
+                {
+                    if (currentOutputVar.ListRules.inputVariables[i].Name == dataTable.Columns[e.ColumnIndex].Name)
+                    {
+                        func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar.ListRules.inputVariables[i]);
+                        break;
+                    }
+                }
+                currentOutputVar.ListRules.rules[e.RowIndex].RedactTerm(func, e.ColumnIndex);
+            }
+        }
+        //////////////////// Добавление строк
+        private void dataTable_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            if (Id != 1)
+            {
+                dataTable.Rows[e.RowIndex].Cells[0].Value = Id;
+                Id++;
+                Rule rule = new Rule(dataTable.ColumnCount - 2, currentOutputVar.ListRules);
+                currentOutputVar.ListRules.rules.Add(rule);
+            }
+            for (int i = 0; i < dataTable.ColumnCount - 2; i++) 
+            {
+                List<string> term = new List<string>();
+                foreach (var func in currentOutputVar.func)
+                {
+                    term.Add(func.Item1.Name);
+                }
+                if (i == 0)
+                {
+                    (dataTable.Columns[dataTable.ColumnCount - 1] as DataGridViewComboBoxColumn).DataSource = term;
+                }
+                else
+                {
+                    (dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = term;
+                }
+            }
         }
     }
 }

@@ -60,6 +60,28 @@ namespace WindowsFormsUtils
                     e.Graphics.DrawRectangle(outline, rect);
                 }
             }
+            else
+            {
+                if (e.Item.BackColor == Color.LightBlue)
+                {
+                    {
+                        Rectangle rect = e.Item.ContentRectangle;
+                        rect.X = e.Item.Padding.Left;
+                        rect.Y = e.Item.Padding.Top;
+                        rect.X -= 2;
+                        rect.Y -= 5;
+                        rect.Width -= 14;
+                        rect.Height += 8;
+
+                        LinearGradientBrush brush = new LinearGradientBrush(e.Item.Bounds,
+                 Color.LightBlue, Color.LightBlue, 90);
+                        e.Graphics.FillRectangle(brush, rect);
+
+                        Pen outline = new Pen(Color.FromArgb(128, 128, 255), 1);
+                        e.Graphics.DrawRectangle(outline, rect);
+                    }
+                }
+            }
         }
     }
 }

@@ -189,28 +189,31 @@ namespace SimpleFuzzy.Service
         }
         public void CopyProject(string name, string path, bool save)
         {
-            string lastName = CurrentProjectName;
-            SaveAll("\\SaveCopy.xml");
-            AddProject(name, path);
-            DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
-            DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
-            foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" +  item.Name, true); }
-            File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
-            if (save)
+            if (ContainsCheckName(name))
             {
-                if (File.Exists(GivePath(name, true) + "\\Save.xml")) File.Delete(GivePath(name, true) + "\\Save.xml");
-                File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
-                OpenProjectfromName(name);
-            }
-            else
-            {
-                if (File.Exists(GivePath(name, true) + "\\Save.xml"))
+                string lastName = CurrentProjectName;
+                SaveAll("\\SaveCopy.xml");
+                AddProject(name, path);
+                DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
+                DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
+                foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" + item.Name, true); }
+                File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
+                if (save)
                 {
-                    File.Move(GivePath(name, true) + "\\Save.xml", GivePath(name, true) + "\\Save1.xml");
+                    if (File.Exists(GivePath(name, true) + "\\Save.xml")) File.Delete(GivePath(name, true) + "\\Save.xml");
                     File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
-                    File.Move(GivePath(name, true) + "\\Save1.xml", GivePath(name, true) + "\\SaveCopy.xml");
+                    OpenProjectfromName(name);
                 }
-                else { File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml"); }
+                else
+                {
+                    if (File.Exists(GivePath(name, true) + "\\Save.xml"))
+                    {
+                        File.Move(GivePath(name, true) + "\\Save.xml", GivePath(name, true) + "\\Save1.xml");
+                        File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
+                        File.Move(GivePath(name, true) + "\\Save1.xml", GivePath(name, true) + "\\SaveCopy.xml");
+                    }
+                    else { File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml"); }
+                }
             }
         }
         public void DeleteProject(string name)

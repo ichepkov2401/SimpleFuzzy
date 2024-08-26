@@ -9,13 +9,13 @@ namespace SimpleFuzzy.View
 {
     public partial class LinguisticVariableUI : UserControl
     {
-        ColorDialog colorDialog = new ColorDialog();
         private LinguisticVariable linguisticVariable;
         private Dictionary<string, IObjectSet> objectSetsName = new Dictionary<string, IObjectSet>();
         private Dictionary<string, IMembershipFunction> termsName = new Dictionary<string, IMembershipFunction>();
         IRepositoryService _repositoryService;
         string oldName;
         Action nameChange;
+        Action treeChange;
         IMembershipFunction nowFunction;
         object nowObject;
 
@@ -26,11 +26,12 @@ namespace SimpleFuzzy.View
             InitializeComponent();
         }
 
-        public LinguisticVariableUI(LinguisticVariable linguisticVariable, Action nameChange)
+        public LinguisticVariableUI(LinguisticVariable linguisticVariable, Action nameChange, Action treeChange)
         {
             _repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             this.linguisticVariable = linguisticVariable;
             this.nameChange = nameChange;
+            this.treeChange = treeChange;
             oldName = linguisticVariable.Name;
             InitializeComponent();
             ListViewExtender extender = new ListViewExtender(termsListView);
@@ -46,15 +47,6 @@ namespace SimpleFuzzy.View
             nameTextBox.Text = linguisticVariable.Name;
             radioButton1.Checked = linguisticVariable.isInput;
             radioButton2.Checked = !linguisticVariable.isInput;
-            if (linguisticVariable.baseSet == null)
-            {
-                if (baseSetComboBox.Items.Count > 0)
-                    baseSetComboBox.SelectedIndex = 0;
-            }
-            else
-            {
-                baseSetComboBox.SelectedItem = objectSetsName.FirstOrDefault(t => t.Value == linguisticVariable.baseSet).Key;
-            }
             FazificationObjectChaged(null, null);
             if (!linguisticVariable.isRedact)
             {
@@ -63,10 +55,15 @@ namespace SimpleFuzzy.View
                 radioButton1.Enabled = false;
                 radioButton2.Enabled = false;
             }
+            termsListView.GetType()
+                            .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                            .SetValue(termsListView, true);
         }
 
         private void SetObjectSet()
         {
+            objectSetsName.Clear();
+            baseSetComboBox.Items.Clear();
             var baseSets = _repositoryService.GetCollection<IObjectSet>().Where(x => x.Active || !linguisticVariable.isRedact);
             foreach (var baseSet in baseSets)
             {
@@ -82,6 +79,15 @@ namespace SimpleFuzzy.View
                 objectSetsName.Add(name, baseSet);
                 baseSetComboBox.Items.Add(name);
             }
+            if (linguisticVariable.baseSet == null)
+            {
+                if (baseSetComboBox.Items.Count > 0)
+                    baseSetComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                baseSetComboBox.SelectedItem = objectSetsName.FirstOrDefault(t => t.Value == linguisticVariable.baseSet).Key;
+            }
         }
 
         private void SetTerms()
@@ -89,8 +95,8 @@ namespace SimpleFuzzy.View
             termsName.Clear();
             termsComboBox.Items.Clear();
             termsListView.Items.Clear();
-            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x => 
-            x.Active && 
+            var terms = _repositoryService.GetCollection<IMembershipFunction>().Where(x =>
+            x.Active &&
             (x.GetType() != typeof(FuzzyOperation) || linguisticVariable.isInput) &&
             x.InputType.IsAssignableFrom(objectSetType));
             foreach (var term in terms)
@@ -131,6 +137,7 @@ namespace SimpleFuzzy.View
                 linguisticVariable.AddTerm((termsName[(string)termsComboBox.SelectedItem], GetColor(linguisticVariable.CountFunc)));
                 termsComboBox.Text = "";
                 SetTerms();
+                nameChange();
             }
         }
 
@@ -142,7 +149,7 @@ namespace SimpleFuzzy.View
                 return;
             }
 
-            var plotModel = new PlotModel { Title = "Лингвистическая переменная" };
+            var plotModel = new PlotModel { Title = $"{linguisticVariable.Name}" };
 
             var baseSetValues = linguisticVariable.ObjectSetToList();
             var data = linguisticVariable.Graphic();
@@ -220,6 +227,7 @@ namespace SimpleFuzzy.View
             {
                 linguisticVariable.Name = nameTextBox.Text;
                 nameChange();
+                UpdateGraph();
             }
         }
 
@@ -228,7 +236,9 @@ namespace SimpleFuzzy.View
             linguisticVariable.BaseSet = objectSetsName[(string)baseSetComboBox.SelectedItem];
             objectSetType = linguisticVariable.BaseSet[0].GetType();
             trackBar.Maximum = linguisticVariable.BaseSet.Count - 1;
+            trackBar.Value = trackBar.Maximum / 2;
             SetTerms();
+            nameChange();
         }
 
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
@@ -243,16 +253,19 @@ namespace SimpleFuzzy.View
                 linguisticVariable.DeleteTerm(term);
                 SetTerms();
                 termView_SelectedIndexChanged(sender, null);
+                nameChange();
             }
         }
 
         private void OnColorActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            colorDialog.ShowDialog();
-            var term = termsName[e.Item.Text];
-            linguisticVariable.SetColor(term, colorDialog.Color);
-            SetTerms();
-            termView_SelectedIndexChanged(sender, null);
+            if (MainWindow.colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                var term = termsName[e.Item.Text];
+                linguisticVariable.SetColor(term, MainWindow.colorDialog.Color);
+                SetTerms();
+                termView_SelectedIndexChanged(sender, null);
+            }
         }
 
         private void termView_SelectedIndexChanged(object sender, EventArgs e)
@@ -262,7 +275,6 @@ namespace SimpleFuzzy.View
                 nowFunction = termsName[termsListView.SelectedItems[0].Text];
                 HeightLabel.Visible = true;
                 NumericUpDown1.Visible = true;
-                trackBar.Visible = true;
                 FazificationObjectChaged(null, null);
                 var value = linguisticVariable.CalculationFuzzySetProperties(nowFunction, (double)NumericUpDown1.Value);
                 SetProperty.Text = $"Тип нечеткого множества: {value.Item2}" +
@@ -297,6 +309,7 @@ namespace SimpleFuzzy.View
             {
                 inputBox.ShowDialog();
                 SetTerms();
+                treeChange();
             }
         }
 
@@ -317,7 +330,8 @@ namespace SimpleFuzzy.View
             using (var inputBox = new GenerationObjectSetUI())
             {
                 inputBox.ShowDialog();
-                SetTerms();
+                SetObjectSet();
+                treeChange();
             }
         }
 
@@ -327,6 +341,16 @@ namespace SimpleFuzzy.View
             if (!radioButton1.Checked)
                 linguisticVariable.func = linguisticVariable.func.Where(t => t.Item1.GetType() != typeof(FuzzyOperation)).ToList();
             SetTerms();
+        }
+
+        private void termsListView_MouseMove(object sender, MouseEventArgs e)
+        {
+            termsListView.Invalidate();
+        }
+
+        private void termsListView_MouseLeave(object sender, EventArgs e)
+        {
+            termsListView.Invalidate();
         }
     }
 }

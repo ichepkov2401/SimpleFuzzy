@@ -1,4 +1,3 @@
-﻿using MetroFramework.Controls;
 using OxyPlot.Series;
 using OxyPlot;
 using OxyPlot.WindowsForms;

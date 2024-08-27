@@ -46,9 +46,14 @@ namespace SimpleFuzzy.Model
             this.setRule = setRule;
             for (int i = 0; i < count; i++) { AddNullTerm(); }
         }
+        public List<IMembershipFunction> GiveList()
+        {
+            return terms;
+        }
         public void AddNullTerm()
         {
             terms.Add(null);
+            IsActive = false;
         }
         public void DeleteTerm(int position)
         {
@@ -57,6 +62,15 @@ namespace SimpleFuzzy.Model
         public void RedactTerm(IMembershipFunction func, int position)
         {
             terms[position] = func;
+            foreach (IMembershipFunction term in terms) 
+            {
+                if (term == null)
+                {
+                    IsActive = false;
+                    return;
+                }
+            }
+            IsActive = true;
         }
     }
 }

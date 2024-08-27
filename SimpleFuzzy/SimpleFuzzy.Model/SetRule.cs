@@ -1,5 +1,8 @@
-﻿using System;
+﻿using SimpleFuzzy.Abstract;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +29,12 @@ namespace SimpleFuzzy.Model
             // Добавляем ЛП
             inputVariables.Add(inputVar);
         }
-
+        // Потом ссылки добавятся
+        public void DeleteRule(int position)
+        {
+            rules.RemoveAt(position);
+        }
+        // Потом ссылки добавятся
         public void DeleteInputVar(string name, int position)
         {
             int index = 0;
@@ -42,6 +50,85 @@ namespace SimpleFuzzy.Model
             }
             // Удаляем термы из всех правил для удаляемой ЛП
             foreach (var rule in rules) { rule.DeleteTerm(position); }
+        }
+
+        private bool IsSameRules(Rule rule1, Rule rule2)
+        {
+            List<IMembershipFunction> list1 = rule1.GiveList();
+            List<IMembershipFunction> list2 = rule2.GiveList();
+            for (int i = 0; i < list1.Count; i++) { if (list1[i] != list2[i]) return false; }
+            return true;
+        }
+
+        private bool IsSameRules(List<IMembershipFunction> list1, Rule rule)
+        {
+            List<IMembershipFunction> list2 = rule.GiveList();
+            for (int i = 0; i < list1.Count; i++) { if (list1[i] != list2[i]) return false; }
+            return true;
+        }
+
+        private bool WasSameRules(Rule rule1, Rule rule2)
+        {
+            int count = 0;
+            List<IMembershipFunction> list1 = rule1.GiveList();
+            List<IMembershipFunction> list2 = rule2.GiveList();
+            for (int i = 0; i < list1.Count; i++) 
+            {
+                if (list1[i] != list2[i]) count++;
+            }
+            if (count == 1) return true;
+            else return false;
+        }
+
+        public int OpenOtherRule(int position)
+        {
+            for (int i = position + 1; i < rules.Count - 1; i++)
+            {
+                if (WasSameRules(rules[position], rules[i]) && !rules[i].IsActive) return i;
+            }
+            return -1; 
+        }
+        public int OpenThisRule(int position)
+        {
+            for (int i = position - 1; i >= 0; i--)
+            {
+                if (IsSameRules(rules[position], rules[i])) return -1;
+            }
+            if (position == 0) return -1;
+            rules[position].IsActive = true;
+            return position;
+        }
+        public int BlockedSameRules(int position)
+        {
+            for (int i = position - 1; i >= 0; i--) 
+            {
+                if (IsSameRules(rules[position], rules[i]))
+                {
+                    rules[position].IsActive = false;
+                    return position;
+                }
+            }
+            for (int i = position + 1; i < rules.Count - 1; i++)
+            {
+                if (IsSameRules(rules[position], rules[i]))
+                {
+                    rules[i].IsActive = false;
+                    return i;
+                }
+            }
+            return -1; 
+        }
+        public int CheckAfterDelete(List<IMembershipFunction> list)
+        {
+            for (int i = 0; i < rules.Count - 1; i++)
+            {
+                if (IsSameRules(list, rules[i]))
+                {
+                    rules[i].IsActive = true;
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

@@ -135,6 +135,7 @@
             okButton.Size = new Size(88, 20);
             okButton.TabIndex = 24;
             okButton.Text = "&ОК";
+            okButton.Click += okButton_Click;
             // 
             // AboutBox
             // 

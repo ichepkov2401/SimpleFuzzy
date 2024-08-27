@@ -254,6 +254,8 @@ namespace SimpleFuzzy.View
         private ToolStripMenuItem button11;
         private ToolStripMenuItem button12;
         private ToolStripMenuItem button13;
+        public AboutBox aboutBox;
+        public  HelpWindow helpWindow;
         private PictureBox logoBox;
         private ToolTip toolTip1;
         private ToolTip toolTip2;

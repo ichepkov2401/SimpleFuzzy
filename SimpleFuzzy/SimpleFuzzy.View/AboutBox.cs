@@ -2,7 +2,7 @@
 
 namespace SimpleFuzzy.View
 {
-    partial class AboutBox : Form
+    public partial class AboutBox : Form
     {
         public AboutBox()
         {

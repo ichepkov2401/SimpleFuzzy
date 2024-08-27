@@ -9,6 +9,7 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            projectList.CheckAll();
             label2.Visible = false;
             string[] list = projectList.GiveList();
             for (int i = 1; i < list.Length; i += 3)

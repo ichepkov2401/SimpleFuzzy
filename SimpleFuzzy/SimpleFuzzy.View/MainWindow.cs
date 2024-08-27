@@ -1,4 +1,3 @@
-using MetroFramework.Forms;
 using System.IO;
 using System.Runtime.Loader;
 using SimpleFuzzy.Abstract;
@@ -9,6 +8,7 @@ namespace SimpleFuzzy.View
     public partial class MainWindow : Form
     {
         Dictionary<UserControlsEnum, ControlConstruct> UserControls = new Dictionary<UserControlsEnum, ControlConstruct>();
+        public static ColorDialog colorDialog = new ColorDialog();
         public UserControl currentControl = null;
         IProjectListService projectList;
         IRepositoryService repositoryService;

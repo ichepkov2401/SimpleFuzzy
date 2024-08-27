@@ -73,6 +73,8 @@ namespace SimpleFuzzy.View
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = System.Windows.Forms.View.Details;
             listView1.SelectedIndexChanged += listView1_SelectedIndexChanged;
+            listView1.MouseLeave += listView1_MouseLeave;
+            listView1.MouseMove += listView1_MouseMove;
             // 
             // button1
             // 

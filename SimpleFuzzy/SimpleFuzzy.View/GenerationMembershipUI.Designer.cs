@@ -19,6 +19,8 @@ namespace SimpleFuzzy.View
         private void InitializeComponent()
         {
             groupBoxSettings = new GroupBox();
+            textBox1 = new TextBox();
+            label1 = new Label();
             labelBaseSet = new Label();
             comboBoxBaseSet = new ComboBox();
             groupBoxConditions = new GroupBox();
@@ -27,37 +29,50 @@ namespace SimpleFuzzy.View
             groupBoxActions = new GroupBox();
             buttonGenerateCode = new Button();
             buttonVisualize = new Button();
-            splitContainer = new SplitContainer();
-            textBoxGeneratedCode = new TextBox();
-            plotView = new PlotView();
+            pictureBox1 = new PictureBox();
             groupBoxSettings.SuspendLayout();
             groupBoxConditions.SuspendLayout();
             groupBoxActions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
-            splitContainer.Panel1.SuspendLayout();
-            splitContainer.Panel2.SuspendLayout();
-            splitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // groupBoxSettings
             // 
+            groupBoxSettings.Controls.Add(textBox1);
+            groupBoxSettings.Controls.Add(label1);
             groupBoxSettings.Controls.Add(labelBaseSet);
             groupBoxSettings.Controls.Add(comboBoxBaseSet);
             groupBoxSettings.Location = new Point(16, 19);
             groupBoxSettings.Margin = new Padding(5, 5, 5, 5);
             groupBoxSettings.Name = "groupBoxSettings";
-            groupBoxSettings.Padding = new Padding(5, 5, 5, 5);
-            groupBoxSettings.Size = new Size(400, 89);
+            groupBoxSettings.Padding = new Padding(4);
+            groupBoxSettings.Size = new Size(350, 122);
             groupBoxSettings.TabIndex = 0;
             groupBoxSettings.TabStop = false;
             groupBoxSettings.Text = "Настройки";
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(152, 39);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(197, 23);
+            textBox1.TabIndex = 5;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(7, 32);
+            label1.Name = "label1";
+            label1.Size = new Size(84, 30);
+            label1.TabIndex = 4;
+            label1.Text = "Имя базового\r\nмножества";
+            // 
             // labelBaseSet
             // 
             labelBaseSet.AutoSize = true;
-            labelBaseSet.Location = new Point(8, 27);
-            labelBaseSet.Margin = new Padding(5, 0, 5, 0);
-            labelBaseSet.MaximumSize = new Size(133, 0);
+            labelBaseSet.Location = new Point(7, 84);
+            labelBaseSet.Margin = new Padding(4, 0, 4, 0);
+            labelBaseSet.MaximumSize = new Size(116, 0);
             labelBaseSet.Name = "labelBaseSet";
             labelBaseSet.Size = new Size(90, 40);
             labelBaseSet.TabIndex = 2;
@@ -72,14 +87,15 @@ namespace SimpleFuzzy.View
             comboBoxBaseSet.Name = "comboBoxBaseSet";
             comboBoxBaseSet.Size = new Size(225, 28);
             comboBoxBaseSet.TabIndex = 3;
+            comboBoxBaseSet.SelectedIndexChanged += comboBoxBaseSet_SelectedIndexChanged;
             // 
             // groupBoxConditions
             // 
             groupBoxConditions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             groupBoxConditions.Controls.Add(panelConditions);
             groupBoxConditions.Controls.Add(buttonAddCondition);
-            groupBoxConditions.Location = new Point(16, 119);
-            groupBoxConditions.Margin = new Padding(5, 5, 5, 5);
+            groupBoxConditions.Location = new Point(13, 144);
+            groupBoxConditions.Margin = new Padding(4);
             groupBoxConditions.Name = "groupBoxConditions";
             groupBoxConditions.Padding = new Padding(5, 5, 5, 5);
             groupBoxConditions.Size = new Size(400, 308);
@@ -114,11 +130,11 @@ namespace SimpleFuzzy.View
             groupBoxActions.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             groupBoxActions.Controls.Add(buttonGenerateCode);
             groupBoxActions.Controls.Add(buttonVisualize);
-            groupBoxActions.Location = new Point(16, 437);
-            groupBoxActions.Margin = new Padding(5, 5, 5, 5);
+            groupBoxActions.Location = new Point(13, 383);
+            groupBoxActions.Margin = new Padding(4);
             groupBoxActions.Name = "groupBoxActions";
-            groupBoxActions.Padding = new Padding(5, 5, 5, 5);
-            groupBoxActions.Size = new Size(400, 85);
+            groupBoxActions.Padding = new Padding(4);
+            groupBoxActions.Size = new Size(350, 57);
             groupBoxActions.TabIndex = 2;
             groupBoxActions.TabStop = false;
             groupBoxActions.Text = "Действия";
@@ -147,55 +163,19 @@ namespace SimpleFuzzy.View
             buttonVisualize.UseVisualStyleBackColor = true;
             buttonVisualize.Click += buttonVisualize_Click;
             // 
-            // splitContainer
+            // pictureBox1
             // 
-            splitContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            splitContainer.Location = new Point(424, 19);
-            splitContainer.Margin = new Padding(5, 5, 5, 5);
-            splitContainer.Name = "splitContainer";
-            splitContainer.Orientation = Orientation.Horizontal;
-            // 
-            // splitContainer.Panel1
-            // 
-            splitContainer.Panel1.Controls.Add(textBoxGeneratedCode);
-            // 
-            // splitContainer.Panel2
-            // 
-            splitContainer.Panel2.Controls.Add(plotView);
-            splitContainer.Size = new Size(605, 568);
-            splitContainer.SplitterDistance = 284;
-            splitContainer.SplitterWidth = 5;
-            splitContainer.TabIndex = 3;
-            // 
-            // textBoxGeneratedCode
-            // 
-            textBoxGeneratedCode.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxGeneratedCode.Location = new Point(0, 0);
-            textBoxGeneratedCode.Margin = new Padding(5, 5, 5, 5);
-            textBoxGeneratedCode.Multiline = true;
-            textBoxGeneratedCode.Name = "textBoxGeneratedCode";
-            textBoxGeneratedCode.ReadOnly = true;
-            textBoxGeneratedCode.ScrollBars = ScrollBars.Vertical;
-            textBoxGeneratedCode.Size = new Size(604, 283);
-            textBoxGeneratedCode.TabIndex = 0;
-            // 
-            // plotView
-            // 
-            plotView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            plotView.Location = new Point(0, 0);
-            plotView.Name = "plotView";
-            plotView.PanCursor = Cursors.Hand;
-            plotView.Size = new Size(605, 279);
-            plotView.TabIndex = 1;
-            plotView.ZoomHorizontalCursor = Cursors.SizeWE;
-            plotView.ZoomRectangleCursor = Cursors.SizeNWSE;
-            plotView.ZoomVerticalCursor = Cursors.SizeNS;
+            pictureBox1.Location = new Point(371, 23);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(543, 408);
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
             // 
             // GenerationMembershipUI
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(splitContainer);
+            Controls.Add(pictureBox1);
             Controls.Add(groupBoxActions);
             Controls.Add(groupBoxConditions);
             Controls.Add(groupBoxSettings);
@@ -207,11 +187,7 @@ namespace SimpleFuzzy.View
             groupBoxSettings.PerformLayout();
             groupBoxConditions.ResumeLayout(false);
             groupBoxActions.ResumeLayout(false);
-            splitContainer.Panel1.ResumeLayout(false);
-            splitContainer.Panel1.PerformLayout();
-            splitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
-            splitContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -223,10 +199,10 @@ namespace SimpleFuzzy.View
         private System.Windows.Forms.GroupBox groupBoxActions;
         private System.Windows.Forms.Button buttonGenerateCode;
         private System.Windows.Forms.Button buttonVisualize;
-        private System.Windows.Forms.SplitContainer splitContainer;
-        private System.Windows.Forms.TextBox textBoxGeneratedCode;
-        private OxyPlot.WindowsForms.PlotView plotView;
         private ComboBox comboBoxBaseSet;
+        private TextBox textBox1;
+        private Label label1;
+        private PictureBox pictureBox1;
     }
 }
 

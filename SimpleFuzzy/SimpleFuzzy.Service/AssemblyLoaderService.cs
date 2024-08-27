@@ -76,9 +76,9 @@ namespace SimpleFuzzy.Service
             {
                 assemblyContext.LoadFromAssemblyPath(filePath);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Абсолютный путь файла введен неправильно.");
+                throw new InvalidOperationException(ex.Message);
             }
             assemblyLoadContexts.Add(assemblyContext);
             repositoryService.GetCollection<AssemblyContextModel>().Add(new AssemblyContextModel() { AssemblyName = assemblyContext.Name });

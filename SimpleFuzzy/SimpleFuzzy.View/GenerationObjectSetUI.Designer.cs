@@ -105,7 +105,6 @@
             // 
             // numericUpDown3
             // 
-
             numericUpDown3.DecimalPlaces = 5;
             numericUpDown3.Location = new Point(164, 121);
             numericUpDown3.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });

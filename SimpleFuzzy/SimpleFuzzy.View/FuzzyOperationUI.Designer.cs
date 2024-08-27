@@ -67,7 +67,6 @@
             // Bin
             // 
             Bin.AutoSize = true;
-            Bin.CausesValidation = false;
             Bin.Location = new Point(271, 68);
             Bin.Margin = new Padding(3, 4, 3, 4);
             Bin.Name = "Bin";
@@ -118,7 +117,7 @@
             // 
             // okButton
             // 
-            okButton.Location = new Point(231, 137);
+            okButton.Location = new Point(3, 180);
             okButton.Margin = new Padding(3, 4, 3, 4);
             okButton.Name = "okButton";
             okButton.Size = new Size(99, 31);
@@ -128,7 +127,7 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(336, 137);
+            cancelButton.Location = new Point(108, 180);
             cancelButton.Margin = new Padding(3, 4, 3, 4);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(99, 31);
@@ -138,8 +137,7 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pictureBox1.Location = new Point(441, 12);
+            pictureBox1.Location = new Point(441, 4);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(366, 207);
@@ -150,7 +148,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.Control;
+            BackColor = SystemColors.ControlLightLight;
             Controls.Add(pictureBox1);
             Controls.Add(cancelButton);
             Controls.Add(okButton);
@@ -163,7 +161,7 @@
             Controls.Add(operand1);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FuzzyOperationUI";
-            Size = new Size(821, 223);
+            Size = new Size(821, 245);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

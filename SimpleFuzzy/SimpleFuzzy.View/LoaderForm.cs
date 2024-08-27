@@ -232,7 +232,7 @@ namespace SimpleFuzzy.View
         //----------------------------------------------------------------------------------------
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Удалить выбранный файл?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)

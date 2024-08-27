@@ -12,6 +12,6 @@
         Open,
         Delete,
         Rename,
-        Copy
+        SaveAs
     };
 }

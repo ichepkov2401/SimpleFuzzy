@@ -1,4 +1,4 @@
-﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View

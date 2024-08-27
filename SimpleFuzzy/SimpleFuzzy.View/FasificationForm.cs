@@ -1,5 +1,4 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 
 
@@ -20,12 +19,17 @@ namespace SimpleFuzzy.View
             extender.AddColumn(buttonAction);
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
+            listView1.GetType()
+                     .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                     .SetValue(listView1, true);
             FillTreeView();
             RefreshLinguisticVariableList();
         }
 
         private void FillTreeView()
         {
+            treeView1.Nodes[0].Nodes.Clear();
+            treeView1.Nodes[1].Nodes.Clear();
             List<IMembershipFunction> list1 = repositoryService.GetCollection<IMembershipFunction>();
             for (int i = 0; i < list1.Count; i++)
             {
@@ -81,7 +85,7 @@ namespace SimpleFuzzy.View
                         MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                    LinguisticVariable newVariable =  new LinguisticVariable(true, true) { Name = variableName };
+                    LinguisticVariable newVariable = new LinguisticVariable(true, true) { Name = variableName };
                     assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
@@ -118,14 +122,17 @@ namespace SimpleFuzzy.View
             foreach (var variable in linguisticVariables)
             {
                 ListViewItem item = new ListViewItem(variable.Name);
-                item.SubItems.Add("X");
+                if (variable.isRedact)
+                    item.SubItems.Add("X");
                 listView1.Items.Add(item);
+                if (!variable.IsActive)
+                    item.ForeColor = Color.Red;
             }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (variableUI != null) 
+            if (variableUI != null)
             {
                 Controls.Remove(variableUI);
                 variableUI.Dispose();
@@ -134,11 +141,21 @@ namespace SimpleFuzzy.View
             {
                 var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == listView1.SelectedItems[0].Text);
                 {
-                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList);
+                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList, FillTreeView);
                     Controls.Add(variableUI);
                     variableUI.Location = new Point(325, 0);
                 }
             }
+        }
+
+        private void listView1_MouseLeave(object sender, EventArgs e)
+        {
+            listView1.Invalidate();
+        }
+
+        private void listView1_MouseMove(object sender, MouseEventArgs e)
+        {
+            listView1.Invalidate();
         }
     }
 }

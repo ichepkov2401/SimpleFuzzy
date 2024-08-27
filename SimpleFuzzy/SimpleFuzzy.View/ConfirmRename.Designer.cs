@@ -94,7 +94,6 @@
             Controls.Add(groupBox1);
             Name = "ConfirmRename";
             Size = new Size(458, 131);
-            Load += ConfirmRename_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

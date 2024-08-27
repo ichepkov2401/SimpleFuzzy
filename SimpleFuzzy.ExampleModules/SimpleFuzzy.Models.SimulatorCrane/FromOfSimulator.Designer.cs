@@ -294,7 +294,7 @@
             Controls.Add(btnStart);
             Controls.Add(btnPause);
             Controls.Add(btnReset);
-            MinimumSize = new Size(1121, 577);
+            MinimumSize = new Size(1120, 576);
             Name = "FromOfSimulator";
             Size = new Size(1121, 577);
             ((System.ComponentModel.ISupportInitialize)forceTrackBar).EndInit();

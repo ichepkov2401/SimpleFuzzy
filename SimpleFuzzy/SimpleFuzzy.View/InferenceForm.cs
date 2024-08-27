@@ -23,6 +23,44 @@ namespace SimpleFuzzy.View
                 outputVariableComboBox.SelectedIndex = 0;
             }
         }
+
+        private void StartTable(SetRule setRule)
+        {
+            if (dataTable != null) dataTable.Columns.Clear();
+            dataTable.Columns.Add("", "ID");
+            dataTable.Columns[0].ReadOnly = true;
+            dataTable.Columns[0].Width = 40;
+            dataTable.Columns[0].Name = "ID";
+
+            DataGridViewTextBoxColumn textBox = new DataGridViewTextBoxColumn();
+            textBox.HeaderText = "Релевантность";
+            dataTable.Columns.Add(textBox);
+            dataTable.Columns[1].Name = "Релевантность";
+
+            DataGridViewComboBoxColumn comboBox = new DataGridViewComboBoxColumn();
+            comboBox.HeaderText = currentOutputVar.Name;
+            comboBox.FlatStyle = FlatStyle.Flat;
+            dataTable.Columns.Add(comboBox);
+            dataTable.Columns[2].Name = currentOutputVar.Name;
+
+            List<string> term = new List<string>();
+            foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
+            (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = term;
+
+            for (int i = currentOutputVar.listRules.inputVariables.Count - 1; i >= 0; i--)
+            {
+                DataGridViewComboBoxColumn comboBoxInput = new DataGridViewComboBoxColumn();
+                comboBoxInput.HeaderText = currentOutputVar.listRules.inputVariables[i].Name;
+                comboBoxInput.FlatStyle = FlatStyle.Flat;
+                dataTable.Columns.Insert(1, comboBoxInput);
+                dataTable.Columns[1].Name = currentOutputVar.listRules.inputVariables[i].Name;
+
+                List<string> termInput = new List<string>();
+                foreach (var func in currentOutputVar.listRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
+            (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = termInput;
+            }
+        }
+
         /// <summary>
         /// Функция определеяет цвет терма заданной Лингвистической переменной
         /// </summary>
@@ -117,10 +155,17 @@ namespace SimpleFuzzy.View
                 }
             }
             currentOutputVar = temp;
-            // добавление таблицы
-            SetRule setRule = new SetRule(currentOutputVar);
-            currentOutputVar.listRules = setRule;
-            AddTable(outputVariableComboBox.SelectedItem.ToString());
+            if (temp.listRules == null)
+            {
+                // добавление таблицы
+                SetRule setRule = new SetRule(currentOutputVar);
+                currentOutputVar.listRules = setRule;
+                AddTable(outputVariableComboBox.SelectedItem.ToString());
+            }
+            else
+            {
+                StartTable(temp.listRules);
+            }
             outputVariableComboBox.Items.Remove(outputVariableComboBox.SelectedItem);
         }
         private void inputVariablesComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,7 +225,6 @@ namespace SimpleFuzzy.View
             else 
             {
                 position = currentOutputVar.listRules.OpenOtherRule(row);
-                if (position == -1) return;//
                 active -= 2;
             }
             if (position != -1)

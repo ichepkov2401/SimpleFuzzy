@@ -1,17 +1,19 @@
-﻿namespace SimpleFuzzy.View
+﻿using SimpleFuzzy.Abstract;
+
+namespace SimpleFuzzy.View
 {
-    public class FilesPathsNamesValidator
+    public class FilesPathsNamesValidatorService : IFilesPathsNamesValidator
     {
         // Зарезервированные имена файлов
-        private static readonly string[] ReservedNames = new[] {
+        private readonly string[] ReservedNames = new[] {
         "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
         "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
         "PRN", "AUX", "NUL", "CON", "CLOCK$"
     };
 
         // Недопустимые символы
-        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
-        private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
+        private readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+        private readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
 
         // Максимальная длина имени файла
         private const int MaxComponentLength = 255;
@@ -21,7 +23,7 @@
         // Максимальная глубина подкаталогов
         private const int MaxDepth = 250;
         // Метод для проверки имени файла
-        public static bool IsValidFileName(string fileName)
+        public bool IsValidFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return false;
 
@@ -41,7 +43,7 @@
         }
 
         // Метод для проверки имени каталога
-        public static bool IsValidDirectoryName(string directoryName)
+        public bool IsValidDirectoryName(string directoryName)
         {
             if (string.IsNullOrEmpty(directoryName)) return false;
             // Проверка длины всего пути
@@ -69,7 +71,7 @@
         }
 
         // Метод для проверки допустимости Юникода
-        private static bool IsValidUnicode(string input)
+        private bool IsValidUnicode(string input)
         {
             foreach (char c in input)
             {

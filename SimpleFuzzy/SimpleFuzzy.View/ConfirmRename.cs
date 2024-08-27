@@ -14,7 +14,8 @@ namespace SimpleFuzzy.View
         {
             textBox1.Text = textBox1.Text.TrimEnd('.');// Для файла
             textBox1.Text = textBox1.Text.Trim(' ');
-            if (FilesPathsNamesValidator.IsValidFileName(textBox1.Text))
+            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
+            if (validator.IsValidFileName(textBox1.Text))
             {
                 try
                 {

@@ -218,7 +218,7 @@ namespace SimpleFuzzy.View
 
         private void NameChangedHandler(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(nameTextBox.Text))
+            if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
                 MessageBox.Show("Имя переменной не может быть пустым!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;

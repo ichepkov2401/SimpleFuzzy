@@ -27,7 +27,8 @@ namespace SimpleFuzzy.View
             metroTextBox1.Text = metroTextBox1.Text.Trim(' ');
             textBox1.Text = textBox1.Text.TrimEnd('/');//Для пути
             textBox1.Text = textBox1.Text.TrimEnd('.');
-            if (FilesPathsNamesValidator.IsValidFileName(metroTextBox1.Text) && FilesPathsNamesValidator.IsValidDirectoryName(textBox1.Text))
+            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
+            if (validator.IsValidFileName(metroTextBox1.Text) && validator.IsValidDirectoryName(textBox1.Text))
             {
                 try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
                 catch (Exception ex)

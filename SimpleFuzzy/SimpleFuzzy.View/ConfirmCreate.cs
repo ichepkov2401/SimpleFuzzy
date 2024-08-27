@@ -19,7 +19,8 @@ namespace SimpleFuzzy.View
             textBox1.Text = textBox1.Text.Trim(' ');
             textBox2.Text = textBox2.Text.TrimEnd('/');//Для пути
             textBox2.Text = textBox2.Text.TrimEnd('.');
-            if (FilesPathsNamesValidator.IsValidFileName(textBox1.Text)&&FilesPathsNamesValidator.IsValidDirectoryName(textBox2.Text))
+            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
+            if (validator.IsValidFileName(textBox1.Text)&&validator.IsValidDirectoryName(textBox2.Text))
             {
                 try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
                 catch (Exception ex)

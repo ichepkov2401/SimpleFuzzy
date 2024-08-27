@@ -52,7 +52,8 @@ namespace SimpleFuzzy.View
             string filePath = filePathTextBox.Text;
             filePath = filePath.TrimEnd('/');//Для пути
             filePath = filePath.TrimEnd('.');
-            if (FilesPathsNamesValidator.IsValidDirectoryName(filePath))
+            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
+            if (validator.IsValidDirectoryName(filePath))
             {
                 try
                 {

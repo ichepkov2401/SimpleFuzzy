@@ -45,7 +45,6 @@
             // 
             // treeView1
             // 
-            treeView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             treeView1.Location = new Point(5, 9);
             treeView1.Margin = new Padding(3, 4, 3, 4);
             treeView1.Name = "treeView1";
@@ -98,6 +97,7 @@
             Controls.Add(treeView1);
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
+            MaximumSize = new Size(272, 335);
             MinimizeBox = false;
             MinimumSize = new Size(272, 335);
             Name = "HelpWindow";

@@ -51,7 +51,7 @@ namespace SimpleFuzzy.View
             // windowHeaderLabel
             // 
             windowHeaderLabel.AutoSize = true;
-            windowHeaderLabel.Location = new Point(384, 10);
+            windowHeaderLabel.Location = new Point(384, 11);
             windowHeaderLabel.Name = "windowHeaderLabel";
             windowHeaderLabel.Size = new Size(144, 20);
             windowHeaderLabel.TabIndex = 2;
@@ -106,13 +106,11 @@ namespace SimpleFuzzy.View
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
             dataTable.Location = new Point(3, 129);
             dataTable.Name = "dataTable";
-            dataTable.RowHeadersVisible = false;
             dataTable.RowHeadersWidth = 51;
             dataTable.RowTemplate.Height = 29;
             dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
-            dataTable.CellValueChanged += dataTable_CellValueChanged;
-            dataTable.RowsAdded += dataTable_RowsAdded;
+            dataTable.RowsRemoved += dataTable_RowsRemoved;
             // 
             // InferenceForm
             // 
@@ -126,7 +124,7 @@ namespace SimpleFuzzy.View
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
             Name = "InferenceForm";
-            Size = new Size(941, 490);
+            Size = new Size(941, 491);
             ((System.ComponentModel.ISupportInitialize)dataTable).EndInit();
             ResumeLayout(false);
             PerformLayout();

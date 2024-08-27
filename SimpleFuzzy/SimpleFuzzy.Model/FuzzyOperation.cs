@@ -45,10 +45,13 @@ namespace SimpleFuzzy.Model
             if (Operand2 != null && Operand2.GetType().Assembly.FullName == context)
                 Operand2 = null;
         }
-
+        public FuzzyOperation()
+        {
+            Active = true;
+        }
         public Type InputType => Operand1.InputType;
 
-        public bool Active { get => true; set => throw new NotImplementedException(); }
+        public bool Active { get; set; }
 
         public string Name { get; set; } = "";
 

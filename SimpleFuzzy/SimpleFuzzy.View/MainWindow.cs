@@ -263,8 +263,6 @@ namespace SimpleFuzzy.View
         //////////////////// Подсветка подсказки симулятора
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // для проверки
-            button1.Text = $"{MousePosition.X - Location.X - Right.Location.X}, {MousePosition.Y - Location.Y - Right.Location.Y}";
             var v = new Point(MousePosition.X - (Location.X + menuStrip2.Location.X + button11.Bounds.Location.X),
                 MousePosition.Y - (Location.Y + menuStrip2.Location.Y + button11.Bounds.Location.Y));
             if (v.X >= 0 && v.X <= button11.Width && v.Y >= 0 && v.Y <= button11.Height)

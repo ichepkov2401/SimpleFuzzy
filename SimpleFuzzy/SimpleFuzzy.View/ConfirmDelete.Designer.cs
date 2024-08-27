@@ -37,6 +37,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(button2);
@@ -50,6 +51,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Location = new Point(33, 23);
@@ -60,6 +62,7 @@
             // 
             // button2
             // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Location = new Point(354, 46);
             button2.Name = "button2";
             button2.Size = new Size(144, 29);
@@ -82,6 +85,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);
+            MinimumSize = new Size(549, 98);
             Name = "ConfirmDelete";
             Size = new Size(549, 98);
             groupBox1.ResumeLayout(false);

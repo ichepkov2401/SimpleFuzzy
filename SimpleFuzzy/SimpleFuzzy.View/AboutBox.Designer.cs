@@ -146,6 +146,7 @@
             Margin = new Padding(4);
             MaximizeBox = false;
             MinimizeBox = false;
+            MinimumSize = new Size(598, 482);
             Name = "AboutBox";
             Padding = new Padding(10, 45, 10, 10);
             ShowIcon = false;

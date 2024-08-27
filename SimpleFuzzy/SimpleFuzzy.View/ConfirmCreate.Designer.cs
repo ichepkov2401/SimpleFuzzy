@@ -41,9 +41,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(653, 24);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.Location = new Point(445, 26);
             button1.Name = "button1";
-            button1.Size = new Size(202, 29);
+            button1.Size = new Size(202, 27);
             button1.TabIndex = 0;
             button1.Text = "Готово";
             button1.UseVisualStyleBackColor = true;
@@ -51,6 +52,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(button3);
             groupBox1.Controls.Add(textBox1);
@@ -64,9 +66,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(445, 24);
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button3.Location = new Point(653, 26);
             button3.Name = "button3";
-            button3.Size = new Size(202, 29);
+            button3.Size = new Size(202, 27);
             button3.TabIndex = 7;
             button3.Text = "Отмена";
             button3.UseVisualStyleBackColor = true;
@@ -74,6 +77,7 @@
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Location = new Point(6, 26);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(433, 27);
@@ -81,6 +85,7 @@
             // 
             // textBox2
             // 
+            textBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox2.Location = new Point(6, 26);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(641, 27);
@@ -88,6 +93,7 @@
             // 
             // button2
             // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Location = new Point(653, 26);
             button2.Name = "button2";
             button2.Size = new Size(202, 29);
@@ -98,6 +104,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox2.BackColor = Color.Transparent;
             groupBox2.Controls.Add(textBox2);
             groupBox2.Controls.Add(button2);
@@ -113,9 +120,10 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Transparent;
+            BackColor = SystemColors.Control;
             Controls.Add(groupBox1);
             Controls.Add(groupBox2);
+            MinimumSize = new Size(876, 150);
             Name = "ConfirmCreate";
             Size = new Size(876, 150);
             Load += ConfirmCreate_Load;

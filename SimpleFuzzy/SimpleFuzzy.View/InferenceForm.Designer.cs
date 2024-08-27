@@ -33,37 +33,35 @@ namespace SimpleFuzzy.View
             // 
             // outputVariableComboBox
             // 
-            outputVariableComboBox.Location = new Point(158, 37);
-            outputVariableComboBox.Margin = new Padding(3, 2, 3, 2);
+            outputVariableComboBox.Location = new Point(181, 49);
             outputVariableComboBox.Name = "outputVariableComboBox";
-            outputVariableComboBox.Size = new Size(170, 23);
+            outputVariableComboBox.Size = new Size(194, 28);
             outputVariableComboBox.TabIndex = 0;
             outputVariableComboBox.SelectedIndexChanged += OutputVariableComboBox_SelectedIndexChanged;
             // 
             // outputVariableLabel
             // 
             outputVariableLabel.AutoSize = true;
-            outputVariableLabel.Location = new Point(3, 39);
+            outputVariableLabel.Location = new Point(3, 52);
             outputVariableLabel.Name = "outputVariableLabel";
-            outputVariableLabel.Size = new Size(137, 15);
+            outputVariableLabel.Size = new Size(175, 20);
             outputVariableLabel.TabIndex = 1;
             outputVariableLabel.Text = "Выходные переменные";
             // 
             // windowHeaderLabel
             // 
             windowHeaderLabel.AutoSize = true;
-            windowHeaderLabel.Location = new Point(336, 8);
+            windowHeaderLabel.Location = new Point(384, 11);
             windowHeaderLabel.Name = "windowHeaderLabel";
-            windowHeaderLabel.Size = new Size(116, 15);
+            windowHeaderLabel.Size = new Size(144, 20);
             windowHeaderLabel.TabIndex = 2;
             windowHeaderLabel.Text = "РЕДАКТОР ПРАВИЛ";
             // 
             // AddInbutton
             // 
-            AddInbutton.Location = new Point(333, 71);
-            AddInbutton.Margin = new Padding(3, 2, 3, 2);
+            AddInbutton.Location = new Point(381, 95);
             AddInbutton.Name = "AddInbutton";
-            AddInbutton.Size = new Size(133, 22);
+            AddInbutton.Size = new Size(152, 29);
             AddInbutton.TabIndex = 3;
             AddInbutton.Text = "Добавить ЛП";
             AddInbutton.UseVisualStyleBackColor = true;
@@ -72,19 +70,18 @@ namespace SimpleFuzzy.View
             // inputVariablesComboBox
             // 
             inputVariablesComboBox.FormattingEnabled = true;
-            inputVariablesComboBox.Location = new Point(158, 71);
-            inputVariablesComboBox.Margin = new Padding(3, 2, 3, 2);
+            inputVariablesComboBox.Location = new Point(181, 95);
             inputVariablesComboBox.Name = "inputVariablesComboBox";
-            inputVariablesComboBox.Size = new Size(170, 23);
+            inputVariablesComboBox.Size = new Size(194, 28);
             inputVariablesComboBox.TabIndex = 4;
             inputVariablesComboBox.SelectedIndexChanged += inputVariablesComboBox_SelectedIndexChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 71);
+            label1.Location = new Point(14, 95);
             label1.Name = "label1";
-            label1.Size = new Size(128, 15);
+            label1.Size = new Size(164, 20);
             label1.TabIndex = 5;
             label1.Text = "Входные переменные";
             // 
@@ -107,20 +104,17 @@ namespace SimpleFuzzy.View
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
-            dataTable.Location = new Point(3, 97);
-            dataTable.Margin = new Padding(3, 2, 3, 2);
+            dataTable.Location = new Point(3, 129);
             dataTable.Name = "dataTable";
-            dataTable.RowHeadersVisible = false;
             dataTable.RowHeadersWidth = 51;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(659, 259);
+            dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
-            dataTable.CellBeginEdit += dataTable_CellBeginEdit;
-            dataTable.CellValueChanged += dataTable_CellValueChanged;
+            dataTable.RowsRemoved += dataTable_RowsRemoved;
             // 
             // InferenceForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(dataTable);
             Controls.Add(label1);
@@ -129,9 +123,8 @@ namespace SimpleFuzzy.View
             Controls.Add(windowHeaderLabel);
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
-            Margin = new Padding(3, 2, 3, 2);
             Name = "InferenceForm";
-            Size = new Size(823, 368);
+            Size = new Size(941, 491);
             ((System.ComponentModel.ISupportInitialize)dataTable).EndInit();
             ResumeLayout(false);
             PerformLayout();

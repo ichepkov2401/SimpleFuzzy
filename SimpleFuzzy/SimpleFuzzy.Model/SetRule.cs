@@ -1,6 +1,8 @@
 ﻿using SimpleFuzzy.Abstract;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +60,13 @@ namespace SimpleFuzzy.Model
             return true;
         }
 
+        private bool IsSameRules(List<IMembershipFunction> list1, Rule rule)
+        {
+            List<IMembershipFunction> list2 = rule.GiveList();
+            for (int i = 0; i < list1.Count; i++) { if (list1[i] != list2[i]) return false; }
+            return true;
+        }
+
         private bool WasSameRules(Rule rule1, Rule rule2)
         {
             int count = 0;
@@ -85,6 +94,7 @@ namespace SimpleFuzzy.Model
             {
                 if (IsSameRules(rules[position], rules[i])) return -1;
             }
+            if (position == 0) return -1;
             rules[position].IsActive = true;
             return position;
         }
@@ -106,7 +116,19 @@ namespace SimpleFuzzy.Model
                     return i;
                 }
             }
-            return -1; // Сюда заходить не должен, надо чтоб возвращали все пути
+            return -1; 
+        }
+        public int CheckAfterDelete(List<IMembershipFunction> list)
+        {
+            for (int i = 0; i < rules.Count - 1; i++)
+            {
+                if (IsSameRules(list, rules[i]))
+                {
+                    rules[i].IsActive = true;
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

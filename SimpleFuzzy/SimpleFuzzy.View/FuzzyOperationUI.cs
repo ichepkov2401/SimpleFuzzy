@@ -241,12 +241,12 @@ namespace SimpleFuzzy.View
             {
                 if (string.IsNullOrWhiteSpace(nameTextBox.Text))
                 {
-                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else if (repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text))
                 {
-                    MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Терм с таким именем уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 repositoryService.GetCollection<IMembershipFunction>().Add(fuzzyOperation);
@@ -268,12 +268,12 @@ namespace SimpleFuzzy.View
         {
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
-                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (repositoryService.GetCollection<IMembershipFunction>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Терм с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 nameTextBox.Text = oldName;
             }
             else

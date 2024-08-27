@@ -25,13 +25,13 @@ namespace SimpleFuzzy.View
         {
             if (metroTextBox1 == null)
             {
-                MessageBox.Show("Введите новое имя проекта");
+                MessageBox.Show("Необходимо ввести имя проекта", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             button3_Click(sender, e);

@@ -241,7 +241,7 @@ namespace SimpleFuzzy.View
                 try { File.Delete(projectListService.GivePath(projectListService.CurrentProjectName, true) + "\\" + e.Item.Text); }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Разработчики уже решают эту проблему)" + ex.Message, "Ошибка удаления");
+                    MessageBox.Show($"{ex.Message}, Пожалуйста, сообщите об этой ошибки разработчикам", "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 dllListView.Items.Remove(e.Item);

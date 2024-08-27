@@ -18,7 +18,7 @@ namespace SimpleFuzzy.View
             try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"{ex.Message}", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             // Дальше открывается проект

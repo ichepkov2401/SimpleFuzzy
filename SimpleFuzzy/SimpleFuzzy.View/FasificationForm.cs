@@ -66,9 +66,9 @@ namespace SimpleFuzzy.View
                 if (inputBox.ShowDialog() == DialogResult.OK)
                 {
                     string variableName = inputBox.InputText;
-                    if (!FilesPathsNamesValidator.IsValidFileName(variableName)||string.IsNullOrEmpty(variableName))
+                    if (string.IsNullOrEmpty(variableName))
                     {
-                        MessageBox.Show("Неверное имя переменной!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Имя переменной не может быть пустым!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 

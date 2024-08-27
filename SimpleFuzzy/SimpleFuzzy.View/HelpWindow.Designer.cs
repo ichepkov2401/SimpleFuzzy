@@ -1,6 +1,6 @@
 ﻿namespace SimpleFuzzy.View
 {
-    partial class HelpWindow
+    public partial class HelpWindow
     {
         /// <summary>
         /// Required designer variable.

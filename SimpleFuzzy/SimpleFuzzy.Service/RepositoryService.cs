@@ -27,6 +27,7 @@ public class RepositoryService : IRepositoryService
             if (_membershipFunctions[k].GetType().Assembly.Location == context)
             {
                 _membershipFunctions.RemoveAt(k);
+                k--;
             }
         }
         for (int k = 0; k < _objectSets.Count; k++)
@@ -34,6 +35,7 @@ public class RepositoryService : IRepositoryService
             if (_objectSets[k].GetType().Assembly.Location == context)
             {
                 _objectSets.RemoveAt(k);
+                k--;
             }
         }
         for (int k = 0; k < _simulators.Count; k++)
@@ -41,6 +43,7 @@ public class RepositoryService : IRepositoryService
             if (_simulators[k].GetType().Assembly.Location == context)
             {
                 _simulators.RemoveAt(k);
+                k--;
             }
         }
     }

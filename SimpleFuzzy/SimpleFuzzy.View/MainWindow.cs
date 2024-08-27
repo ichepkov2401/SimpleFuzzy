@@ -221,14 +221,30 @@ namespace SimpleFuzzy.View
         }
         private void button12_Click(object sender, EventArgs e)
         {
-            AboutBox aboutBox = new AboutBox();
-            aboutBox.Show();
+            if (aboutBox == null || aboutBox.IsDisposed)
+            {
+                aboutBox = new AboutBox();
+                aboutBox.Show();
+            }
+            else
+            {
+                aboutBox.Show();
+                aboutBox.Focus();
+            }
 
         }
         private void button13_Click(object sender, EventArgs e)
         {
-            HelpWindow help = new HelpWindow();
-            help.Show();
+            if (helpWindow == null || helpWindow.IsDisposed)
+            {
+                helpWindow = new HelpWindow();
+                helpWindow.Show();
+            }
+            else
+            {
+                helpWindow.Show();
+                helpWindow.Focus();
+            }
         }
 
         ////////////////// Переход между элементами управления

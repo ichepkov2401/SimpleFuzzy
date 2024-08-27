@@ -1,6 +1,6 @@
 ﻿namespace SimpleFuzzy.View
 {
-    partial class AboutBox
+    public partial class AboutBox
     {
         /// <summary>
         /// Обязательная переменная конструктора.

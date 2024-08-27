@@ -302,10 +302,10 @@ namespace SimpleFuzzy.View
                 FazificationObjectChaged(null, null);
                 var value = linguisticVariable.CalculationFuzzySetProperties(nowFunction, (double)NumericUpDown1.Value);
                 SetProperty.Text = $"Тип нечеткого множества: {value.Item2}" +
-                    $"\nВысота нечеткого множества: {value.Item1}" +
-                    $"\n{value.Item3.AsQueryable().Aggregate("Область влияния нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
-                    $"\n{value.Item4.AsQueryable().Aggregate("Ядро нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
-                    $"\n{value.Item5.AsQueryable().Aggregate($"Сечение на выстое {(double)NumericUpDown1.Value}: ", (x, y) => x + " " + y.ToString())}";
+                                    $"\nВысота нечеткого множества: {value.Item1}" +
+                                    $"\nОбласть влияния нечеткого множества: {value.Item3}" +
+                                    $"\nЯдро нечеткого множества: {value.Item4}" +
+                                    $"\nСечение на высоте {(double)NumericUpDown1.Value}: {value.Item5}";
                 DrawY();
             }
             else

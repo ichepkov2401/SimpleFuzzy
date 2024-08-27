@@ -1,7 +1,6 @@
 using SimpleFuzzy.Abstract;
 using System.Text;
 using System.Drawing;
-using System.Xml;
 
 
 namespace SimpleFuzzy.Model
@@ -259,7 +258,7 @@ namespace SimpleFuzzy.Model
 
         private List<object> CalculateAreaOfInfluence(IMembershipFunction term)
         {
-            var areaOfInfluence = new List<object>();
+            List<object> areaOfInfluence = new List<object>();
             for (int i = 0; i < baseSet.Count; i++)
             {
                 double membershipValue = term.MembershipFunction(baseSet[i]);
@@ -286,7 +285,7 @@ namespace SimpleFuzzy.Model
         }
         private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {
-            var section = new List<object>();
+            List<object> section = new List<object>();
             for (int i = 0; i < baseSet.Count; i++)
             {
                 double membershipValue = term.MembershipFunction(baseSet[i]);
@@ -312,29 +311,60 @@ namespace SimpleFuzzy.Model
             StringBuilder output = new StringBuilder();
             output.Append("{");
             int start = 0;
+            dynamic step = null;
+
+            // Погрешность для сравнения double
+            const double accuracy = 1e-10;
 
             for (int i = 1; i < input.Count; i++)
             {
-                if ((int)input[i] != (int)input[i - 1] + 1)
+                if (input[i] is int || input[i] is double)
                 {
-                    if (i - start > 1)
+                    dynamic current = Convert.ChangeType(input[i], input[i].GetType());
+                    dynamic previous = Convert.ChangeType(input[i - 1], input[i - 1].GetType());
+
+                    if (step == null)
                     {
-                        output.Append($"[{input[start]}, {input[i - 1]}], ");
+                        step = current - previous; // Вычисляем шаг, если он еще не определен
+                    }
+
+                    bool isStepEqual;
+                    if (current is double && previous is double)
+                    {
+                        isStepEqual = Math.Abs((current - previous) - step) < accuracy;
                     }
                     else
                     {
-                        output.Append($"{input[start]}, ");
+                        isStepEqual = (current - previous).CompareTo(step) == 0;
                     }
-                    start = i;
+
+                    if (!isStepEqual)
+                    {
+                        if (i - start > 1)
+                        {
+                            output.Append($"[{input[start]}; {input[i - 1]}], ");
+                        }
+                        else
+                        {
+                            output.Append($"{input[start]}, ");
+                        }
+                        start = i;
+                        step = null; // Сбрасываем шаг при разрыве последовательности
+                    }
+                }
+                else
+                {
+                    start = i; // Сброс начала последовательности
+                    step = null;
                 }
             }
 
             // Обработка последней последовательности
             if (input.Count - start > 1)
             {
-                output.Append($"[{input[start]}, {input[input.Count - 1]}]");
+                output.Append($"[{input[start]}; {input[input.Count - 1]}]");
             }
-            else
+            else if (start < input.Count)
             {
                 output.Append($"{input[start]}");
             }

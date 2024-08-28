@@ -173,5 +173,6 @@
         private NumericUpDown numericUpDown3;
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown1;
+        public const bool isChangableSize = true;
     }
 }

@@ -72,5 +72,6 @@
 
         private RadioButton metroRadioButton1;
         private RadioButton metroRadioButton2;
+        public const bool isChangableSize = true;
     }
 }

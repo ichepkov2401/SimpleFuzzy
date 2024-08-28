@@ -232,7 +232,7 @@ namespace SimpleFuzzy.View
         //----------------------------------------------------------------------------------------
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Удалить выбранный файл?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -241,7 +241,7 @@ namespace SimpleFuzzy.View
                 try { File.Delete(projectListService.GivePath(projectListService.CurrentProjectName, true) + "\\" + e.Item.Text); }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Разработчики уже решают эту проблему)" + ex.Message, "Ошибка удаления");
+                    MessageBox.Show($"{ex.Message}, Пожалуйста, сообщите об этой ошибки разработчикам", "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 dllListView.Items.Remove(e.Item);

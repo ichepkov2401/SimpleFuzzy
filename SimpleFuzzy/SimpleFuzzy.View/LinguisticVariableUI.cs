@@ -255,12 +255,12 @@ namespace SimpleFuzzy.View
         {
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
-                MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (_repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Переменная с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else
@@ -283,7 +283,7 @@ namespace SimpleFuzzy.View
 
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Удалить выбранный терм?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -319,10 +319,10 @@ namespace SimpleFuzzy.View
                 FazificationObjectChaged(null, null);
                 var value = linguisticVariable.CalculationFuzzySetProperties(nowFunction, (double)NumericUpDown1.Value);
                 SetProperty.Text = $"Тип нечеткого множества: {value.Item2}" +
-                    $"\nВысота нечеткого множества: {value.Item1}" +
-                    $"\n{value.Item3.AsQueryable().Aggregate("Область влияния нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
-                    $"\n{value.Item4.AsQueryable().Aggregate("Ядро нечеткого множества: ", (x, y) => x + " " + y.ToString())}" +
-                    $"\n{value.Item5.AsQueryable().Aggregate($"Сечение на выстое {(double)NumericUpDown1.Value}: ", (x, y) => x + " " + y.ToString())}";
+                                    $"\nВысота нечеткого множества: {value.Item1}" +
+                                    $"\nОбласть влияния нечеткого множества: {value.Item3}" +
+                                    $"\nЯдро нечеткого множества: {value.Item4}" +
+                                    $"\nСечение на высоте {(double)NumericUpDown1.Value}: {value.Item5}";
                 DrawY();
             }
             else

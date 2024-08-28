@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Service;
+using SimpleFuzzy.View;
 
 public class AutofacConfig : Module
 {
@@ -12,5 +13,7 @@ public class AutofacConfig : Module
         builder.RegisterType<ProjectListService>().As<IProjectListService>().SingleInstance();
         builder.RegisterType<CompileService>().As<ICompileService>().SingleInstance();
         builder.RegisterType<RepositoryService>().As<IRepositoryService>().SingleInstance();
+        builder.RegisterType<FilesPathsNamesValidatorService>().As<IFilesPathsNamesValidator>().SingleInstance();
+
     }
 }

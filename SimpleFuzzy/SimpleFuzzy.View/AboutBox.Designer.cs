@@ -1,9 +1,6 @@
-﻿using MetroFramework;
-using MetroFramework.Components;
-
-namespace SimpleFuzzy.View
+﻿namespace SimpleFuzzy.View
 {
-    partial class AboutBox
+    public partial class AboutBox
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -37,7 +34,7 @@ namespace SimpleFuzzy.View
             labelVersion = new Label();
             labelCopyright = new Label();
             labelCompanyName = new Label();
-            okButton = new MetroFramework.Controls.MetroButton();
+            okButton = new Button();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logoPictureBox).BeginInit();
             SuspendLayout();
@@ -54,8 +51,8 @@ namespace SimpleFuzzy.View
             tableLayoutPanel.Controls.Add(labelCompanyName, 1, 3);
             tableLayoutPanel.Controls.Add(okButton, 1, 5);
             tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.Location = new Point(12, 60);
-            tableLayoutPanel.Margin = new Padding(4, 5, 4, 5);
+            tableLayoutPanel.Location = new Point(11, 60);
+            tableLayoutPanel.Margin = new Padding(5);
             tableLayoutPanel.Name = "tableLayoutPanel";
             tableLayoutPanel.RowCount = 6;
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
@@ -64,18 +61,18 @@ namespace SimpleFuzzy.View
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel.Size = new Size(556, 361);
+            tableLayoutPanel.Size = new Size(559, 362);
             tableLayoutPanel.TabIndex = 0;
             // 
             // logoPictureBox
             // 
             logoPictureBox.Dock = DockStyle.Fill;
             logoPictureBox.Image = (Image)resources.GetObject("logoPictureBox.Image");
-            logoPictureBox.Location = new Point(4, 5);
-            logoPictureBox.Margin = new Padding(4, 5, 4, 5);
+            logoPictureBox.Location = new Point(5, 5);
+            logoPictureBox.Margin = new Padding(5);
             logoPictureBox.Name = "logoPictureBox";
             tableLayoutPanel.SetRowSpan(logoPictureBox, 6);
-            logoPictureBox.Size = new Size(175, 351);
+            logoPictureBox.Size = new Size(174, 352);
             logoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             logoPictureBox.TabIndex = 12;
             logoPictureBox.TabStop = false;
@@ -83,11 +80,11 @@ namespace SimpleFuzzy.View
             // labelProductName
             // 
             labelProductName.Dock = DockStyle.Fill;
-            labelProductName.Location = new Point(191, 0);
-            labelProductName.Margin = new Padding(8, 0, 4, 0);
-            labelProductName.MaximumSize = new Size(0, 26);
+            labelProductName.Location = new Point(192, 0);
+            labelProductName.Margin = new Padding(8, 0, 5, 0);
+            labelProductName.MaximumSize = new Size(0, 27);
             labelProductName.Name = "labelProductName";
-            labelProductName.Size = new Size(361, 26);
+            labelProductName.Size = new Size(362, 27);
             labelProductName.TabIndex = 19;
             labelProductName.Text = "Название продукта";
             labelProductName.TextAlign = ContentAlignment.MiddleLeft;
@@ -95,11 +92,11 @@ namespace SimpleFuzzy.View
             // labelVersion
             // 
             labelVersion.Dock = DockStyle.Fill;
-            labelVersion.Location = new Point(191, 36);
-            labelVersion.Margin = new Padding(8, 0, 4, 0);
-            labelVersion.MaximumSize = new Size(0, 26);
+            labelVersion.Location = new Point(192, 36);
+            labelVersion.Margin = new Padding(8, 0, 5, 0);
+            labelVersion.MaximumSize = new Size(0, 27);
             labelVersion.Name = "labelVersion";
-            labelVersion.Size = new Size(361, 26);
+            labelVersion.Size = new Size(362, 27);
             labelVersion.TabIndex = 0;
             labelVersion.Text = "Версия";
             labelVersion.TextAlign = ContentAlignment.MiddleLeft;
@@ -107,11 +104,11 @@ namespace SimpleFuzzy.View
             // labelCopyright
             // 
             labelCopyright.Dock = DockStyle.Fill;
-            labelCopyright.Location = new Point(191, 72);
-            labelCopyright.Margin = new Padding(8, 0, 4, 0);
-            labelCopyright.MaximumSize = new Size(0, 26);
+            labelCopyright.Location = new Point(192, 72);
+            labelCopyright.Margin = new Padding(8, 0, 5, 0);
+            labelCopyright.MaximumSize = new Size(0, 27);
             labelCopyright.Name = "labelCopyright";
-            labelCopyright.Size = new Size(361, 26);
+            labelCopyright.Size = new Size(362, 27);
             labelCopyright.TabIndex = 21;
             labelCopyright.Text = "Авторские права";
             labelCopyright.TextAlign = ContentAlignment.MiddleLeft;
@@ -119,11 +116,11 @@ namespace SimpleFuzzy.View
             // labelCompanyName
             // 
             labelCompanyName.Dock = DockStyle.Fill;
-            labelCompanyName.Location = new Point(191, 108);
-            labelCompanyName.Margin = new Padding(8, 0, 4, 0);
-            labelCompanyName.MaximumSize = new Size(0, 26);
+            labelCompanyName.Location = new Point(192, 108);
+            labelCompanyName.Margin = new Padding(8, 0, 5, 0);
+            labelCompanyName.MaximumSize = new Size(0, 27);
             labelCompanyName.Name = "labelCompanyName";
-            labelCompanyName.Size = new Size(361, 26);
+            labelCompanyName.Size = new Size(362, 27);
             labelCompanyName.TabIndex = 22;
             labelCompanyName.Text = "Название организации";
             labelCompanyName.TextAlign = ContentAlignment.MiddleLeft;
@@ -132,29 +129,27 @@ namespace SimpleFuzzy.View
             // 
             okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             okButton.DialogResult = DialogResult.Cancel;
-            okButton.Highlight = false;
-            okButton.Location = new Point(452, 329);
-            okButton.Margin = new Padding(4, 5, 4, 5);
+            okButton.Location = new Point(453, 330);
+            okButton.Margin = new Padding(5);
             okButton.Name = "okButton";
-            okButton.Size = new Size(100, 27);
-            okButton.Style = MetroColorStyle.Blue;
-            okButton.StyleManager = null;
+            okButton.Size = new Size(101, 27);
             okButton.TabIndex = 24;
             okButton.Text = "&ОК";
-            okButton.Theme = MetroThemeStyle.Light;
+            okButton.Click += okButton_Click;
             // 
             // AboutBox
             // 
             AcceptButton = okButton;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(580, 435);
+            ClientSize = new Size(581, 435);
             Controls.Add(tableLayoutPanel);
-            Margin = new Padding(4, 5, 4, 5);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Margin = new Padding(5);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "AboutBox";
-            Padding = new Padding(12, 60, 12, 14);
+            Padding = new Padding(11, 60, 11, 13);
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
@@ -172,6 +167,7 @@ namespace SimpleFuzzy.View
         private System.Windows.Forms.Label labelCopyright;
         private System.Windows.Forms.Label labelCompanyName;
         private System.Windows.Forms.TextBox textBoxDescription;
-        private MetroFramework.Controls.MetroButton okButton;
+        private Button okButton;
+        public const bool isChangableSize = false;
     }
 }

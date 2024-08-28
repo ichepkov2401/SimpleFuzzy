@@ -254,6 +254,8 @@ namespace SimpleFuzzy.View
         private ToolStripMenuItem button11;
         private ToolStripMenuItem button12;
         private ToolStripMenuItem button13;
+        public AboutBox aboutBox;
+        public  HelpWindow helpWindow;
         private PictureBox logoBox;
         private ToolTip toolTip1;
         private ToolTip toolTip2;
@@ -261,5 +263,6 @@ namespace SimpleFuzzy.View
         private Button Left;
         private Button Right;
         private Label label1;
+        public const bool isChangableSize = true;
     }
 }

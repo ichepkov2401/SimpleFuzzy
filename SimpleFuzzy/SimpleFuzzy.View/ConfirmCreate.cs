@@ -22,12 +22,13 @@ namespace SimpleFuzzy.View
             IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
             if (validator.IsValidFileName(textBox1.Text)&&validator.IsValidDirectoryName(textBox2.Text))
             {
+
                 try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return;
-                }
+catch (Exception ex)
+{
+    MessageBox.Show($"{ex.Message}", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    return;
+}
             }
             else
             {

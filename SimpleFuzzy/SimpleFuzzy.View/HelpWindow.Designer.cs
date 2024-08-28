@@ -1,6 +1,6 @@
 ﻿namespace SimpleFuzzy.View
 {
-    partial class HelpWindow
+    public partial class HelpWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -96,9 +96,6 @@
             ClientSize = new Size(254, 288);
             Controls.Add(treeView1);
             Margin = new Padding(3, 4, 3, 4);
-            MaximizeBox = false;
-            MaximumSize = new Size(272, 335);
-            MinimizeBox = false;
             MinimumSize = new Size(272, 335);
             Name = "HelpWindow";
             Padding = new Padding(0, 60, 0, 0);
@@ -109,6 +106,7 @@
 
         #endregion
 
+        public const bool isChangableSize = true;
         private TreeView treeView1;
     }
 }

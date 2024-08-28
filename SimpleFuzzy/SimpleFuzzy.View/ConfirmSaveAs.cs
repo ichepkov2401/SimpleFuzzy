@@ -33,13 +33,13 @@ namespace SimpleFuzzy.View
                 try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
             else
             {
-                MessageBox.Show("Неверное имя файла!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Неверное имя или путь к файлу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             

@@ -36,10 +36,9 @@
             // 
             metroRadioButton1.AutoSize = true;
             metroRadioButton1.Checked = true;
-            metroRadioButton1.Location = new Point(14, 16);
-            metroRadioButton1.Margin = new Padding(3, 4, 3, 4);
+            metroRadioButton1.Location = new Point(12, 12);
             metroRadioButton1.Name = "metroRadioButton1";
-            metroRadioButton1.Size = new Size(326, 24);
+            metroRadioButton1.Size = new Size(260, 19);
             metroRadioButton1.TabIndex = 0;
             metroRadioButton1.TabStop = true;
             metroRadioButton1.Text = "Сгенерировать функцию принадлежности";
@@ -49,23 +48,21 @@
             // metroRadioButton2
             // 
             metroRadioButton2.AutoSize = true;
-            metroRadioButton2.Location = new Point(346, 16);
-            metroRadioButton2.Margin = new Padding(3, 4, 3, 4);
+            metroRadioButton2.Location = new Point(303, 12);
             metroRadioButton2.Name = "metroRadioButton2";
-            metroRadioButton2.Size = new Size(264, 24);
+            metroRadioButton2.Size = new Size(208, 19);
             metroRadioButton2.TabIndex = 1;
             metroRadioButton2.Text = "Задать терм нечеткой операцией";
             metroRadioButton2.UseVisualStyleBackColor = true;
             // 
             // NewMembershipDialogForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
-            ClientSize = new Size(806, 437);
+            ClientSize = new Size(912, 461);
             Controls.Add(metroRadioButton2);
             Controls.Add(metroRadioButton1);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "NewMembershipDialogForm";
             ResumeLayout(false);
             PerformLayout();
@@ -75,5 +72,6 @@
 
         private RadioButton metroRadioButton1;
         private RadioButton metroRadioButton2;
+        public const bool isChangableSize = true;
     }
 }

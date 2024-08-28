@@ -23,13 +23,13 @@ namespace SimpleFuzzy.View
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                   MessageBox.Show(ex.Message, "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
             else
             {
-                MessageBox.Show("Неверное имя файла!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Неверное имя файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             

@@ -16,7 +16,7 @@ namespace SimpleFuzzy.View
             try { projectList.DeleteProject(projectList.CurrentProjectName); }
             catch 
             {
-                MessageBox.Show("Разработчики уже решают эту проблему)", "Ошибка удаления");
+                MessageBox.Show("Пожалуйста, сообщите об этой проблеме разработчикам", "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (Parent is MainWindow parent)

@@ -7,11 +7,11 @@ namespace SimpleFuzzy.SimpleModule
         public bool Active { get; set; }
         public string Name { get; } = "Недостаточный вес";
 
-        public Type InputType => typeof(int);
+        public Type InputType => typeof(double);
 
         public double MembershipFunction(object elem)
         {
-            int[] values = { 40, 40, 45, 50 };
+            double[] values = { 40, 40, 45, 50 };
             if (elem == null)
             {
                 throw new ArgumentNullException(nameof(elem));
@@ -27,7 +27,7 @@ namespace SimpleFuzzy.SimpleModule
                 throw new ArgumentException("Unable to convert input to double", nameof(elem), ex);
             }
             double result;
-            if (doubleElem <= values[0] || doubleElem >= values[3])
+            if (doubleElem >= values[3])
             {
                 result = 0;
             }
@@ -35,7 +35,7 @@ namespace SimpleFuzzy.SimpleModule
             {
                 result = (doubleElem - values[0]) / (values[1] - values[0]);
             }
-            else if (doubleElem > values[1] && doubleElem < values[2])
+            else if (doubleElem > values[1] && doubleElem < values[2] || doubleElem <= values[0])
             {
                 result = 1;
             }

@@ -10,8 +10,31 @@ namespace SimpleFuzzy.View
 {
     public partial class FuzzyOperationUI : UserControl
     {
-        string[] unos = { "Нечеткое дополнение" };
-        string[] bins = { "Нечеткое пересечение" };
+        string[] unos = {
+            "Нечеткое дополнение",
+            "Концентрация",
+            "Расширение",
+            "Контраст",
+        };
+        string[] bins = {
+            "Нечеткое \"И\"",
+            "Нечеткое \"ИЛИ\"",
+            "Гамма - оператор",
+            "Min-Max \"И\"",
+            "Min-Max \"ИЛИ\"",
+            "\"Усиленное\" произведение",
+            "\"Усиленная\" сумма",
+            "Лукашевич \"И\"",
+            "Лукашевич \"ИЛИ\"",
+            "Эйнштейновское \"И\"",
+            "Эйнштейновское \"ИЛИ\"",
+            "Алгебраическое \"И\"",
+            "Алгебраическое \"ИЛИ\"",
+            "Хамахеровское \"И\"",
+            "Хамахеровское \"ИЛИ\"",
+            "T - оператор Ягера",
+            "S - оператор Ягера"
+        };
         IRepositoryService repositoryService;
         IAssemblyLoaderService assemblyLoaderService;
         FuzzyOperation fuzzyOperation;
@@ -54,10 +77,9 @@ namespace SimpleFuzzy.View
             var list = repositoryService.GetCollection<IMembershipFunction>();
             if (ObjectSet != null)
             {
-                ObjectSet.ToFirst();
                 foreach (var item in list)
                 {
-                    if (item.InputType != ObjectSet.Extraction().GetType()) continue;
+                    if (item.InputType != ObjectSet[0].GetType()) continue;
                     Queue<IMembershipFunction> queue = new Queue<IMembershipFunction>();
                     queue.Enqueue(item);
                     bool check = false;
@@ -185,16 +207,14 @@ namespace SimpleFuzzy.View
                 Title = "Результат операции",
                 Color = OxyColor.FromRgb(0, 255, 0)
             };
-            ObjectSet.ToFirst();
-            while (!ObjectSet.IsEnd())
+            for (int i = 0; i < ObjectSet.Count; i++)
             {
-                var x = ObjectSet.Extraction();
+                var x = ObjectSet[i];
                 operand1Series.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.Operand1.MembershipFunction(x)));
                 if (fuzzyOperation.Operand2 != null)
                     operand2Series.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.Operand2.MembershipFunction(x)));
                 if (fuzzyOperation.Operand2 != null || Uno.Checked)
                     resSeries.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.MembershipFunction(x)));
-                ObjectSet.MoveNext();
             }
             plotModel.Series.Add(operand1Series);
             plotModel.Series.Add(operand2Series);
@@ -221,12 +241,12 @@ namespace SimpleFuzzy.View
             {
                 if (string.IsNullOrWhiteSpace(nameTextBox.Text))
                 {
-                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else if (repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text))
                 {
-                    MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Терм с таким именем уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 repositoryService.GetCollection<IMembershipFunction>().Add(fuzzyOperation);
@@ -248,12 +268,12 @@ namespace SimpleFuzzy.View
         {
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
-                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (repositoryService.GetCollection<IMembershipFunction>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Терм с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 nameTextBox.Text = oldName;
             }
             else

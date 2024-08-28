@@ -94,35 +94,8 @@ namespace SimpleFuzzy.Model
                 else return false;
             }
         }
-
-        public int OpenOtherRule(int row, int column, string lastValue, bool wasActive) 
+        public int CloseRuleNext(int position) 
         {
-            for (int i = row + 1; i < rules.Count - 1; i++)
-            {
-                if (WasSameRules(rules[row], rules[i], column, lastValue) && wasActive) return i;
-            }
-            return -1; 
-        }
-        public int OpenThisRule(int position) 
-        {
-            for (int i = position - 1; i >= 0; i--)
-            {
-                if (IsSameRules(rules[position], rules[i])) return -1;
-            }
-            if (position == 0) return -1;
-            rules[position].IsDublicate = false;
-            return position;
-        }
-        public int BlockedSameRules(int position) 
-        {
-            for (int i = position - 1; i >= 0; i--) 
-            {
-                if (IsSameRules(rules[position], rules[i]))
-                {
-                    rules[position].IsDublicate = true;
-                    return position;
-                }
-            }
             for (int i = position + 1; i < rules.Count - 1; i++)
             {
                 if (IsSameRules(rules[position], rules[i]))
@@ -131,11 +104,35 @@ namespace SimpleFuzzy.Model
                     return i;
                 }
             }
+            return -1;
+        }
+        public int OpenRuleNext(int row, int column, string lastValue) 
+        {
+            for (int i = row + 1; i < rules.Count - 1; i++)
+            {
+                if (WasSameRules(rules[row], rules[i], column, lastValue))
+                {
+                    rules[i].IsDublicate = false;
+                    return i;
+                }
+            }
             return -1; 
         }
-        public int CheckAfterDelete(List<IMembershipFunction> list) // после удаления правила
+        public bool OpenOrBlockedCurrentRule(int position) 
         {
-            for (int i = 0; i < rules.Count - 1; i++)
+            for (int i = position - 1; i >= 0; i--) 
+            {
+                if (IsSameRules(rules[position], rules[i]))
+                {
+                    rules[position].IsDublicate = true;
+                    return false;
+                }
+            }
+            return true; 
+        }
+        public int CheckAfterDelete(List<IMembershipFunction> list, int position) 
+        {
+            for (int i = position; i < rules.Count - 1; i++)
             {
                 if (IsSameRules(list, rules[i]))
                 {
@@ -155,6 +152,7 @@ namespace SimpleFuzzy.Model
                     return position;
                 }
             }
+            rules[position].IsDublicate = false;
             return -1;
         }
     }

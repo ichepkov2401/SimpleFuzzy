@@ -13,7 +13,7 @@ namespace SimpleFuzzy.View
         public int Id = 0;
         private string lastValue;
         private int lastValueColumn;
-        private bool wasActive;
+        private bool wasDublicate;
         public InferenceForm()
         {
             InitializeComponent();
@@ -96,7 +96,7 @@ namespace SimpleFuzzy.View
                     dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorTerm(dataTable.Columns[cells].Name, list[0], 1);
                 }
             }
-            for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++) ChangeActiveRules(i);
+            for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++) ChangeActiveRules(i, currentOutputVar.ListRules.rules[i].IsDublicate);
         }
 
         private bool IsContainsTermInRep(string name)
@@ -258,46 +258,45 @@ namespace SimpleFuzzy.View
             }
             return null; // Сюда заходить не будет (надо чтобы все пути к коду возвращали значение)
         }
-        private void ChangeActiveRules(int row, int column = -1, string lastValue = "", bool wasActive = false)
+        private void ChangeActiveRules(int row, bool isDublicate)
         {
-            ChangeRule(row, 2, column, lastValue, wasActive);
-            ChangeRule(row, 1, column, lastValue, wasActive);
-            ChangeRule(row, 3, column, lastValue, wasActive);
+            if (isDublicate)
+            {
+                if (currentOutputVar.ListRules.OpenOrBlockedCurrentRule(row)) ChangeRuleDub(row, 1); // Возможно открыть текущее правило
+                else ChangeRuleDub(row, 2); // Возможно закрыть текущее правило  
+                int position = currentOutputVar.ListRules.CloseRuleNext(row);
+                if (position != -1) ChangeRuleDub(position, 2); // Возможно закрыть правило дальше
+            }
+            else
+            {
+                if (!wasDublicate) // Возможно открыть правило дальше  !!!нужны старые данные!!!
+                {
+                    int position1 = currentOutputVar.ListRules.OpenRuleNext(row, lastValueColumn, lastValue);
+                    if (position1 != -1) ChangeRuleDub(position1, 1);
+                }
+                if (!currentOutputVar.ListRules.OpenOrBlockedCurrentRule(row)) ChangeRuleDub(row, 2); // Возможно закрыть текущее правило  
+                int position = currentOutputVar.ListRules.CloseRuleNext(row);
+                if (position != -1) ChangeRuleDub(position, 2); // Возможно закрыть правило дальше
+            }
         }
-        private void ChangeRule(int row, byte active, int column, string lastValue, bool wasActive)
+        private void ChangeRuleDub(int position, byte active)
         {
-            int position = -1;
-            if (active == 1) position = currentOutputVar.ListRules.OpenThisRule(row);
-            else if (active == 2) position = currentOutputVar.ListRules.BlockedSameRules(row);
-            else if (active == 3 && column >= 0)
+            for (int i = 1; i < dataTable.Columns.Count - 2; i++)
             {
-                position = currentOutputVar.ListRules.OpenOtherRule(row, column, lastValue, wasActive);
-                active -= 2;
+                if (dataTable.Rows[position].Cells[i].Value != null)
+                    dataTable.Rows[position].Cells[i].Style.BackColor = SetColorTerm(dataTable.Columns[i].Name,
+                    GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.ListRules.inputVariables[i - 1]), active);
             }
-            else if (active == 4)
+            double n;
+            if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
+                dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
+            if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value != null)
             {
-                position = row;
-                active = 1;
-            }
-            if (position != -1)
-            {
-                for (int i = 1; i < dataTable.Columns.Count - 2; i++)
-                {
-                    if (dataTable.Rows[position].Cells[i].Value != null)
-                        dataTable.Rows[position].Cells[i].Style.BackColor = SetColorTerm(dataTable.Columns[i].Name,
-                        GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.ListRules.inputVariables[i - 1]), active);
-                }
-                double n;
-                if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
-                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
-                if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value != null)
-                {
-                    string name = dataTable.Columns[dataTable.Columns.Count - 1].Name;
-                    string text = dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value.ToString();
-                    LinguisticVariable var = currentOutputVar.ListRules.outVariable;
-                    IMembershipFunction func = GiveFunc(text, var);
-                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
-                }
+                string name = dataTable.Columns[dataTable.Columns.Count - 1].Name;
+                string text = dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value.ToString();
+                LinguisticVariable var = currentOutputVar.ListRules.outVariable;
+                IMembershipFunction func = GiveFunc(text, var);
+                dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
             }
         }
 
@@ -309,7 +308,7 @@ namespace SimpleFuzzy.View
             {
                 IMembershipFunction func = GiveFunc(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString(), currentOutputVar);
                 currentOutputVar.ListRules.rules[e.RowIndex].RedactTerm(func, 0);
-                ChangeActiveRules(e.RowIndex, lastValueColumn, lastValue, wasActive);
+                ChangeActiveRules(e.RowIndex, currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate/*, lastValueColumn, lastValue, wasActive*/);
                 byte active = 1;
                 if (currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate) active = 2;
                 dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
@@ -356,7 +355,7 @@ namespace SimpleFuzzy.View
                     }
                 }
                 currentOutputVar.ListRules.rules[e.RowIndex].RedactTerm(func, e.ColumnIndex);
-                ChangeActiveRules(e.RowIndex, lastValueColumn, lastValue);
+                ChangeActiveRules(e.RowIndex, currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate/*, lastValueColumn, lastValue*/);
             }
         }
         //////////////////// Добавление строк
@@ -367,13 +366,13 @@ namespace SimpleFuzzy.View
             {
                 lastValue = dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 lastValueColumn = e.ColumnIndex;
-                wasActive = !currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
+                wasDublicate = currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
             }
             else
             {
                 lastValue = null;
                 lastValueColumn = -1;
-                wasActive = false;
+                wasDublicate = true;
             }
             if (e.RowIndex == dataTable.RowCount - 1 && Id != dataTable.RowCount)
             {
@@ -414,7 +413,7 @@ namespace SimpleFuzzy.View
         private void dataTable_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             List<IMembershipFunction> list = currentOutputVar.ListRules.rules[e.RowIndex].GiveList();
-            bool active = !currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
+            bool dublicate = currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
             currentOutputVar.ListRules.DeleteRule(e.RowIndex);
             Id = 0;
             for (int i = 0; i < dataTable.RowCount; i++)
@@ -422,10 +421,10 @@ namespace SimpleFuzzy.View
                 Id++;
                 dataTable.Rows[i].Cells[0].Value = Id;
             }
-            if (active)
+            if (!dublicate)
             {
-                int position = currentOutputVar.ListRules.CheckAfterDelete(list);
-                if (position != -1) { ChangeRule(position, 4, -1, "", false); }
+                int position = currentOutputVar.ListRules.CheckAfterDelete(list, e.RowIndex);
+                if (position != -1) { ChangeRuleDub(position, 1); }
             }
         }
 
@@ -446,7 +445,7 @@ namespace SimpleFuzzy.View
             for (int i = dataTable.RowCount - 1; i >= 0; i--) 
             {
                 int position = currentOutputVar.ListRules.CheckAfterDeleteColumn(i);
-                if (position != -1) { ChangeRule(position, 4, -1, "", false); }
+                if (position != -1) { ChangeRuleDub(position, 2); }
             }
         }
     }

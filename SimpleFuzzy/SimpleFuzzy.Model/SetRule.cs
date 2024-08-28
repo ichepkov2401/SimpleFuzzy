@@ -24,21 +24,18 @@ namespace SimpleFuzzy.Model
 
         public void AddInputVar(LinguisticVariable inputVar)
         {
-            // Добавляем пустые термы
             foreach (var rule in rules) { rule.AddNullTerm(); }
-            // Добавляем ЛП
             inputVariables.Add(inputVar);
         }
-        // Потом ссылки добавятся
+
         public void DeleteRule(int position)
         {
             rules.RemoveAt(position);
         }
-        // Потом ссылки добавятся
+
         public void DeleteInputVar(string name, int position)
         {
             int index = 0;
-            // Удаляем ЛП из списка
             for (int i = 1; i < inputVariables.Count; i++)
             {
                 if (inputVariables[i].Name == name)
@@ -48,7 +45,6 @@ namespace SimpleFuzzy.Model
                     break;
                 }
             }
-            // Удаляем термы из всех правил для удаляемой ЛП
             foreach (var rule in rules) { rule.DeleteTerm(position); }
         }
 
@@ -67,44 +63,63 @@ namespace SimpleFuzzy.Model
             return true;
         }
 
-        private bool WasSameRules(Rule rule1, Rule rule2)
+        private bool WasSameRules(Rule rule1, Rule rule2, int column, string lastValue)
         {
             int count = 0;
             List<IMembershipFunction> list1 = rule1.GiveList();
             List<IMembershipFunction> list2 = rule2.GiveList();
-            for (int i = 0; i < list1.Count; i++) 
+            bool isInputChanged = false;
+            for (int i = 1; i < list1.Count; i++) 
             {
-                if (list1[i] != list2[i]) count++;
+                if (i != column)
+                {
+                    if (list1[i] != list2[i]) return false;
+                }
+                else
+                {
+                    if (list2[i] == null) return false;
+                    if (list2[i].Name != lastValue) return false;
+                    isInputChanged = true;
+                }
             }
-            if (count == 1) return true;
-            else return false;
+            if (isInputChanged)
+            {
+                if (list1[0] != list2[0]) return false;
+                else return true;
+            }
+            else
+            {
+                if (list2[0] == null) return false;
+                if (list2[0].Name == lastValue) return true;
+                else return false;
+            }
         }
 
-        public int OpenOtherRule(int position)
+        public int OpenOtherRule(int row, int column, string lastValue, bool wasActive) 
         {
-            for (int i = position + 1; i < rules.Count - 1; i++)
+            for (int i = row + 1; i < rules.Count - 1; i++)
             {
-                if (WasSameRules(rules[position], rules[i]) && !rules[i].IsActive) return i;
+                if (WasSameRules(rules[row], rules[i], column, lastValue) && wasActive) return i;
             }
             return -1; 
         }
-        public int OpenThisRule(int position)
+        public int OpenThisRule(int position) 
         {
             for (int i = position - 1; i >= 0; i--)
             {
                 if (IsSameRules(rules[position], rules[i])) return -1;
             }
             if (position == 0) return -1;
-            rules[position].IsActive = true;
+            rules[position].IsDublicate = false;
             return position;
         }
-        public int BlockedSameRules(int position)
+        public int BlockedSameRules(int position) 
         {
             for (int i = position - 1; i >= 0; i--) 
             {
                 if (IsSameRules(rules[position], rules[i]))
                 {
-                    rules[position].IsActive = false;
+                    rules[position].IsDublicate = true;
                     return position;
                 }
             }
@@ -112,20 +127,32 @@ namespace SimpleFuzzy.Model
             {
                 if (IsSameRules(rules[position], rules[i]))
                 {
-                    rules[i].IsActive = false;
+                    rules[i].IsDublicate = true;
                     return i;
                 }
             }
             return -1; 
         }
-        public int CheckAfterDelete(List<IMembershipFunction> list)
+        public int CheckAfterDelete(List<IMembershipFunction> list) // после удаления правила
         {
             for (int i = 0; i < rules.Count - 1; i++)
             {
                 if (IsSameRules(list, rules[i]))
                 {
-                    rules[i].IsActive = true;
+                    rules[i].IsDublicate = false;
                     return i;
+                }
+            }
+            return -1;
+        }
+        public int CheckAfterDeleteColumn(int position)
+        {
+            for (int i = position - 1; i >= 0; i--)
+            {
+                if (IsSameRules(rules[position], rules[i]))
+                {
+                    rules[position].IsDublicate = true;
+                    return position;
                 }
             }
             return -1;

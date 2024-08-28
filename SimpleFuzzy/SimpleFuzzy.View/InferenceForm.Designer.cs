@@ -27,7 +27,7 @@ namespace SimpleFuzzy.View
             AddInbutton = new Button();
             inputVariablesComboBox = new ComboBox();
             label1 = new Label();
-            dataTable = new DataGridView();
+            dataTable = new ButtonTable();
             ((System.ComponentModel.ISupportInitialize)dataTable).BeginInit();
             SuspendLayout();
             // 
@@ -104,12 +104,16 @@ namespace SimpleFuzzy.View
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataTable.EnableHeadersVisualStyles = false;
             dataTable.Location = new Point(3, 129);
             dataTable.Name = "dataTable";
             dataTable.RowHeadersWidth = 51;
             dataTable.RowTemplate.Height = 29;
             dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
+            dataTable.CellBeginEdit += dataTable_CellBeginEdit;
+            dataTable.CellValueChanged += dataTable_CellValueChanged;
+            dataTable.ColumnRemoved += dataTable_ColumnRemoved;
             dataTable.RowsRemoved += dataTable_RowsRemoved;
             // 
             // InferenceForm
@@ -138,6 +142,6 @@ namespace SimpleFuzzy.View
         private Button AddInbutton;
         private ComboBox inputVariablesComboBox;
         private Label label1;
-        private DataGridView dataTable;
+        private ButtonTable dataTable;
     }
 }

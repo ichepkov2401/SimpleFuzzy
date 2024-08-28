@@ -255,12 +255,12 @@ namespace SimpleFuzzy.View
         {
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
-                MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (_repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Переменная с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else
@@ -283,7 +283,7 @@ namespace SimpleFuzzy.View
 
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Удалить выбранный терм?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)

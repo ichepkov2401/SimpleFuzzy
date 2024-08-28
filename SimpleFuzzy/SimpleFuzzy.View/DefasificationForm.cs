@@ -1,8 +1,9 @@
-using OxyPlot.Series;
 using OxyPlot;
+using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
+using System.Drawing;
 
 namespace SimpleFuzzy.View
 {
@@ -10,13 +11,17 @@ namespace SimpleFuzzy.View
     {
         IRepositoryService repositoryService;
         IDefazificationService defazificationService;
-        List<(LinguisticVariable, PictureBox, TrackBar, Label)> inputs = new List<(LinguisticVariable, PictureBox, TrackBar, Label)>();
+        Rule.Inference Inference { get; set; }
+        IDefazificationService.Methods Method { get; set; }
+        List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)> inputs = new List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)>();
         LinguisticVariable output;
+        LineSeries outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
         public DefasificationForm()
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             defazificationService = AutofacIntegration.GetInstance<IDefazificationService>();
+            textBox1.Visible = false;
             FillComboBox();
         }
 
@@ -25,7 +30,7 @@ namespace SimpleFuzzy.View
             for (int i = 0; i < repositoryService.GetCollection<LinguisticVariable>().Count; i++)
             {
                 if (!repositoryService.GetCollection<LinguisticVariable>()[i].isInput)
-                OutputVariables.Items.Add(repositoryService.GetCollection<LinguisticVariable>()[i].Name);
+                    OutputVariables.Items.Add(repositoryService.GetCollection<LinguisticVariable>()[i].Name);
             }
         }
 
@@ -60,7 +65,21 @@ namespace SimpleFuzzy.View
                 label.Text = newInput[i].Name;
                 label.Location = new Point(169, 405 + i * 250);
                 Controls.Add(label);
-                inputs.Add((newInput[i], pictureBox, trackBar, label));
+                inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
+            }
+            textBox1.Visible = true;
+            if (newInput.Count != 1)
+                pictureBox2.Visible = false;
+            else
+            {
+                pictureBox2.Visible = true;
+                List<PointF> points = new List<PointF>();
+                for (int i = 0; i < newInput[0].BaseSet.Count; i++)
+                    points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()),
+                        float.Parse(defazificationService.Defazification(output,
+                        new List<object> { newInput[0].BaseSet[i] },
+                        Method, Inference).ToString())));
+                DrawOutput(points);
             }
         }
 
@@ -112,14 +131,79 @@ namespace SimpleFuzzy.View
             };
         }
 
+        private void DrawOutput(List<PointF> list)
+        {
+            if (pictureBox2.Visible)
+            {
+                pictureBox2.Controls.Clear();
+                PlotView plotView = new PlotView() { Dock = DockStyle.Fill };
+                PlotModel plotModel = new PlotModel() { Title = "График передаточных характерестики" };
+                LineSeries series = new LineSeries();
+                foreach (PointF point in list)
+                {
+                    series.Points.Add(new DataPoint(point.X, point.Y));
+                }
+                plotModel.Series.Add(series);
+                plotView.Model = plotModel;
+                pictureBox2.Controls.Add(plotView);
+            }
+        }
+
+        private void DrawX(double x, LineSeries series, PlotView plot)
+        {
+            if (!plot.Model.Series.Contains(series))
+                plot.Model.Series.Add(series);
+            series.Points.Clear();
+            series.Points.Add(new DataPoint(x, 0));
+            series.Points.Add(new DataPoint(x, 1));
+            plot.InvalidatePlot(true);
+        }
+
         private void InputChanged(object sender, EventArgs e)
         {
             var variable = inputs.FirstOrDefault(t => t.Item3 == sender);
             if (variable.Item1 != null)
             {
                 variable.Item4.Text = variable.Item1.BaseSet[variable.Item3.Value].ToString();
-                MethodsOfDefasification.Text = defazificationService.Defazification(output, inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]), IDefazificationService.Methods.Max, Rule.Inference.Min).ToString();
+                DrawX(Convert.ToDouble(variable.Item1.BaseSet[variable.Item3.Value]), variable.Item5, variable.Item2.Controls[0] as PlotView);
+                object defazification = defazificationService.Defazification(output, inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]), Method, Inference).ToString();
+                DrawX(Convert.ToDouble(defazification), outputLine, pictureBox1.Controls[0] as PlotView);
+                textBox1.Text = defazification.ToString();
             }
+        }
+
+        private void MaxProd_CheckedChanged(object sender, EventArgs e)
+        { 
+            Inference = MaxProd.Checked ? Rule.Inference.Prod : Rule.Inference.Min;
+            List<PointF> points = new List<PointF>();
+            for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
+                points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
+                    float.Parse(defazificationService.Defazification(output,
+                    new List<object> { inputs[0].Item1.BaseSet[i] },
+                    Method, Inference).ToString())));
+            DrawOutput(points);
+        }
+
+        private void MaximumMethod_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == MaximumMethod)
+                Method = IDefazificationService.Methods.Max;
+            else if (sender == MethodAverageMax)
+                Method = IDefazificationService.Methods.AvgMax;
+            else if (sender == MetodLeftLineDef)
+                Method = IDefazificationService.Methods.LinarLeft;
+            else if (sender == MethodRightLineDef)
+                Method = IDefazificationService.Methods.LinarRight;
+            else if (sender == MethodSenterGravity)
+                Method = IDefazificationService.Methods.CenterOfWight;
+            List<PointF> points = new List<PointF>();
+
+            for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
+                points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
+                    float.Parse(defazificationService.Defazification(output,
+                    new List<object> { inputs[0].Item1.BaseSet[i] },
+                    Method, Inference).ToString())));
+            DrawOutput(points);
         }
     }
 }

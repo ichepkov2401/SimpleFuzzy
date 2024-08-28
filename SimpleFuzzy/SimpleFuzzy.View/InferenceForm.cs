@@ -269,13 +269,17 @@ namespace SimpleFuzzy.View
                         GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.ListRules.inputVariables[i - 1]), active);
                 }
                 double n;
-                if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
+                if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value != null &&
+                    double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
                     dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
                 string name = dataTable.Columns[dataTable.Columns.Count - 1].Name;
-                string text = dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value.ToString();
-                LinguisticVariable var = currentOutputVar.ListRules.outVariable;
-                IMembershipFunction func = GiveFunc(text, var);
-                dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
+                if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value != null)
+                {
+                    string text = dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value.ToString();
+                    LinguisticVariable var = currentOutputVar.ListRules.outVariable;
+                    IMembershipFunction func = GiveFunc(text, var);
+                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
+                }
             }
         }
 

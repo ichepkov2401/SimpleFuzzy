@@ -39,9 +39,12 @@
             MethodsOfInference = new GroupBox();
             MethodsOfDefasification = new GroupBox();
             pictureBox1 = new PictureBox();
+            textBox1 = new TextBox();
+            pictureBox2 = new PictureBox();
             MethodsOfInference.SuspendLayout();
             MethodsOfDefasification.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // OutputVariables
@@ -66,6 +69,7 @@
             MaxProd.TabStop = true;
             MaxProd.Text = "Max-Prod";
             MaxProd.UseVisualStyleBackColor = true;
+            MaxProd.CheckedChanged += MaxProd_CheckedChanged;
             // 
             // MaxMin
             // 
@@ -90,6 +94,7 @@
             MaximumMethod.TabStop = true;
             MaximumMethod.Text = "Метод максимума";
             MaximumMethod.UseVisualStyleBackColor = true;
+            MaximumMethod.CheckedChanged += MaximumMethod_CheckedChanged;
             // 
             // MethodAverageMax
             // 
@@ -101,6 +106,7 @@
             MethodAverageMax.TabIndex = 4;
             MethodAverageMax.Text = "Метод среднего значения максимумов";
             MethodAverageMax.UseVisualStyleBackColor = true;
+            MethodAverageMax.CheckedChanged += MaximumMethod_CheckedChanged;
             // 
             // MetodLeftLineDef
             // 
@@ -112,6 +118,7 @@
             MetodLeftLineDef.TabIndex = 5;
             MetodLeftLineDef.Text = "Метод линейной дефазификации (слева)";
             MetodLeftLineDef.UseVisualStyleBackColor = true;
+            MetodLeftLineDef.CheckedChanged += MaximumMethod_CheckedChanged;
             // 
             // MethodRightLineDef
             // 
@@ -123,6 +130,7 @@
             MethodRightLineDef.TabIndex = 6;
             MethodRightLineDef.Text = "Метод линейной дефазификации (справа)";
             MethodRightLineDef.UseVisualStyleBackColor = true;
+            MethodRightLineDef.CheckedChanged += MaximumMethod_CheckedChanged;
             // 
             // MethodSenterGravity
             // 
@@ -134,6 +142,7 @@
             MethodSenterGravity.TabIndex = 7;
             MethodSenterGravity.Text = "Метод центра тяжести";
             MethodSenterGravity.UseVisualStyleBackColor = true;
+            MethodSenterGravity.CheckedChanged += MaximumMethod_CheckedChanged;
             // 
             // MethodsOfInference
             // 
@@ -172,23 +181,42 @@
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(308, 282);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(347, 23);
+            textBox1.TabIndex = 11;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(308, 311);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(347, 237);
+            pictureBox2.TabIndex = 12;
+            pictureBox2.TabStop = false;
+            // 
             // DefasificationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(pictureBox2);
+            Controls.Add(textBox1);
             Controls.Add(pictureBox1);
             Controls.Add(MethodsOfDefasification);
             Controls.Add(MethodsOfInference);
             Controls.Add(OutputVariables);
             Margin = new Padding(3, 2, 3, 2);
             Name = "DefasificationForm";
-            Size = new Size(737, 551);
+            Size = new Size(737, 566);
             MethodsOfInference.ResumeLayout(false);
             MethodsOfInference.PerformLayout();
             MethodsOfDefasification.ResumeLayout(false);
             MethodsOfDefasification.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -204,5 +232,7 @@
         private GroupBox MethodsOfInference;
         private GroupBox MethodsOfDefasification;
         private PictureBox pictureBox1;
+        private TextBox textBox1;
+        private PictureBox pictureBox2;
     }
 }

@@ -109,10 +109,10 @@ namespace SimpleFuzzy.View
                 string name = term.Name;
                 if (terms.Count(t => t.Name == name) > 1)
                 {
-                    name = $"{term.Name} - {term.GetType()}";
-                    if (terms.Where(x => x.InputType.IsAssignableFrom(objectSetType) && x.Name == name).Count(x => x.GetType() == term.GetType()) > 1)
+                    name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.FullName} - {DateTime.Now.Ticks}";
+                    if (terms.Where(x => x.Name == name).Count() > 1)
                     {
-                        name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.FullName}";
+                        name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.FullName} - {DateTime.Now.Ticks}";
                     }
                 }
                 if (linguisticVariable.ContainsFunc(term))

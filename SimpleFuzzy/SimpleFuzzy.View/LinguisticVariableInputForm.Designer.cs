@@ -83,7 +83,10 @@
             Controls.Add(buttonOK);
             Controls.Add(label1);
             Controls.Add(textBox);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Margin = new Padding(2, 1, 2, 1);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "LinguisticVariableInputForm";
             Text = "LinguisticVariableInputForm";
             ResumeLayout(false);
@@ -96,5 +99,6 @@
         private Label label1;
         private Button buttonOK;
         private Button buttonCancel;
+        public const bool isChangablesize = false;
     }
 }

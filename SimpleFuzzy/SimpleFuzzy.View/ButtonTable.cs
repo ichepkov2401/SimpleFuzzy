@@ -25,10 +25,13 @@ namespace SimpleFuzzy.View
             buttons.Insert(0, new Button());
             Controls.Add(buttons[0]);
             buttons[0].Text = "X";
+            buttons[0].BackColor = Color.Transparent;
+            buttons[0].FlatStyle = FlatStyle.Flat;
+
             buttons[0].Click += DeleteColumn;
             for (int i = 0; i < buttons.Count; i++)
             {
-                buttons[i].Size = new Size(Columns[i + 1].HeaderCell.Size.Width / 4, Columns[i + 1].HeaderCell.Size.Height);
+                buttons[i].Size = new Size(25, 25);
                 buttons[i].Location = new Point(GetCellDisplayRectangle(i + 1, 0, false).X, 0);
             }
         }
@@ -50,7 +53,7 @@ namespace SimpleFuzzy.View
         {
             for (int i = 0; i < buttons.Count; i++) 
             {
-                buttons[i].Size = new Size(Columns[i + 1].HeaderCell.Size.Width / 4, Columns[i + 1].HeaderCell.Size.Height);
+                buttons[i].Size = new Size(25, 25);
                 buttons[i].Location = new Point(GetCellDisplayRectangle(i + 1, 0, false).X, 0);
             }
         }

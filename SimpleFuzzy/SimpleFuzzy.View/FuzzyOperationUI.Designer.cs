@@ -32,7 +32,9 @@
             Uno = new RadioButton();
             Bin = new RadioButton();
             nameLabel = new Label();
+            pLabel = new Label();
             nameTextBox = new TextBox();
+            pTextBox = new TextBox();
             operations = new ComboBox();
             operand2 = new ComboBox();
             okButton = new Button();
@@ -47,7 +49,7 @@
             operand1.Location = new Point(3, 100);
             operand1.Margin = new Padding(3, 4, 3, 4);
             operand1.Name = "operand1";
-            operand1.Size = new Size(140, 29);
+            operand1.Size = new Size(140, 28);
             operand1.TabIndex = 0;
             operand1.SelectedIndexChanged += operand1_SelectedIndexChanged;
             // 
@@ -78,60 +80,81 @@
             // nameLabel
             // 
             nameLabel.AutoSize = true;
-            nameLabel.Location = new Point(0, 0);
+            nameLabel.Location = new Point(3, 4);
             nameLabel.Name = "nameLabel";
-            nameLabel.Size = new Size(177, 20);
-            nameLabel.TabIndex = 3;
-            nameLabel.Text = "Имя нового множества:";
+            nameLabel.Size = new Size(146, 20);
+            nameLabel.TabIndex = 12;
+            nameLabel.Text = "Введите имя терма";
+            // 
+            // pLabel
+            // 
+            nameLabel.AutoSize = true;
+            pLabel.Location = new Point(3, 141);
+            pLabel.Name = "pLabel";
+            pLabel.Size = new Size(190, 23);
+            pLabel.TabIndex = 13;
+            pLabel.Text = "Введите значение параметра \"p\"";
             // 
             // nameTextBox
             // 
-            nameTextBox.Location = new Point(3, 29);
+            nameTextBox.Location = new Point(3, 24);
             nameTextBox.Margin = new Padding(3, 4, 3, 4);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.Size = new Size(432, 27);
-            nameTextBox.TabIndex = 4;
+            nameTextBox.TabIndex = 5;
             nameTextBox.Leave += nameTextBox_Leave;
+            // 
+            // pTextBox
+            // 
+            pTextBox.Location = new Point(0, 167);
+            pTextBox.Margin = new Padding(3, 4, 3, 4);
+            pTextBox.Name = "pTextBox";
+            pTextBox.Text = "Возможные значения параметра \"p\": (0;1]";
+            pTextBox.ForeColor = Color.Gray;
+            pTextBox.Size = new Size(432, 27);
+            pTextBox.TabIndex = 6;
+            pTextBox.Enter += pTextBox_Enter;
+            pTextBox.Leave += pTextBox_Leave;
             // 
             // operations
             // 
             operations.FormattingEnabled = true;
-            operations.ItemHeight = 23;
+            operations.ItemHeight = 20;
             operations.Location = new Point(149, 100);
             operations.Margin = new Padding(3, 4, 3, 4);
             operations.Name = "operations";
-            operations.Size = new Size(140, 29);
-            operations.TabIndex = 5;
+            operations.Size = new Size(140, 28);
+            operations.TabIndex = 7;
             operations.SelectedIndexChanged += operations_SelectedIndexChanged;
             // 
             // operand2
             // 
             operand2.FormattingEnabled = true;
-            operand2.ItemHeight = 23;
+            operand2.ItemHeight = 20;
             operand2.Location = new Point(295, 100);
             operand2.Margin = new Padding(3, 4, 3, 4);
             operand2.Name = "operand2";
-            operand2.Size = new Size(140, 29);
-            operand2.TabIndex = 6;
+            operand2.Size = new Size(140, 28);
+            operand2.TabIndex = 8;
             operand2.SelectedIndexChanged += operand2_SelectedIndexChanged;
             // 
             // okButton
             // 
-            okButton.Location = new Point(3, 180);
+            okButton.Location = new Point(3, 210);
             okButton.Margin = new Padding(3, 4, 3, 4);
             okButton.Name = "okButton";
             okButton.Size = new Size(99, 31);
-            okButton.TabIndex = 7;
+            okButton.TabIndex = 9;
             okButton.Text = "Сохранить";
             okButton.Click += okButton_Click;
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(108, 180);
+            cancelButton.Location = new Point(108, 210);
             cancelButton.Margin = new Padding(3, 4, 3, 4);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(99, 31);
-            cancelButton.TabIndex = 8;
+            cancelButton.TabIndex = 10;
             cancelButton.Text = "Удалить";
             cancelButton.Click += cancelButton_Click;
             // 
@@ -141,7 +164,7 @@
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(366, 207);
-            pictureBox1.TabIndex = 9;
+            pictureBox1.TabIndex = 11;
             pictureBox1.TabStop = false;
             // 
             // FuzzyOperationUI
@@ -155,7 +178,9 @@
             Controls.Add(operand2);
             Controls.Add(operations);
             Controls.Add(nameTextBox);
+            Controls.Add(pTextBox);
             Controls.Add(nameLabel);
+            Controls.Add(pLabel);
             Controls.Add(Bin);
             Controls.Add(Uno);
             Controls.Add(operand1);
@@ -173,7 +198,9 @@
         private RadioButton Uno;
         private RadioButton Bin;
         private Label nameLabel;
+        private Label pLabel;
         private TextBox nameTextBox;
+        private TextBox pTextBox;
         private ComboBox operations;
         private ComboBox operand2;
         private Button okButton;

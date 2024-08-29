@@ -5,6 +5,7 @@ using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 using System.Collections.Generic;
 using System.Data;
+using System.Web.WebPages;
 
 namespace SimpleFuzzy.View
 {
@@ -117,7 +118,7 @@ namespace SimpleFuzzy.View
                 if (operand1.Items.Count > 0)
                     operand1.SelectedIndex = 0;
             }
-            else 
+            else
             {
                 operand1.DataSource = termsName.Keys.ToList();
                 operand1.SelectedItem = termsName.FirstOrDefault(t => t.Value == fuzzyOperation.Operand1).Key;
@@ -279,6 +280,23 @@ namespace SimpleFuzzy.View
             else
             {
                 fuzzyOperation.Name = nameTextBox.Text;
+            }
+        }
+
+        private void pTextBox_Enter(object sender, EventArgs e)
+        {
+            if (pTextBox.Text == "Возможные значения параметра \"p\": (0;1]")
+            {
+                pTextBox.Clear();
+                pTextBox.ForeColor = Color.Black;
+            }
+        }
+        private void pTextBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(pTextBox.Text) || Convert.ToDouble(pTextBox.Text, System.Globalization.CultureInfo.InvariantCulture) <= 0 || Convert.ToDouble(pTextBox.Text, System.Globalization.CultureInfo.InvariantCulture) > 1)
+            {
+                MessageBox.Show("\"p\" не может равняется нулю или выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pTextBox.Text = "1";
             }
         }
     }

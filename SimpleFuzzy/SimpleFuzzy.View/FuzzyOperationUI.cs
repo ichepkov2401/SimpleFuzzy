@@ -3,10 +3,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-using System.Collections.Generic;
 using System.Data;
-using System.Web.WebPages;
-
 namespace SimpleFuzzy.View
 {
     public partial class FuzzyOperationUI : UserControl
@@ -293,10 +290,51 @@ namespace SimpleFuzzy.View
         }
         private void pTextBox_Leave(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(pTextBox.Text) || Convert.ToDouble(pTextBox.Text, System.Globalization.CultureInfo.InvariantCulture) <= 0 || Convert.ToDouble(pTextBox.Text, System.Globalization.CultureInfo.InvariantCulture) > 1)
+            string str = pTextBox.Text;
+            foreach (var ch in str)
+            { 
+                if (ch.CompareTo(Convert.ToChar(".")) == 0)
+                {
+                    str = str.Replace(".", ",");
+                    break;
+                }
+            }
+            double resultofConvert;
+            if (!double.TryParse(str, out resultofConvert) || resultofConvert <= 0 || resultofConvert > 1)
             {
-                MessageBox.Show("\"p\" не может равняется нулю или выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("\"p\" должно быть числом и не может выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 pTextBox.Text = "1";
+                fuzzyOperation.p = 1;
+            }
+            else
+            {
+                fuzzyOperation.p = resultofConvert;
+            }
+        }
+        private void pTextBox_ClickEnter(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ((char)Keys.Enter))
+            {
+                string str = pTextBox.Text;
+                foreach (var ch in str)
+                {
+                    if (ch.CompareTo(Convert.ToChar(".")) == 0)
+                    {
+                        str = str.Replace(".", ",");
+                        break;
+                    }
+                }
+                double resultofConvert;
+                if (!double.TryParse(str, out resultofConvert) || resultofConvert <= 0 || resultofConvert > 1)
+                {
+                    MessageBox.Show("\"p\" должно быть числом и не может выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    pTextBox.Text = "1";
+                    fuzzyOperation.p = 1;
+                }
+                else
+                {
+                    fuzzyOperation.p = resultofConvert;
+                }
             }
         }
     }

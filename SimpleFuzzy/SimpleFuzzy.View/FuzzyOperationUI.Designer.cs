@@ -115,6 +115,7 @@
             pTextBox.TabIndex = 6;
             pTextBox.Enter += pTextBox_Enter;
             pTextBox.Leave += pTextBox_Leave;
+            pTextBox.KeyPress += pTextBox_ClickEnter;
             // 
             // operations
             // 

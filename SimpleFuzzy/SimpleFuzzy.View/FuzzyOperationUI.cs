@@ -230,6 +230,19 @@ namespace SimpleFuzzy.View
         private void operations_SelectedIndexChanged(object sender, EventArgs e)
         {
             fuzzyOperation.Func = (string)operations.SelectedItem;
+            if (Bin.Checked)
+            {
+                if ((string)operations.SelectedItem == bins[0] || (string)operations.SelectedItem == bins[1] || (string)operations.SelectedItem == bins[2] || (string)operations.SelectedItem == bins[^1] || (string)operations.SelectedItem == bins[^2])
+                {
+                    pLabel.Visible = true;
+                    pTextBox.Visible = true;
+                }
+                else
+                {
+                    pLabel.Visible = false;
+                    pTextBox.Visible = false;
+                }
+            }
             GraphicUpdate();
         }
 
@@ -237,6 +250,11 @@ namespace SimpleFuzzy.View
         {
             if (!repositoryService.GetCollection<IMembershipFunction>().Contains(fuzzyOperation))
             {
+                if (string.IsNullOrWhiteSpace(pTextBox.Text))
+                {
+                    MessageBox.Show("значение параметра \"p\" не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 if (string.IsNullOrWhiteSpace(nameTextBox.Text))
                 {
                     MessageBox.Show("Имя терма не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -334,6 +352,7 @@ namespace SimpleFuzzy.View
                 else
                 {
                     fuzzyOperation.p = resultofConvert;
+                    pictureBox1.Focus();                
                 }
             }
         }

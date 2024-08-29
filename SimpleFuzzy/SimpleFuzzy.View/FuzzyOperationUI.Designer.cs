@@ -94,6 +94,7 @@
             pLabel.Size = new Size(190, 23);
             pLabel.TabIndex = 13;
             pLabel.Text = "Введите значение параметра \"p\"";
+            pLabel.Visible = false;
             // 
             // nameTextBox
             // 
@@ -116,6 +117,7 @@
             pTextBox.Enter += pTextBox_Enter;
             pTextBox.Leave += pTextBox_Leave;
             pTextBox.KeyPress += pTextBox_ClickEnter;
+            pTextBox.Visible = false;
             // 
             // operations
             // 

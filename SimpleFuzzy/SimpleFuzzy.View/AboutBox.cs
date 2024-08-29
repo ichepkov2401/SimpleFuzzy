@@ -88,5 +88,9 @@ namespace SimpleFuzzy.View
             }
         }
         #endregion
+        public void okButton_Click (object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

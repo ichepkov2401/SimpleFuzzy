@@ -73,9 +73,9 @@ namespace SimpleFuzzy.View
                 if (baseSets.Count(t => t.Name == name) > 1)
                 {
                     name = $"{baseSet.Name} - {baseSet.GetType()}";
-                    if (baseSets.Where(t => t.Name == name).Count(x => x.GetType() == baseSet.GetType()) > 1)
+                    if (baseSets.Where(t => t.Name == baseSet.Name).Count(x => x.GetType().Name == baseSet.GetType().Name) > 1)
                     {
-                        name = $"{baseSet.Name} - {baseSet.GetType()} - {baseSet.GetType().Assembly.FullName}";
+                        name = $"{baseSet.Name} - {baseSet.GetType()} - {baseSet.GetType().Assembly.Location}";
                     }
                 }
                 objectSetsName.Add(name, baseSet);
@@ -109,10 +109,10 @@ namespace SimpleFuzzy.View
                 string name = term.Name;
                 if (terms.Count(t => t.Name == name) > 1)
                 {
-                    name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.FullName} - {DateTime.Now.Ticks}";
-                    if (terms.Where(x => x.Name == name).Count() > 1)
+                    name = $"{term.Name} - {term.GetType()}";
+                    if (terms.Where(x => x.InputType.IsAssignableFrom(objectSetType) && x.Name == term.Name).Count(x => x.GetType().Name == term.GetType().Name) > 1)
                     {
-                        name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.FullName} - {DateTime.Now.Ticks}";
+                        name = $"{term.Name} - {term.GetType()} - {term.GetType().Assembly.Location}";
                     }
                 }
                 if (linguisticVariable.ContainsFunc(term))

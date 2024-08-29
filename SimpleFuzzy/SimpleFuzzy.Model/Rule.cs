@@ -39,11 +39,14 @@ namespace SimpleFuzzy.Model
         private List<IMembershipFunction> terms = new List<IMembershipFunction>(); // Список термов 
         public double relevance = 1; // Степень заполняемости
         public bool IsActive { get; set; } // Автосвойство активности
+        public bool IsDublicate { get; set; } // Автосвойство дубликатности
         private SetRule setRule;
 
         public Rule(int count, SetRule setRule) 
         {
             this.setRule = setRule;
+            IsActive = true;
+            IsDublicate = false;
             for (int i = 0; i < count; i++) { AddNullTerm(); }
         }
         public List<IMembershipFunction> GiveList()

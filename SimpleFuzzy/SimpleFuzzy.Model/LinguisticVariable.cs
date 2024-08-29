@@ -23,7 +23,7 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
             this.isInput = isInput;
-            this.ListRules = new SetRule(this);
+            if (!isInput) ListRules = new SetRule(this);
         }
         public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {

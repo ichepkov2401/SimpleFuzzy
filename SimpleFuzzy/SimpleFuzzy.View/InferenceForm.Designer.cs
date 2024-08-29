@@ -87,6 +87,8 @@ namespace SimpleFuzzy.View
             // 
             // dataTable
             // 
+            dataTable.AllowUserToResizeColumns = false;
+            dataTable.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -108,12 +110,14 @@ namespace SimpleFuzzy.View
             dataTable.Location = new Point(3, 129);
             dataTable.Name = "dataTable";
             dataTable.RowHeadersWidth = 51;
+            dataTable.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataTable.RowTemplate.Height = 29;
             dataTable.Size = new Size(753, 345);
             dataTable.TabIndex = 7;
             dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
             dataTable.ColumnRemoved += dataTable_ColumnRemoved;
+            dataTable.ColumnWidthChanged += dataTable_ColumnWidthChanged;
             dataTable.RowsRemoved += dataTable_RowsRemoved;
             // 
             // InferenceForm

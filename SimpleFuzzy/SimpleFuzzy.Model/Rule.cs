@@ -53,6 +53,11 @@ namespace SimpleFuzzy.Model
         {
             return terms;
         }
+        /*public void ChangeTermNull(int position)
+        {
+            terms[position] = null;
+            IsActive = false;
+        }*/
         public void AddNullTerm()
         {
             terms.Add(null);

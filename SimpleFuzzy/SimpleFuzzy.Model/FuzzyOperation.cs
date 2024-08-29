@@ -31,7 +31,7 @@ namespace SimpleFuzzy.Model
             {"Эйнштейновское \"ИЛИ\"", (false, (x, y, z, p) => (x.MembershipFunction(z) + y.MembershipFunction(z)) / (1 + x.MembershipFunction(z) * y.MembershipFunction(z)))},
             {"Алгебраическое \"И\"", (false, (x, y, z, p) => x.MembershipFunction(z) * y.MembershipFunction(z))},
             {"Алгебраическое \"ИЛИ\"", (false, (x, y, z, p) => x.MembershipFunction(z) + y.MembershipFunction(z) - x.MembershipFunction(z) * y.MembershipFunction(z))},
-            {"Хамахеровское \"И\"", (false, (x, y, z, p) => x.MembershipFunction(z) * y.MembershipFunction(z) / (x.MembershipFunction(z) + y.MembershipFunction(z) - x.MembershipFunction(z) * y.MembershipFunction(z)))},
+            {"Хамахеровское \"И\"", (false, (x, y, z, p) => (x.MembershipFunction(z) + y.MembershipFunction(z) == 0) ? 0 : x.MembershipFunction(z) * y.MembershipFunction(z) / (x.MembershipFunction(z) + y.MembershipFunction(z) - x.MembershipFunction(z) * y.MembershipFunction(z)))},
             {"Хамахеровское \"ИЛИ\"", (false, (x, y, z, p) => (x.MembershipFunction(z) + y.MembershipFunction(z)) - 2 * x.MembershipFunction(z) * y.MembershipFunction(z) / (1 - x.MembershipFunction(z) * y.MembershipFunction(z)))},
             {"T - оператор Ягера", (false, (x, y, z, p) => 1 - Math.Min(Math.Pow(Math.Truncate(Math.Pow(1 - x.MembershipFunction(z), p) + Math.Pow(1 - y.MembershipFunction(z), p)), 1 / p), 1))},
             {"S - оператор Ягера", (false, (x, y, z, p) => Math.Min(Math.Pow(Math.Pow(x.MembershipFunction(z), p) + Math.Pow(y.MembershipFunction(z), p), 1 / p), 1))},

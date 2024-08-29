@@ -169,7 +169,11 @@ namespace SimpleFuzzy.Model
                     }
                 }
             }
-            result = result.Remove(result.Length - 2);
+            if (result.Length > 2)
+            {
+                result = result.Remove(result.Length - 2);
+            }
+            
             if (countTerms > 1)
             {
                 string and = " и ";

@@ -16,6 +16,7 @@ namespace SimpleFuzzy.View
         List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)> inputs = new List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)>();
         LinguisticVariable output;
         LineSeries outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
+        List<AreaSeries> allArea = new List<AreaSeries>();
         public DefasificationForm()
         {
             InitializeComponent();
@@ -73,12 +74,13 @@ namespace SimpleFuzzy.View
             else
             {
                 pictureBox2.Visible = true;
+                List<ActiveRule> activeRules;
                 List<PointF> points = new List<PointF>();
                 for (int i = 0; i < newInput[0].BaseSet.Count; i++)
                     points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()),
                         float.Parse(defazificationService.Defazification(output,
                         new List<object> { newInput[0].BaseSet[i] },
-                        Method, Inference).ToString())));
+                        Method, Inference, out activeRules).ToString())));
                 DrawOutput(points);
             }
         }
@@ -159,16 +161,40 @@ namespace SimpleFuzzy.View
             plot.InvalidatePlot(true);
         }
 
+        private void DrawRule(IMembershipFunction function, double active)
+        {
+            var pic = pictureBox1.Controls[0] as PlotView;
+            Color color = output.GetColor(function);
+            AreaSeries areaSeries = new AreaSeries() {  
+            Fill = OxyColor.FromArgb(128, color.R, color.G, color.B), Color = OxyColor.FromArgb(128, color.R, color.G, color.B) };
+            for (int i = 0; i < output.BaseSet.Count; i++)
+            {
+                var input = output.BaseSet[i];
+                if (Inference == Rule.Inference.Prod)
+                    areaSeries.Points.Add(new DataPoint(double.Parse(input.ToString()), function.MembershipFunction(input) * active));
+                else
+                    areaSeries.Points.Add(new DataPoint(double.Parse(input.ToString()), Math.Min(function.MembershipFunction(input), active)));
+            }
+            pic.Model.Series.Add(areaSeries);
+            allArea.Add(areaSeries);
+            pic.InvalidatePlot(true);
+        }
+
         private void InputChanged(object sender, EventArgs e)
         {
             var variable = inputs.FirstOrDefault(t => t.Item3 == sender);
             if (variable.Item1 != null)
             {
+                List<ActiveRule> activeRules;
                 variable.Item4.Text = variable.Item1.BaseSet[variable.Item3.Value].ToString();
                 DrawX(Convert.ToDouble(variable.Item1.BaseSet[variable.Item3.Value]), variable.Item5, variable.Item2.Controls[0] as PlotView);
-                object defazification = defazificationService.Defazification(output, inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]), Method, Inference).ToString();
+                object defazification = defazificationService.Defazification(output, inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]), Method, Inference, out activeRules).ToString();
                 DrawX(Convert.ToDouble(defazification), outputLine, pictureBox1.Controls[0] as PlotView);
                 textBox1.Text = defazification.ToString();
+                foreach (var oldArea in allArea)
+                    (pictureBox1.Controls[0] as PlotView).Model.Series.Remove(oldArea);
+                allArea.Clear();
+                foreach (ActiveRule rule in activeRules) DrawRule(rule.function, rule.values);
             }
         }
 
@@ -176,34 +202,38 @@ namespace SimpleFuzzy.View
         { 
             Inference = MaxProd.Checked ? Rule.Inference.Prod : Rule.Inference.Min;
             List<PointF> points = new List<PointF>();
+            List<ActiveRule> activeRules;
             for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
                 points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
                     float.Parse(defazificationService.Defazification(output,
                     new List<object> { inputs[0].Item1.BaseSet[i] },
-                    Method, Inference).ToString())));
+                    Method, Inference, out activeRules).ToString())));
             DrawOutput(points);
         }
 
         private void MaximumMethod_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender == MaximumMethod)
-                Method = IDefazificationService.Methods.Max;
-            else if (sender == MethodAverageMax)
-                Method = IDefazificationService.Methods.AvgMax;
-            else if (sender == MetodLeftLineDef)
-                Method = IDefazificationService.Methods.LinarLeft;
-            else if (sender == MethodRightLineDef)
-                Method = IDefazificationService.Methods.LinarRight;
-            else if (sender == MethodSenterGravity)
-                Method = IDefazificationService.Methods.CenterOfWight;
-            List<PointF> points = new List<PointF>();
-
-            for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
-                points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
-                    float.Parse(defazificationService.Defazification(output,
-                    new List<object> { inputs[0].Item1.BaseSet[i] },
-                    Method, Inference).ToString())));
-            DrawOutput(points);
+            if ((sender as RadioButton).Checked)
+            {
+                if (sender == MaximumMethod)
+                    Method = IDefazificationService.Methods.Max;
+                else if (sender == MethodAverageMax)
+                    Method = IDefazificationService.Methods.AvgMax;
+                else if (sender == MetodLeftLineDef)
+                    Method = IDefazificationService.Methods.LinarLeft;
+                else if (sender == MethodRightLineDef)
+                    Method = IDefazificationService.Methods.LinarRight;
+                else if (sender == MethodSenterGravity)
+                    Method = IDefazificationService.Methods.CenterOfWight;
+                List<PointF> points = new List<PointF>();
+                List<ActiveRule> activeRules;
+                for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
+                    points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
+                        float.Parse(defazificationService.Defazification(output,
+                        new List<object> { inputs[0].Item1.BaseSet[i] },
+                        Method, Inference, out activeRules).ToString())));
+                DrawOutput(points);
+            }
         }
     }
 }

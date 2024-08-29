@@ -1,38 +1,46 @@
-﻿using SimpleFuzzy.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.Service
 {
     public class DefizificationService : IDefazificationService
     {
-        public object Defazification(LinguisticVariable output, List<object> input, IDefazificationService.Methods method, Rule.Inference inference)
+
+        private IRepositoryService _repositoryService;
+        
+        public DefizificationService(IRepositoryService repositoryService)
+        {
+            _repositoryService = repositoryService;
+        }
+
+        public object Defazification(LinguisticVariable output, List<object> input, IDefazificationService.Methods method, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             switch (method)
             {
                 case IDefazificationService.Methods.Max:
-                    return MaxMethod(output, input, inference);
+                    return MaxMethod(output, input, inference, out activeRules);
                 case IDefazificationService.Methods.AvgMax:
-                    return AvgMaxMethod(output, input, inference);
+                    return AvgMaxMethod(output, input, inference, out activeRules);
                 case IDefazificationService.Methods.LinarLeft:
-                    return LeftMethod(output, input, inference);
+                    return LeftMethod(output, input, inference, out activeRules);
                 case IDefazificationService.Methods.LinarRight:
-                    return RightMethod(output, input, inference);
+                    return RightMethod(output, input, inference, out activeRules);
                 case IDefazificationService.Methods.CenterOfWight:
-                    return CenterOfWightMethod(output, input, inference);
+                    return CenterOfWightMethod(output, input, inference, out activeRules);
                 default:
-                    return 0;
+                    {
+                        activeRules = null;
+                        return 0;
+                    }
             }
         }
 
-        private object MaxMethod(LinguisticVariable output, List<object> input, Rule.Inference inference)
+        private object MaxMethod(LinguisticVariable output, List<object> input, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             double max = 0;
             Rule maxRule = null;
-            foreach(var rule in output.ListRules.rules)
+            activeRules = new List<ActiveRule>();
+            foreach (var rule in output.ListRules.rules)
             {
                 (LinguisticVariable, object)[] values = new (LinguisticVariable, object)[input.Count];
                 for (int i = 0; i < output.ListRules.inputVariables.Count; i++)
@@ -43,12 +51,14 @@ namespace SimpleFuzzy.Service
                     max = res;
                     maxRule = rule;
                 }
+                if (res != 0)
+                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
             }
             if (maxRule != null)
             {
                 object result = output.BaseSet[0];
                 max = 0;
-                for (int i = 0 ; i < output.BaseSet.Count; i++)
+                for (int i = 0; i < output.BaseSet.Count; i++)
                 {
                     object now = output.BaseSet[i];
                     double value = maxRule[0].MembershipFunction(now);
@@ -66,10 +76,11 @@ namespace SimpleFuzzy.Service
             }
         }
 
-        private object AvgMaxMethod(LinguisticVariable output, List<object> input, Rule.Inference inference)
+        private object AvgMaxMethod(LinguisticVariable output, List<object> input, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             double max = 0;
-            List<Rule> maxRules = new List<Rule>();
+            List<(Rule, double)> maxRules = new List<(Rule, double)>();
+            activeRules = new List<ActiveRule>();
             foreach (var rule in output.ListRules.rules)
             {
                 (LinguisticVariable, object)[] values = new (LinguisticVariable, object)[input.Count];
@@ -80,10 +91,12 @@ namespace SimpleFuzzy.Service
                 {
                     max = res;
                     maxRules.Clear();
-                    maxRules.Add(rule);
+                    maxRules.Add((rule, res));
                 }
                 else if (max == res)
-                    maxRules.Add(rule);
+                    maxRules.Add((rule, res));
+                if (res != 0)
+                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
             }
             if (maxRules.Count > 0)
             {
@@ -94,7 +107,7 @@ namespace SimpleFuzzy.Service
                     for (int i = 0; i < output.BaseSet.Count; i++)
                     {
                         object now = output.BaseSet[i];
-                        double value = x[0].MembershipFunction(now);
+                        double value = x.Item1[0].MembershipFunction(now);
                         if (value > max)
                         {
                             result = i;
@@ -110,10 +123,11 @@ namespace SimpleFuzzy.Service
             }
         }
 
-        private object LeftMethod(LinguisticVariable output, List<object> input, Rule.Inference inference)
+        private object LeftMethod(LinguisticVariable output, List<object> input, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             double max = 0;
             Rule maxRule = null;
+            activeRules = new List<ActiveRule>();
             foreach (var rule in output.ListRules.rules)
             {
                 (LinguisticVariable, object)[] values = new (LinguisticVariable, object)[input.Count];
@@ -125,20 +139,24 @@ namespace SimpleFuzzy.Service
                     max = res;
                     maxRule = rule;
                 }
+                if (res != 0)
+                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
             }
             if (maxRule != null)
             {
                 double dist = 1;
                 object result = output.BaseSet[0];
+                double before = maxRule[0].MembershipFunction(output.BaseSet[0]);
                 for (int i = 0; i < output.BaseSet.Count; i++)
                 {
                     object now = output.BaseSet[i];
                     double value = maxRule[0].MembershipFunction(now);
-                    if (Math.Abs(value - max) < dist)
+                    if (before <= value && Math.Abs(value - max) < dist)
                     {
                         result = now;
                         dist = Math.Abs(value - max);
                     }
+                    before = value;
                 }
                 return result;
             }
@@ -148,10 +166,11 @@ namespace SimpleFuzzy.Service
             }
         }
 
-        private object RightMethod(LinguisticVariable output, List<object> input, Rule.Inference inference)
+        private object RightMethod(LinguisticVariable output, List<object> input, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             double max = 0;
             Rule maxRule = null;
+            activeRules = new List<ActiveRule>();
             foreach (var rule in output.ListRules.rules)
             {
                 (LinguisticVariable, object)[] values = new (LinguisticVariable, object)[input.Count];
@@ -163,20 +182,24 @@ namespace SimpleFuzzy.Service
                     max = res;
                     maxRule = rule;
                 }
+                if (res != 0)
+                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
             }
             if (maxRule != null)
             {
                 double dist = 1;
                 object result = output.BaseSet[output.CountFunc - 1];
+                double before = maxRule[0].MembershipFunction(output.BaseSet[0]);
                 for (int i = output.BaseSet.Count - 1; i >= 0; i--)
                 {
                     object now = output.BaseSet[i];
                     double value = maxRule[0].MembershipFunction(now);
-                    if (Math.Abs(value - max) < dist)
+                    if (before <= value && Math.Abs(value - max) < dist)
                     {
                         result = now;
                         dist = Math.Abs(value - max);
                     }
+                    before = value;
                 }
                 return result;
             }
@@ -186,9 +209,10 @@ namespace SimpleFuzzy.Service
             }
         }
 
-        private object CenterOfWightMethod(LinguisticVariable output, List<object> input, Rule.Inference inference)
+        private object CenterOfWightMethod(LinguisticVariable output, List<object> input, Rule.Inference inference, out List<ActiveRule> activeRules)
         {
             double d;
+            activeRules = new List<ActiveRule>();
             if (double.TryParse(output.BaseSet[0].ToString(), out d) && output.ListRules.rules.Count > 0)
             {
                 double globalSum = 0;
@@ -201,6 +225,8 @@ namespace SimpleFuzzy.Service
                         for (int i = 0; i < output.ListRules.inputVariables.Count; i++)
                             values[i] = (output.ListRules.inputVariables[i], input[i]);
                         double res = rule.CalcRule(values, inference);
+                        if (res != 0)
+                            activeRules.Add(new ActiveRule() { function = rule[0], values = res });
                         double sum = 0;
                         for (int i = 1; i < output.BaseSet.Count; i++)
                         {
@@ -216,6 +242,41 @@ namespace SimpleFuzzy.Service
                 return globalSum / count;
             }
             else return output.BaseSet[output.BaseSet.Count / 2];
+        }
+
+        public List<object> DefazificationSimulator(List<object> input)
+        {
+            List<object> result = new List<object>();
+            var simulator = _repositoryService.GetCollection<ISimulator>().FirstOrDefault(t => t.Active);
+            if (simulator != null)
+            {
+                var simVariable = simulator.GetLinguisticVariables();
+                for (int i = 0; i < simVariable.Count; i++)
+                {
+                    if (!simVariable[i].IsInput)
+                    {
+                        var output = _repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(t => !t.IsInput && t.Name == simVariable[i].Name);
+                        if (output != null)
+                        {
+                            List<object> inputsForNowOutput = new List<object>();
+                            foreach (var inputInput in output.ListRules.inputVariables) 
+                            {
+                                for (int j = 0; j < simVariable.Count; j++)
+                                {
+                                    if (inputInput.IsInput && simVariable[j].Name == inputInput.Name)
+                                    {
+                                        inputsForNowOutput.Add(input[j]);
+                                        break;
+                                    }
+                                }
+                            }
+                            List<ActiveRule> activeRules;
+                            result.Add(Defazification(output, inputsForNowOutput, IDefazificationService.Methods.CenterOfWight, Rule.Inference.Prod, out activeRules));
+                        }
+                    }
+                }
+            }
+            return result;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 forceTrackBar.Enabled = true;
             }
             simulator.Step();
-            if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
+            if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
                 string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";

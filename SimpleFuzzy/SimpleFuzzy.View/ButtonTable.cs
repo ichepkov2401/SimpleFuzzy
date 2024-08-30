@@ -15,20 +15,30 @@ namespace SimpleFuzzy.View
         List<Button> buttons = new List<Button>();
         public ButtonTable()
         {
+            DoubleBuffered = true;
+            Scroll += Handler;
             ColumnHeadersHeightChanged += Handler;
             ColumnWidthChanged += Handler;
         }
-
+        public void ButtonsClear()
+        {
+            foreach (var button in buttons) 
+            {
+                Controls.Remove(button);
+            }
+            buttons.Clear();
+        }
         public void AddColumn(DataGridViewComboBoxColumn column)
         {
-            Columns.Insert(1, column);
-            buttons.Insert(0, new Button());
-            Controls.Add(buttons[0]);
-            buttons[0].Text = "X";
-            buttons[0].BackColor = Color.Transparent;
-            buttons[0].FlatStyle = FlatStyle.Flat;
+            Columns.Insert(ColumnCount - 2, column);
+            buttons.Add(new Button());
+            //buttons.Insert(0, new Button());
+            Controls.Add(buttons[^1]);
+            buttons[^1].Text = "X";
+            buttons[^1].BackColor = Color.Transparent;
+            buttons[^1].FlatStyle = FlatStyle.Flat;
 
-            buttons[0].Click += DeleteColumn;
+            buttons[^1].Click += DeleteColumn;
             for (int i = 0; i < buttons.Count; i++)
             {
                 buttons[i].Size = new Size(25, 25);
@@ -47,6 +57,7 @@ namespace SimpleFuzzy.View
                     buttons.RemoveAt(i);
                 }
             }
+            Handler(sender, e);
         }
 
         private void Handler(object sender, EventArgs e)
@@ -54,7 +65,13 @@ namespace SimpleFuzzy.View
             for (int i = 0; i < buttons.Count; i++) 
             {
                 buttons[i].Size = new Size(25, 25);
-                buttons[i].Location = new Point(GetCellDisplayRectangle(i + 1, 0, false).X, 0);
+                Point point = new Point(GetCellDisplayRectangle(i + 1, 0, false).X, 0);
+                if (point.X < 55) { buttons[i].Visible = false; }
+                else
+                {
+                    buttons[i].Visible = true;
+                    buttons[i].Location = point;
+                }
             }
         }
     }

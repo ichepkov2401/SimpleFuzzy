@@ -53,11 +53,22 @@ namespace SimpleFuzzy.Model
         {
             return terms;
         }
-        /*public void ChangeTermNull(int position)
+        /*public void UnloadingHandler(object sender, EventArgs e)
+        {
+            for (int i = 0; i < terms.Count; i++) 
+            {
+                if (terms[i].GetType().Assembly.FullName == sender as string)
+                {
+                    terms[i] = null;
+                    IsActive = false;
+                }
+            }
+        }*/
+        public void ChangeNullTerm(int position) 
         {
             terms[position] = null;
             IsActive = false;
-        }*/
+        }
         public void AddNullTerm()
         {
             terms.Add(null);

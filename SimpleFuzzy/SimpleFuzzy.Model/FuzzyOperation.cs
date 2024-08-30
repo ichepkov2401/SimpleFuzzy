@@ -18,8 +18,8 @@ namespace SimpleFuzzy.Model
             {"Расширение", (true, (x, y, z, p) => Math.Pow(x.MembershipFunction(z), 0.5))},
             {"Контраст", (true, (x, y, z, p) => x.MembershipFunction(z) < 0.5 ? 2 * Math.Pow(x.MembershipFunction(z), 2) : 1 - 2 * Math.Pow(1 - x.MembershipFunction(z), 2))},
             // Бинарные операции
-            {"Нечеткое \"И\"", (false, (x, y, z, p) => p * Math.Min(x.MembershipFunction(z), y.MembershipFunction(z)) + (1 - p) * (x.MembershipFunction(z) + y.MembershipFunction(z)) / 2 )},
-            {"Нечеткое \"ИЛИ\"", (false, (x, y, z, p) => p * Math.Max(x.MembershipFunction(z), y.MembershipFunction(z)) + (1 - p) * (x.MembershipFunction(z) + y.MembershipFunction(z)) / 2 )},
+            {"Нечеткое \"И\"", (false, (x, y, z, p) => p * Math.Min(x.MembershipFunction(z), y.MembershipFunction(z)) + 0.5 * (1 - p) * (x.MembershipFunction(z) + y.MembershipFunction(z)) / 2 )},
+            {"Нечеткое \"ИЛИ\"", (false, (x, y, z, p) => p * Math.Max(x.MembershipFunction(z), y.MembershipFunction(z)) + 0.5 * (1 - p) * (x.MembershipFunction(z) + y.MembershipFunction(z)) / 2 )},
             {"Гамма - оператор", (false, (x, y, z, p) => Math.Pow(x.MembershipFunction(z) * y.MembershipFunction(z), 1 - p) * Math.Pow(1 - (1 - x.MembershipFunction(z)) * (1 - y.MembershipFunction(z)), p))},
             {"Min-Max \"И\"", (false, (x, y, z, p) => Math.Min(x.MembershipFunction(z), y.MembershipFunction(z)))},
             {"Min-Max \"ИЛИ\"", (false, (x, y, z, p) => Math.Max(x.MembershipFunction(z), y.MembershipFunction(z)))},

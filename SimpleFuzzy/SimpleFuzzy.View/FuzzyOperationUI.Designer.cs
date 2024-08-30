@@ -34,13 +34,14 @@
             nameLabel = new Label();
             pLabel = new Label();
             nameTextBox = new TextBox();
-            pTextBox = new TextBox();
             operations = new ComboBox();
             operand2 = new ComboBox();
             okButton = new Button();
             cancelButton = new Button();
             pictureBox1 = new PictureBox();
+            pNumericUpDown = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // operand1
@@ -82,14 +83,13 @@
             nameLabel.AutoSize = true;
             nameLabel.Location = new Point(3, 4);
             nameLabel.Name = "nameLabel";
-            nameLabel.Size = new Size(146, 20);
+            nameLabel.Size = new Size(143, 20);
             nameLabel.TabIndex = 12;
             nameLabel.Text = "Введите имя терма";
             // 
             // pLabel
             // 
-            nameLabel.AutoSize = true;
-            pLabel.Location = new Point(3, 141);
+            pLabel.Location = new Point(3, 155);
             pLabel.Name = "pLabel";
             pLabel.Size = new Size(190, 23);
             pLabel.TabIndex = 13;
@@ -104,20 +104,6 @@
             nameTextBox.Size = new Size(432, 27);
             nameTextBox.TabIndex = 5;
             nameTextBox.Leave += nameTextBox_Leave;
-            // 
-            // pTextBox
-            // 
-            pTextBox.Location = new Point(0, 167);
-            pTextBox.Margin = new Padding(3, 4, 3, 4);
-            pTextBox.Name = "pTextBox";
-            pTextBox.Text = "Возможные значения параметра \"p\": (0;1]";
-            pTextBox.ForeColor = Color.Gray;
-            pTextBox.Size = new Size(432, 27);
-            pTextBox.TabIndex = 6;
-            pTextBox.Enter += pTextBox_Enter;
-            pTextBox.Leave += pTextBox_Leave;
-            pTextBox.KeyPress += pTextBox_ClickEnter;
-            pTextBox.Visible = false;
             // 
             // operations
             // 
@@ -170,18 +156,31 @@
             pictureBox1.TabIndex = 11;
             pictureBox1.TabStop = false;
             // 
+            // pNumericUpDown
+            // 
+            pNumericUpDown.Visible = false;
+            pNumericUpDown.Location = new Point(139, 153);
+            pNumericUpDown.Name = "pNumericUpDown";
+            pNumericUpDown.Size = new Size(150, 27);
+            pNumericUpDown.TabIndex = 14;
+            pNumericUpDown.ValueChanged += pNumericUpDown_ValueChanged;
+            pNumericUpDown.Minimum = (decimal)Double.Epsilon;
+            pNumericUpDown.Maximum = 1;
+            pNumericUpDown.Increment = (decimal)0.1;
+            pNumericUpDown.DecimalPlaces = 2;
+            // 
             // FuzzyOperationUI
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(pNumericUpDown);
             Controls.Add(pictureBox1);
             Controls.Add(cancelButton);
             Controls.Add(okButton);
             Controls.Add(operand2);
             Controls.Add(operations);
             Controls.Add(nameTextBox);
-            Controls.Add(pTextBox);
             Controls.Add(nameLabel);
             Controls.Add(pLabel);
             Controls.Add(Bin);
@@ -191,6 +190,7 @@
             Name = "FuzzyOperationUI";
             Size = new Size(821, 245);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pNumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -203,11 +203,11 @@
         private Label nameLabel;
         private Label pLabel;
         private TextBox nameTextBox;
-        private TextBox pTextBox;
         private ComboBox operations;
         private ComboBox operand2;
         private Button okButton;
         private Button cancelButton;
         private PictureBox pictureBox1;
+        private NumericUpDown pNumericUpDown;
     }
 }

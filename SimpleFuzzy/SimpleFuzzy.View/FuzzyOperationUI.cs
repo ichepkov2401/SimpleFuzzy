@@ -235,12 +235,12 @@ namespace SimpleFuzzy.View
                 if ((string)operations.SelectedItem == bins[0] || (string)operations.SelectedItem == bins[1] || (string)operations.SelectedItem == bins[2] || (string)operations.SelectedItem == bins[^1] || (string)operations.SelectedItem == bins[^2])
                 {
                     pLabel.Visible = true;
-                    pTextBox.Visible = true;
+                    pNumericUpDown.Visible = true;
                 }
                 else
                 {
                     pLabel.Visible = false;
-                    pTextBox.Visible = false;
+                    pNumericUpDown.Visible = false;
                 }
             }
             GraphicUpdate();
@@ -250,11 +250,6 @@ namespace SimpleFuzzy.View
         {
             if (!repositoryService.GetCollection<IMembershipFunction>().Contains(fuzzyOperation))
             {
-                if (string.IsNullOrWhiteSpace(pTextBox.Text))
-                {
-                    MessageBox.Show("значение параметра \"p\" не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
                 if (string.IsNullOrWhiteSpace(nameTextBox.Text))
                 {
                     MessageBox.Show("Имя терма не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -298,63 +293,10 @@ namespace SimpleFuzzy.View
             }
         }
 
-        private void pTextBox_Enter(object sender, EventArgs e)
+        private void pNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            if (pTextBox.Text == "Возможные значения параметра \"p\": (0;1]")
-            {
-                pTextBox.Clear();
-                pTextBox.ForeColor = Color.Black;
-            }
-        }
-        private void pTextBox_Leave(object sender, EventArgs e)
-        {
-            string str = pTextBox.Text;
-            foreach (var ch in str)
-            { 
-                if (ch.CompareTo(Convert.ToChar(".")) == 0)
-                {
-                    str = str.Replace(".", ",");
-                    break;
-                }
-            }
-            double resultofConvert;
-            if (!double.TryParse(str, out resultofConvert) || resultofConvert <= 0 || resultofConvert > 1)
-            {
-                MessageBox.Show("\"p\" должно быть числом и не может выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                pTextBox.Text = "1";
-                fuzzyOperation.p = 1;
-            }
-            else
-            {
-                fuzzyOperation.p = resultofConvert;
-            }
-        }
-        private void pTextBox_ClickEnter(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == ((char)Keys.Enter))
-            {
-                string str = pTextBox.Text;
-                foreach (var ch in str)
-                {
-                    if (ch.CompareTo(Convert.ToChar(".")) == 0)
-                    {
-                        str = str.Replace(".", ",");
-                        break;
-                    }
-                }
-                double resultofConvert;
-                if (!double.TryParse(str, out resultofConvert) || resultofConvert <= 0 || resultofConvert > 1)
-                {
-                    MessageBox.Show("\"p\" должно быть числом и не может выходить за пределы (0; 1], поставлено значение по умолчанию = 1", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    pTextBox.Text = "1";
-                    fuzzyOperation.p = 1;
-                }
-                else
-                {
-                    fuzzyOperation.p = resultofConvert;
-                    pictureBox1.Focus();                
-                }
-            }
+            fuzzyOperation.p = (double)pNumericUpDown.Value;
+            GraphicUpdate();
         }
     }
 }

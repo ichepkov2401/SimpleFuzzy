@@ -12,15 +12,26 @@ namespace SimpleFuzzy.Model
     public class SetRule
     {
         // список словарей
+        public List<Dictionary<string, IMembershipFunction>> listDic = new List<Dictionary<string, IMembershipFunction>>();
+
         public List<Rule> rules; // список правил с одной и той же выходной переменной
         public List<LinguisticVariable> inputVariables; // список входных переменных
         public LinguisticVariable outVariable; // выходная переменная
         public SetRule(LinguisticVariable var)
         {
+            /*for (int i = 0; i < outVariable.func.Count; i++)
+            {
+                if (outVariable.func.Count(v => v.Item1.Name == outVariable.func[i].Item1.Name) > 1)
+                    listDic[0].Add(outVariable.func[i].Item1.Name + " - " + outVariable.func[i].Item1.GetType().Name +
+                        " - " + outVariable.func[i].Item1.GetType().Assembly.Location, outVariable.func[i].Item1);
+                else
+                    listDic[0].Add(outVariable.func[i].Item1.Name, outVariable.func[i].Item1);
+            }*/
             outVariable = var;
             rules = new List<Rule>();
             inputVariables = new List<LinguisticVariable>();
         }
+
         public void UnloadingHandler(object sender, EventArgs e)
         {
             for (int i = 0; i < rules.Count; i++)
@@ -39,6 +50,7 @@ namespace SimpleFuzzy.Model
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }
             inputVariables.Add(inputVar);
+            // дополнить
         }
 
         public void DeleteRule(int position)
@@ -59,6 +71,7 @@ namespace SimpleFuzzy.Model
                 }
             }
             foreach (var rule in rules) { rule.DeleteTerm(position); }
+            // почистить словарь
         }
 
         private bool IsSameRules(Rule rule1, Rule rule2)

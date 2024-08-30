@@ -112,7 +112,7 @@ namespace SimpleFuzzy.View
             dataTable.RowHeadersWidth = 51;
             dataTable.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(753, 345);
+            dataTable.Size = new Size(570, 345);
             dataTable.TabIndex = 7;
             dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;

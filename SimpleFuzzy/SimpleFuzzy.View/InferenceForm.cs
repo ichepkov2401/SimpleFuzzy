@@ -462,5 +462,23 @@ namespace SimpleFuzzy.View
         {
             if (e.Column.HeaderCell.Size.Width < 50) e.Column.Width = 50;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (currentOutputVar.ListRules.inputVariables.Count > 0)
+            {
+                int[] counter = currentOutputVar.ListRules.inputVariables.ConvertAll(x => x.CountFunc).ToArray();
+                for (int i = 0; i <= counter.Aggregate((x, y) => x * y); i++)
+                {
+                    int value = i;
+                    currentOutputVar.ListRules.rules.Add(new Rule(counter.Length + 1, currentOutputVar.ListRules));
+                    for (int j = 0; j < counter.Length; j++)
+                    {
+                        currentOutputVar.ListRules.rules[^1].RedactTerm(currentOutputVar.ListRules.inputVariables[j].func[value % counter[j]].Item1, j + 1);
+                        value /= counter[j];
+                    }
+                }
+            }
+        }
     }
 }

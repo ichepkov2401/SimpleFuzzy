@@ -6,11 +6,32 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Simple Fuzzy</AssemblyName>
+    <ApplicationIcon>SF.ico</ApplicationIcon>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <SignAssembly>False</SignAssembly>
+    <Title>Simple Fuzzy</Title>
+    <Version>$(VersionPrefix)</Version>
+    <AssemblyVersion>0.3</AssemblyVersion>
+    <Copyright> Apache License Version 2.0</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company>ETU</Company>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="SF.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CoreCLR-NCalc" Version="3.1.253" />
-    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Version="1.0.1" />
+    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Version="1.0.1" />    
   </ItemGroup>
 
   <ItemGroup>

@@ -72,14 +72,14 @@ namespace SimpleFuzzy.View
                     dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
 
                 List<string> termInput = new List<string>();
-                foreach (var func in currentOutputVar.func) { termInput.Add(func.Item1.Name); }
+                foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
                 (dataTable.Columns[i + 1] as DataGridViewComboBoxColumn).DataSource = termInput;
                 //(dataTable.Columns[^3] as DataGridViewComboBoxColumn).DataSource = listDic[i].ToList().ConvertAll(x => x.Key);
             }
             // Далее заполнение значениями
             if (currentOutputVar.ListRules.rules.Count > 0)
             {
-                for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++)
+                for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++)
                 {
                     int cells = 0;
                     dataTable.Rows.Add();
@@ -109,7 +109,7 @@ namespace SimpleFuzzy.View
                         else dataTable.Rows[i].Cells[cells].Style.ForeColor = Color.White;
                     }
                 }
-                for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++) ChangeActiveRules(i, currentOutputVar.ListRules.rules[i].IsDublicate);
+                for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++) ChangeActiveRules(i, currentOutputVar.ListRules.rules[i].IsDublicate);
             }
             foreach (DataGridViewColumn column in dataTable.Columns)
             {
@@ -308,6 +308,7 @@ namespace SimpleFuzzy.View
                     GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.ListRules.inputVariables[i - 1]), active);
                 if (IsGoodView(dataTable.Rows[position].Cells[i].Style.BackColor)) dataTable.Rows[position].Cells[i].Style.ForeColor = Color.Black;
                 else dataTable.Rows[position].Cells[i].Style.ForeColor = Color.White;
+                if (dataTable.Rows[position].Cells[i].Value == null) dataTable.Rows[position].Cells[i].Style.ForeColor = Color.Black;
             }
             double n;
             if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
@@ -321,6 +322,8 @@ namespace SimpleFuzzy.View
                 dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
                 if (IsGoodView(dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor)) dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.Black;
                 else dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.White;
+                if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value == null) 
+                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.Black;
             }
         }
 
@@ -337,6 +340,8 @@ namespace SimpleFuzzy.View
                 dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
                 if (IsGoodView(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor)) dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                 else dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.White;
+                if (dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null) 
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                 ChangeActiveRules(e.RowIndex, currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate);
                 dataTable.AutoResizeColumn(e.ColumnIndex);
             }
@@ -374,6 +379,8 @@ namespace SimpleFuzzy.View
                         dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
                         if (IsGoodView(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor)) dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                         else dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.White;
+                        if (dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null) 
+                            dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                         break;
                     }
                 }

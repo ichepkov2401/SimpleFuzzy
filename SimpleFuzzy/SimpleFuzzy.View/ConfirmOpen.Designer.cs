@@ -51,7 +51,7 @@
             groupBox1.Location = new Point(3, 3);
             groupBox1.MinimumSize = new Size(715, 373);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(715, 373);
+            groupBox1.Size = new Size(753, 373);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Открытие проекта";
@@ -60,7 +60,7 @@
             // 
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(356, 109);
+            label2.Location = new Point(692, 109);
             label2.Name = "label2";
             label2.Size = new Size(50, 20);
             label2.TabIndex = 11;
@@ -80,7 +80,7 @@
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Location = new Point(356, 44);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(348, 27);
+            textBox1.Size = new Size(386, 27);
             textBox1.TabIndex = 8;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
@@ -99,7 +99,7 @@
             button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Location = new Point(356, 77);
             button2.Name = "button2";
-            button2.Size = new Size(171, 29);
+            button2.Size = new Size(192, 29);
             button2.TabIndex = 5;
             button2.Text = "Отмена";
             button2.Click += button2_Click;
@@ -107,9 +107,9 @@
             // button1
             // 
             button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.Location = new Point(533, 77);
+            button1.Location = new Point(550, 77);
             button1.Name = "button1";
-            button1.Size = new Size(171, 27);
+            button1.Size = new Size(192, 29);
             button1.TabIndex = 4;
             button1.Text = "Открыть проводник";
             button1.Click += button1_Click;
@@ -120,7 +120,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);
             Name = "ConfirmOpen";
-            Size = new Size(721, 379);
+            Size = new Size(756, 379);
             Load += ConfirmOpen_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

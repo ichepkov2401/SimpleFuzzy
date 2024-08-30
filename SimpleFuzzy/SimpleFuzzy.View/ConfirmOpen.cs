@@ -38,6 +38,8 @@ namespace SimpleFuzzy.View
                 {
                     parent.Locked();
                     parent.OpenLoader();
+                    // Обновляем состояние симулятора после открытия проекта
+                    parent.UpdateSimulatorState();
                 }
             }
             catch (Exception ex)
@@ -102,6 +104,8 @@ namespace SimpleFuzzy.View
                 {
                     parent.Locked();
                     parent.OpenLoader();
+                    // Обновляем состояние симулятора после открытия проекта
+                    parent.UpdateSimulatorState();
                 }
             }
         }

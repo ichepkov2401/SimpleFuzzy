@@ -23,6 +23,7 @@ namespace SimpleFuzzy.Model
             foreach (var variable in input)
             {
                 int index = setRule.inputVariables.IndexOf(variable.Item1);
+                if (terms.Any(x => x == null)) return 0;
                 double fazizfication = terms[index + 1].MembershipFunction(variable.Item2);
                 if (Inference.Min == inference)
                     res = Math.Min(res, fazizfication);
@@ -51,6 +52,22 @@ namespace SimpleFuzzy.Model
         public List<IMembershipFunction> GiveList()
         {
             return terms;
+        }
+        /*public void UnloadingHandler(object sender, EventArgs e)
+        {
+            for (int i = 0; i < terms.Count; i++) 
+            {
+                if (terms[i].GetType().Assembly.FullName == sender as string)
+                {
+                    terms[i] = null;
+                    IsActive = false;
+                }
+            }
+        }*/
+        public void ChangeNullTerm(int position) 
+        {
+            terms[position] = null;
+            IsActive = false;
         }
         public void AddNullTerm()
         {

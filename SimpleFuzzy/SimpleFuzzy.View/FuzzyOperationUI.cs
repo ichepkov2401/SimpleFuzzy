@@ -3,9 +3,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-using System.Collections.Generic;
 using System.Data;
-
 namespace SimpleFuzzy.View
 {
     public partial class FuzzyOperationUI : UserControl
@@ -102,13 +100,9 @@ namespace SimpleFuzzy.View
                     string name = $"{item.Name}";
                     if (list.Count(t => t.Name == item.Name) > 1)
                     {
-                        name = $"{item.Name} - {item.GetType()}";
-                        if (list.Where(x => x.Name == item.Name).Count(x => x.GetType() == item.GetType()) > 1)
-                        {
-                            name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.FullName}";
-                        }
+                        name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.Location}";
                     }
-                    termsName.Add(item.Name, item);
+                    termsName.Add(name, item);
                 }
             }
             if (fuzzyOperation.Operand1 == null)
@@ -117,7 +111,7 @@ namespace SimpleFuzzy.View
                 if (operand1.Items.Count > 0)
                     operand1.SelectedIndex = 0;
             }
-            else 
+            else
             {
                 operand1.DataSource = termsName.Keys.ToList();
                 operand1.SelectedItem = termsName.FirstOrDefault(t => t.Value == fuzzyOperation.Operand1).Key;
@@ -232,6 +226,19 @@ namespace SimpleFuzzy.View
         private void operations_SelectedIndexChanged(object sender, EventArgs e)
         {
             fuzzyOperation.Func = (string)operations.SelectedItem;
+            if (Bin.Checked)
+            {
+                if ((string)operations.SelectedItem == bins[0] || (string)operations.SelectedItem == bins[1] || (string)operations.SelectedItem == bins[2] || (string)operations.SelectedItem == bins[^1] || (string)operations.SelectedItem == bins[^2])
+                {
+                    pLabel.Visible = true;
+                    pNumericUpDown.Visible = true;
+                }
+                else
+                {
+                    pLabel.Visible = false;
+                    pNumericUpDown.Visible = false;
+                }
+            }
             GraphicUpdate();
         }
 
@@ -280,6 +287,12 @@ namespace SimpleFuzzy.View
             {
                 fuzzyOperation.Name = nameTextBox.Text;
             }
+        }
+
+        private void pNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            fuzzyOperation.p = (double)pNumericUpDown.Value;
+            GraphicUpdate();
         }
     }
 }

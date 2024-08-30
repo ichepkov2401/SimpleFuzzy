@@ -68,6 +68,11 @@ namespace SimpleFuzzy.View
             if (projectList.CurrentProjectName != null) label1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
             SwichUserControl(UserControlsEnum.Loader, button7);
         }
+        public void UpdateSimulatorState()
+        {
+            isContainSimulator = repositoryService.GetCollection<ISimulator>().Any(t => t.Active);
+            button11.Enabled = isContainSimulator;
+        }
         public void Locked()
         {
             if (projectList.CurrentProjectName == null)

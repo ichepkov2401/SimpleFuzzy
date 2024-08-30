@@ -89,6 +89,7 @@ namespace SimpleFuzzy.View
             // 
             dataTable.AllowUserToResizeColumns = false;
             dataTable.AllowUserToResizeRows = false;
+            dataTable.BackgroundColor = SystemColors.ControlLight;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -106,13 +107,14 @@ namespace SimpleFuzzy.View
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataTable.Dock = DockStyle.Bottom;
             dataTable.EnableHeadersVisualStyles = false;
-            dataTable.Location = new Point(3, 129);
+            dataTable.Location = new Point(0, 146);
             dataTable.Name = "dataTable";
             dataTable.RowHeadersWidth = 51;
             dataTable.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(570, 345);
+            dataTable.Size = new Size(941, 345);
             dataTable.TabIndex = 7;
             dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;

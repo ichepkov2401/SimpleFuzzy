@@ -6,12 +6,14 @@ namespace SimpleFuzzy.View
     {
         IRepositoryService repositoryService;
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmCreate()
         {
             InitializeComponent();
             textBox2.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -19,7 +21,6 @@ namespace SimpleFuzzy.View
             textBox1.Text = textBox1.Text.Trim(' ');
             textBox2.Text = textBox2.Text.TrimEnd('/');//Для пути
             textBox2.Text = textBox2.Text.TrimEnd('.');
-            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
             if (validator.IsValidFileName(textBox1.Text)&&validator.IsValidDirectoryName(textBox2.Text))
             {
 

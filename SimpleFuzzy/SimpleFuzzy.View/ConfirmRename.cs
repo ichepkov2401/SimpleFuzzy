@@ -5,16 +5,18 @@ namespace SimpleFuzzy.View
     public partial class ConfirmRename : UserControl
     {
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmRename()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Text = textBox1.Text.TrimEnd('.');// Для файла
             textBox1.Text = textBox1.Text.Trim(' ');
-            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
+            
             if (validator.IsValidFileName(textBox1.Text))
             {
                 try

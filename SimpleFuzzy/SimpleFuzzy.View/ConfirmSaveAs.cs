@@ -5,11 +5,13 @@ namespace SimpleFuzzy.View
     public partial class ConfirmSaveAs : UserControl
     {
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmSaveAs()
         {
             InitializeComponent();
             textBox1.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -27,7 +29,6 @@ namespace SimpleFuzzy.View
             metroTextBox1.Text = metroTextBox1.Text.Trim(' ');
             textBox1.Text = textBox1.Text.TrimEnd('/');//Для пути
             textBox1.Text = textBox1.Text.TrimEnd('.');
-            IFilesPathsNamesValidator validator = new FilesPathsNamesValidatorService();
             if (validator.IsValidFileName(metroTextBox1.Text) && validator.IsValidDirectoryName(textBox1.Text))
             {
                 try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }

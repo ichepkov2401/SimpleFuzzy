@@ -36,7 +36,13 @@ namespace SimpleFuzzy.View
             double first = (double)numericUpDown1.Value;
             double step = (double)numericUpDown2.Value;
             double last = (double)numericUpDown3.Value;
-
+            nameTextBox.Text = nameTextBox.Text.TrimEnd('.');
+            nameTextBox.Text = nameTextBox.Text.Trim(' ');
+            if (string.IsNullOrWhiteSpace(nameTextBox.Text))
+            {
+                MessageBox.Show("Имя множества не может быть пустым.", "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             try
             {
                 string generatedCode = service.ReturnObjectSet(first, step, last, nameTextBox.Text);

@@ -52,7 +52,11 @@ namespace SimpleFuzzy.Service
                     maxRule = rule;
                 }
                 if (res != 0)
-                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                {
+                    var oldRule = activeRules.FirstOrDefault(x => x.function == rule[0]);
+                    if (oldRule == null) activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                    else oldRule.values = Math.Max(oldRule.values, res);
+                }
             }
             if (maxRule != null)
             {
@@ -93,10 +97,14 @@ namespace SimpleFuzzy.Service
                     maxRules.Clear();
                     maxRules.Add((rule, res));
                 }
-                else if (max == res)
+                else if (max == res && res != 0)
                     maxRules.Add((rule, res));
                 if (res != 0)
-                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                {
+                    var oldRule = activeRules.FirstOrDefault(x => x.function == rule[0]);
+                    if (oldRule == null) activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                    else oldRule.values = Math.Max(oldRule.values, res);
+                }
             }
             if (maxRules.Count > 0)
             {
@@ -140,7 +148,11 @@ namespace SimpleFuzzy.Service
                     maxRule = rule;
                 }
                 if (res != 0)
-                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                {
+                    var oldRule = activeRules.FirstOrDefault(x => x.function == rule[0]);
+                    if (oldRule == null) activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                    else oldRule.values = Math.Max(oldRule.values, res);
+                }
             }
             if (maxRule != null)
             {
@@ -183,7 +195,11 @@ namespace SimpleFuzzy.Service
                     maxRule = rule;
                 }
                 if (res != 0)
-                    activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                {
+                    var oldRule = activeRules.FirstOrDefault(x => x.function == rule[0]);
+                    if (oldRule == null) activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                    else oldRule.values = Math.Max(oldRule.values, res);
+                }
             }
             if (maxRule != null)
             {
@@ -226,7 +242,11 @@ namespace SimpleFuzzy.Service
                             values[i] = (output.ListRules.inputVariables[i], input[i]);
                         double res = rule.CalcRule(values, inference);
                         if (res != 0)
-                            activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                        {
+                            var oldRule = activeRules.FirstOrDefault(x => x.function == rule[0]);
+                            if (oldRule == null) activeRules.Add(new ActiveRule() { function = rule[0], values = res });
+                            else oldRule.values = Math.Max(oldRule.values, res);
+                        }
                         double sum = 0;
                         for (int i = 1; i < output.BaseSet.Count; i++)
                         {
@@ -239,7 +259,7 @@ namespace SimpleFuzzy.Service
                         globalSum += sum;
                     }
                 }
-                return globalSum / count;
+                return count > 0 ? globalSum / count : output.BaseSet[output.BaseSet.Count / 2];
             }
             else return output.BaseSet[output.BaseSet.Count / 2];
         }

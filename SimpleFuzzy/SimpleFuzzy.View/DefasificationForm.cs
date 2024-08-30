@@ -11,11 +11,11 @@ namespace SimpleFuzzy.View
     {
         IRepositoryService repositoryService;
         IDefazificationService defazificationService;
-        Rule.Inference Inference { get; set; }
+        Rule.Inference Inference { get; set; } = Rule.Inference.Prod;
         IDefazificationService.Methods Method { get; set; }
         List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)> inputs = new List<(LinguisticVariable, PictureBox, TrackBar, Label, LineSeries)>();
         LinguisticVariable output;
-        LineSeries outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
+        LineSeries outputLine;
         List<AreaSeries> allArea = new List<AreaSeries>();
         public DefasificationForm()
         {
@@ -47,41 +47,49 @@ namespace SimpleFuzzy.View
             output = repositoryService.GetCollection<LinguisticVariable>()
                 .FirstOrDefault(t => t.Name == (string)OutputVariables.SelectedItem);
             pictureBox1.Controls.Clear();
-            pictureBox1.Controls.Add(DrawInput(output));
-            var newInput = output.ListRules.inputVariables;
-            for (int i = 0; i < newInput.Count; i++)
+            textBox1.Text = "";
+            textBox1.Visible = false;
+            pictureBox2.Visible = false;
+            if (output.ListRules != null)
             {
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.Size = new Size(287, 193);
-                pictureBox.Location = new Point(15, 197 + i * 250);
-                pictureBox.Controls.Add(DrawInput(newInput[i]));
-                Controls.Add(pictureBox);
-                TrackBar trackBar = new TrackBar();
-                trackBar.Size = new Size(148, 45);
-                trackBar.Location = new Point(15, 396 + i * 250);
-                trackBar.ValueChanged += InputChanged;
-                trackBar.Maximum = newInput[i].BaseSet.Count - 1;
-                Controls.Add(trackBar);
-                Label label = new Label();
-                label.Text = newInput[i].Name;
-                label.Location = new Point(169, 405 + i * 250);
-                Controls.Add(label);
-                inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
-            }
-            textBox1.Visible = true;
-            if (newInput.Count != 1)
-                pictureBox2.Visible = false;
-            else
-            {
-                pictureBox2.Visible = true;
-                List<ActiveRule> activeRules;
-                List<PointF> points = new List<PointF>();
-                for (int i = 0; i < newInput[0].BaseSet.Count; i++)
-                    points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()),
-                        float.Parse(defazificationService.Defazification(output,
-                        new List<object> { newInput[0].BaseSet[i] },
-                        Method, Inference, out activeRules).ToString())));
-                DrawOutput(points);
+                textBox1.Visible = true;
+                outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
+                pictureBox1.Controls.Add(DrawInput(output));
+                var newInput = output.ListRules.inputVariables;
+                for (int i = 0; i < newInput.Count; i++)
+                {
+                    PictureBox pictureBox = new PictureBox();
+                    pictureBox.Size = new Size(287, 193);
+                    pictureBox.Location = new Point(15, 197 + i * 250);
+                    pictureBox.Controls.Add(DrawInput(newInput[i]));
+                    Controls.Add(pictureBox);
+                    TrackBar trackBar = new TrackBar();
+                    trackBar.Size = new Size(148, 45);
+                    trackBar.Location = new Point(15, 396 + i * 250);
+                    trackBar.ValueChanged += InputChanged;
+                    trackBar.Maximum = newInput[i].BaseSet.Count - 1;
+                    Controls.Add(trackBar);
+                    Label label = new Label();
+                    label.Text = newInput[i].Name;
+                    label.Location = new Point(169, 405 + i * 250);
+                    Controls.Add(label);
+                    inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
+                }
+                textBox1.Visible = true;
+                if (newInput.Count != 1)
+                    pictureBox2.Visible = false;
+                else
+                {
+                    pictureBox2.Visible = true;
+                    List<ActiveRule> activeRules;
+                    List<PointF> points = new List<PointF>();
+                    for (int i = 0; i < newInput[0].BaseSet.Count; i++)
+                        points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()),
+                            float.Parse(defazificationService.Defazification(output,
+                            new List<object> { newInput[0].BaseSet[i] },
+                            Method, Inference, out activeRules).ToString())));
+                    DrawOutput(points);
+                }
             }
         }
 
@@ -201,14 +209,17 @@ namespace SimpleFuzzy.View
         private void MaxProd_CheckedChanged(object sender, EventArgs e)
         { 
             Inference = MaxProd.Checked ? Rule.Inference.Prod : Rule.Inference.Min;
-            List<PointF> points = new List<PointF>();
-            List<ActiveRule> activeRules;
-            for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
-                points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
-                    float.Parse(defazificationService.Defazification(output,
-                    new List<object> { inputs[0].Item1.BaseSet[i] },
-                    Method, Inference, out activeRules).ToString())));
-            DrawOutput(points);
+            if (inputs.Count > 0)
+            {
+                List<PointF> points = new List<PointF>();
+                List<ActiveRule> activeRules;
+                for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
+                    points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
+                        float.Parse(defazificationService.Defazification(output,
+                        new List<object> { inputs[0].Item1.BaseSet[i] },
+                        Method, Inference, out activeRules).ToString())));
+                DrawOutput(points);
+            }
         }
 
         private void MaximumMethod_CheckedChanged(object sender, EventArgs e)
@@ -225,14 +236,17 @@ namespace SimpleFuzzy.View
                     Method = IDefazificationService.Methods.LinarRight;
                 else if (sender == MethodSenterGravity)
                     Method = IDefazificationService.Methods.CenterOfWight;
-                List<PointF> points = new List<PointF>();
-                List<ActiveRule> activeRules;
-                for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
-                    points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
-                        float.Parse(defazificationService.Defazification(output,
-                        new List<object> { inputs[0].Item1.BaseSet[i] },
-                        Method, Inference, out activeRules).ToString())));
-                DrawOutput(points);
+                if (inputs.Count > 0)
+                {
+                    List<PointF> points = new List<PointF>();
+                    List<ActiveRule> activeRules;
+                    for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
+                        points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
+                            float.Parse(defazificationService.Defazification(output,
+                            new List<object> { inputs[0].Item1.BaseSet[i] },
+                            Method, Inference, out activeRules).ToString())));
+                    DrawOutput(points);
+                }
             }
         }
     }

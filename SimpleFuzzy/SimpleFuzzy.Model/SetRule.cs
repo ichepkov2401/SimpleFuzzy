@@ -35,7 +35,7 @@ namespace SimpleFuzzy.Model
                 }
             }
         }
-            public void AddInputVar(LinguisticVariable inputVar)
+        public void AddInputVar(LinguisticVariable inputVar)
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }
             inputVariables.Add(inputVar);

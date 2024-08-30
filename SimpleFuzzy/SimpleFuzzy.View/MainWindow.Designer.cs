@@ -64,7 +64,7 @@ namespace SimpleFuzzy.View
             menuStrip1.Items.AddRange(new ToolStripItem[] { button1, button2, button3, button4, button5, button6, button12, button13 });
             menuStrip1.Location = new Point(0, 60);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1122, 28);
+            menuStrip1.Size = new Size(914, 28);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -130,7 +130,7 @@ namespace SimpleFuzzy.View
             menuStrip2.Items.AddRange(new ToolStripItem[] { button7, button8, button9, button10, button11 });
             menuStrip2.Location = new Point(0, 88);
             menuStrip2.Name = "menuStrip2";
-            menuStrip2.Size = new Size(1122, 28);
+            menuStrip2.Size = new Size(914, 28);
             menuStrip2.TabIndex = 1;
             menuStrip2.Text = "menuStrip2";
             // 
@@ -191,7 +191,7 @@ namespace SimpleFuzzy.View
             Left.Name = "Left";
             Left.Size = new Size(94, 29);
             Left.TabIndex = 2;
-            Left.Text = "Влево <-";
+            Left.Text = "Влево";
             Left.UseVisualStyleBackColor = true;
             Left.Click += Left_Click;
             // 
@@ -201,7 +201,7 @@ namespace SimpleFuzzy.View
             Right.Name = "Right";
             Right.Size = new Size(94, 29);
             Right.TabIndex = 3;
-            Right.Text = "Вправо ->";
+            Right.Text = "Вправо";
             Right.UseVisualStyleBackColor = true;
             Right.Click += Right_Click;
             // 
@@ -217,15 +217,15 @@ namespace SimpleFuzzy.View
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1122, 698);
+            ClientSize = new Size(914, 600);
             Controls.Add(label1);
             Controls.Add(Right);
             Controls.Add(Left);
             Controls.Add(menuStrip2);
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
+            Location = new Point(0, 0);
             MainMenuStrip = menuStrip1;
-            MinimumSize = new Size(1140, 745);
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
             menuStrip1.ResumeLayout(false);
@@ -263,5 +263,6 @@ namespace SimpleFuzzy.View
         private Button Left;
         private Button Right;
         private Label label1;
+        public const bool isChangableSize = true;
     }
 }

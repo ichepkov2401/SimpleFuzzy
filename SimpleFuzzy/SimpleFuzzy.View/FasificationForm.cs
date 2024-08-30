@@ -73,7 +73,7 @@ namespace SimpleFuzzy.View
 
                     if (string.IsNullOrWhiteSpace(variableName))
                     {
-                        MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -82,7 +82,7 @@ namespace SimpleFuzzy.View
 
                     if (existingVariable != null)
                     {
-                        MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Переменная с таким именем уже существует.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     LinguisticVariable newVariable = new LinguisticVariable(true, true) { Name = variableName };
@@ -95,7 +95,7 @@ namespace SimpleFuzzy.View
         }
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранную лингвистическую переменную?";
+            const string message = "Удалить лингвистическую переменную?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -144,8 +144,6 @@ namespace SimpleFuzzy.View
                     variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList, FillTreeView);
                     Controls.Add(variableUI);
                     variableUI.Location = new Point(325, 0);
-                    variableUI.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                    variableUI.Size = new Size(Width - 325, Height);
                 }
             }
         }

@@ -8,6 +8,7 @@ namespace SimpleFuzzy.View
         public IAssemblyLoaderService moduleLoaderService;
         public IRepositoryService repositoryService;
         public IProjectListService projectListService;
+        private IDefazificationService defazificationService;
         Dictionary<string, IModulable> modules = new Dictionary<string, IModulable>();
         Dictionary<ListViewItem, string> LoadedAssembies = new Dictionary<ListViewItem, string>();
         public LoaderForm()
@@ -22,6 +23,7 @@ namespace SimpleFuzzy.View
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();
+            defazificationService = AutofacIntegration.GetInstance<IDefazificationService>();
             RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
             TreeViewShow();
 
@@ -65,6 +67,13 @@ namespace SimpleFuzzy.View
                 {
                     throw new FileFormatException("Файл должен иметь расширение .dll");
                 }
+                foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
+                {
+                    if (FileCompare(assemblyLoadContext.AssemblyName, filePath))
+                    {
+                        throw new FileLoadException("Загружаемый dll файл уже есть в домене приложения");
+                    }
+                }
                 moduleLoaderService.AssemblyLoader(filePath);
                 foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
                 {
@@ -85,10 +94,42 @@ namespace SimpleFuzzy.View
             {
                 messageTextBox.Text = $"Ошибка: Неверный формат файла. {ex.Message}";
             }
+            catch (FileLoadException ex)
+            {
+                messageTextBox.Text = $"Ошибка: Загрузка файла невозможна. {ex.Message}";
+            }
             catch (Exception ex)
             {
                 messageTextBox.Text = $"Неизвестная ошибка: {ex.Message}";
             }
+        }
+
+        private bool FileCompare(string file1, string file2)
+        {
+            int file1byte;
+            int file2byte;
+
+            if (file1.Split('\\')[^1] != file2.Split('\\')[^1])
+            {
+                return false;
+            }
+            FileStream fs1 = File.OpenRead(file1);
+            FileStream fs2 = File.OpenRead(file2);
+            if (fs1.Length != fs2.Length)
+            {
+                fs1.Close();
+                fs2.Close();
+                return false;
+            }
+            do
+            {
+                file1byte = fs1.ReadByte();
+                file2byte = fs2.ReadByte();
+            }
+            while ((file1byte == file2byte) && (file1byte != -1 || file2byte != -1));
+            fs1.Close();
+            fs2.Close();
+            return ((file1byte - file2byte) == 0);
         }
 
         private void TreeViewShow()
@@ -175,13 +216,16 @@ namespace SimpleFuzzy.View
         {
             foreach (var variable in simulator.GetLinguisticVariables())
             {
-                repositoryService.GetCollection<LinguisticVariable>().Add(new LinguisticVariable(
+                var list = repositoryService.GetCollection<LinguisticVariable>();
+                list.Add(new LinguisticVariable(
                     variable.Name,
                     variable.IsInput,
                     false,
                     repositoryService.GetCollection<IObjectSet>().FirstOrDefault(t => t.GetType() == variable.BaseSet),
                     new List<(IMembershipFunction, Color)>()));
+                list[^1].ListRules = new SetRule(list[^1]);
             }
+            simulator.SetController(defazificationService.DefazificationSimulator);
         }
 
         private void UnloadSimulationVariable(ISimulator simulator)
@@ -232,7 +276,7 @@ namespace SimpleFuzzy.View
         //----------------------------------------------------------------------------------------
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранный файл?";
+            const string message = "Удалить выбранный файл?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -241,7 +285,7 @@ namespace SimpleFuzzy.View
                 try { File.Delete(projectListService.GivePath(projectListService.CurrentProjectName, true) + "\\" + e.Item.Text); }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Разработчики уже решают эту проблему)" + ex.Message, "Ошибка удаления");
+                    MessageBox.Show($"{ex.Message}, Пожалуйста, сообщите об этой ошибки разработчикам", "Ошибка удаления", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 dllListView.Items.Remove(e.Item);

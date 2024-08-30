@@ -74,7 +74,7 @@ namespace SimpleFuzzy.View
             labelBaseSet.Margin = new Padding(4, 0, 4, 0);
             labelBaseSet.MaximumSize = new Size(116, 0);
             labelBaseSet.Name = "labelBaseSet";
-            labelBaseSet.Size = new Size(90, 40);
+            labelBaseSet.Size = new Size(72, 30);
             labelBaseSet.TabIndex = 2;
             labelBaseSet.Text = "Базовое множество:";
             // 
@@ -91,7 +91,6 @@ namespace SimpleFuzzy.View
             // 
             // groupBoxConditions
             // 
-            groupBoxConditions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             groupBoxConditions.Controls.Add(panelConditions);
             groupBoxConditions.Controls.Add(buttonAddCondition);
             groupBoxConditions.Location = new Point(13, 144);
@@ -105,7 +104,6 @@ namespace SimpleFuzzy.View
             // 
             // panelConditions
             // 
-            panelConditions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             panelConditions.AutoScroll = true;
             panelConditions.Location = new Point(8, 29);
             panelConditions.Margin = new Padding(5);
@@ -119,7 +117,7 @@ namespace SimpleFuzzy.View
             buttonAddCondition.Location = new Point(9, 166);
             buttonAddCondition.Margin = new Padding(5);
             buttonAddCondition.Name = "buttonAddCondition";
-            buttonAddCondition.Size = new Size(384, 35);
+            buttonAddCondition.Size = new Size(336, 26);
             buttonAddCondition.TabIndex = 1;
             buttonAddCondition.Text = "Добавить условие";
             buttonAddCondition.UseVisualStyleBackColor = true;
@@ -127,7 +125,6 @@ namespace SimpleFuzzy.View
             // 
             // groupBoxActions
             // 
-            groupBoxActions.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             groupBoxActions.Controls.Add(buttonGenerateCode);
             groupBoxActions.Controls.Add(buttonVisualize);
             groupBoxActions.Location = new Point(13, 363);
@@ -145,7 +142,7 @@ namespace SimpleFuzzy.View
             buttonGenerateCode.Location = new Point(9, 20);
             buttonGenerateCode.Margin = new Padding(5);
             buttonGenerateCode.Name = "buttonGenerateCode";
-            buttonGenerateCode.Size = new Size(187, 35);
+            buttonGenerateCode.Size = new Size(164, 26);
             buttonGenerateCode.TabIndex = 0;
             buttonGenerateCode.Text = "Сгенерировать";
             buttonGenerateCode.UseVisualStyleBackColor = true;
@@ -157,7 +154,7 @@ namespace SimpleFuzzy.View
             buttonVisualize.Location = new Point(204, 20);
             buttonVisualize.Margin = new Padding(5);
             buttonVisualize.Name = "buttonVisualize";
-            buttonVisualize.Size = new Size(187, 35);
+            buttonVisualize.Size = new Size(164, 26);
             buttonVisualize.TabIndex = 1;
             buttonVisualize.Text = "Сохранить";
             buttonVisualize.UseVisualStyleBackColor = true;
@@ -173,7 +170,7 @@ namespace SimpleFuzzy.View
             // 
             // GenerationMembershipUI
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(pictureBox1);
             Controls.Add(groupBoxActions);

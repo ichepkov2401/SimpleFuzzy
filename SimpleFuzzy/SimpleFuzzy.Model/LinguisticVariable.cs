@@ -1,6 +1,7 @@
-﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Abstract;
+using System.Text;
 using System.Drawing;
-using System.Xml;
+
 
 namespace SimpleFuzzy.Model
 {
@@ -22,7 +23,7 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
             this.isInput = isInput;
-            this.ListRules = new SetRule(this);
+            if (!isInput) ListRules = new SetRule(this);
         }
         public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
@@ -180,7 +181,9 @@ namespace SimpleFuzzy.Model
         }
 
         //Расчет свойств нечеткого множества
-        public Tuple<double, string,List<object>, List<object>, List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+
+        public Tuple<double,string,string,string,string> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+
 
             if (!heightCache.ContainsKey(term))
             {
@@ -204,7 +207,7 @@ namespace SimpleFuzzy.Model
 
             List<object> section = CalculateSection(term, sectionHeight);
 
-            return Tuple.Create( heightCache[term], typeCache[term], areaOfInfluenceCache[term], coreCache[term], section);
+            return Tuple.Create( heightCache[term], typeCache[term],RemoveSequences(areaOfInfluenceCache[term]), RemoveSequences(coreCache[term]), RemoveSequences(section));
         }
         private double CalculateHeight(IMembershipFunction term) {
             double maxHeight = 0;
@@ -255,7 +258,7 @@ namespace SimpleFuzzy.Model
 
         private List<object> CalculateAreaOfInfluence(IMembershipFunction term)
         {
-            var areaOfInfluence = new List<object>();
+            List<object> areaOfInfluence = new List<object>();
             for (int i = 0; i < baseSet.Count; i++)
             {
                 double membershipValue = term.MembershipFunction(baseSet[i]);
@@ -282,7 +285,7 @@ namespace SimpleFuzzy.Model
         }
         private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {
-            var section = new List<object>();
+            List<object> section = new List<object>();
             for (int i = 0; i < baseSet.Count; i++)
             {
                 double membershipValue = term.MembershipFunction(baseSet[i]);
@@ -293,6 +296,84 @@ namespace SimpleFuzzy.Model
             }
             return section;
         }
+        string RemoveSequences(List<object> input)
+        {
+            if (input == null || input.Count == 0)
+            {
+                return "{}";
+            }
+
+            if (input.Count == 1)
+            {
+                return $"{{{input[0]}}}";
+            }
+
+            StringBuilder output = new StringBuilder();
+            output.Append("{");
+            int start = 0;
+            dynamic step = null;
+
+            // Погрешность для сравнения double
+            const double accuracy = 1e-10;
+
+            for (int i = 1; i < input.Count; i++)
+            {
+                if (input[i] is int || input[i] is double)
+                {
+                    dynamic current = Convert.ChangeType(input[i], input[i].GetType());
+                    dynamic previous = Convert.ChangeType(input[i - 1], input[i - 1].GetType());
+
+                    if (step == null)
+                    {
+                        step = current - previous; // Вычисляем шаг, если он еще не определен
+                    }
+
+                    bool isStepEqual;
+                    if (current is double && previous is double)
+                    {
+                        isStepEqual = Math.Abs((current - previous) - step) < accuracy;
+                    }
+                    else
+                    {
+                        isStepEqual = (current - previous).CompareTo(step) == 0;
+                    }
+
+                    if (!isStepEqual)
+                    {
+                        if (i - start > 1)
+                        {
+                            output.Append($"[{input[start]}; {input[i - 1]}], ");
+                        }
+                        else
+                        {
+                            output.Append($"{input[start]}, ");
+                        }
+                        start = i;
+                        step = null; // Сбрасываем шаг при разрыве последовательности
+                    }
+                }
+                else
+                {
+                    start = i; // Сброс начала последовательности
+                    step = null;
+                }
+            }
+
+            // Обработка последней последовательности
+            if (input.Count - start > 1)
+            {
+                output.Append($"[{input[start]}; {input[input.Count - 1]}]");
+            }
+            else if (start < input.Count)
+            {
+                output.Append($"{input[start]}");
+            }
+
+            output.Append("}");
+
+            return output.ToString();
+        }
+
     }
 }
 

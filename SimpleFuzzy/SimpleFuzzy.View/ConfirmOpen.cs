@@ -42,7 +42,7 @@ namespace SimpleFuzzy.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"{ex.Message}", "Ошибка открытия", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -96,20 +96,12 @@ namespace SimpleFuzzy.View
             if (listBox1.SelectedItem != null)
             {
                 string projectName = listBox1.SelectedItem.ToString();
-                try
+                // открытие проекта
+                projectList.OpenProjectfromName(projectName);
+                if (Parent is MainWindow parent)
                 {
-                    // открытие проекта
-                    projectList.OpenProjectfromName(projectName);
-                    if (Parent is MainWindow parent)
-                    {
-                        parent.Locked();
-                        parent.OpenLoader();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return;
+                    parent.Locked();
+                    parent.OpenLoader();
                 }
             }
         }

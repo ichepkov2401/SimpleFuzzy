@@ -209,7 +209,7 @@ namespace SimpleFuzzy.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка при визуализации: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка при визуализации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

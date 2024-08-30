@@ -19,13 +19,15 @@ namespace SimpleFuzzy.Service
         public string pathPR = Directory.GetCurrentDirectory() + "\\Projects";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
+        private IDefazificationService defazificationService;
         Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
-        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
+        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService, IDefazificationService defazificationService)
         {
             repository = repositoryService;
             this.loaderService = loaderService;
             pair.Add("activeModules", ChooseActive);
             pair.Add("allLinguisticVariables", LoadLinguisticVariable);
+            this.defazificationService = defazificationService;
         }
         public string? CurrentProjectName { get; set; }
 
@@ -43,8 +45,8 @@ namespace SimpleFuzzy.Service
         {
             if (!IsContainsName(name))
             {
-                if (name == "") throw new InvalidOperationException("Имя не может быть пустым");
-                if (name[0] == ' ') throw new InvalidOperationException("Имя не может начинаться с пробела");
+                if (name == "") throw new InvalidOperationException("Имя проекта не может быть пустым");
+                if (name[0] == ' ') throw new InvalidOperationException("Имя проекта не может начинаться с пробела");
                 CurrentProjectName = name;
                 FileStream file = new FileStream(pathPL, FileMode.Append);
                 StreamWriter writer = new StreamWriter(file);
@@ -111,6 +113,7 @@ namespace SimpleFuzzy.Service
                 if (module != null)
                 {
                     module.Active = status;
+                    (module as ISimulator).SetController(defazificationService.DefazificationSimulator);
                     continue;
                 }
             }
@@ -186,7 +189,7 @@ namespace SimpleFuzzy.Service
             }
             else
             {
-                throw new InvalidOperationException("Проекта по данному пути не существует");
+                throw new InvalidOperationException("Проекта по указаному пути не существует");
             }
         }
         public void CopyProject(string name, string path, bool save)

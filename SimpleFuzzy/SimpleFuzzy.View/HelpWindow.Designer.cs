@@ -45,7 +45,6 @@
             // 
             // treeView1
             // 
-            treeView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             treeView1.Location = new Point(5, 9);
             treeView1.Margin = new Padding(3, 4, 3, 4);
             treeView1.Name = "treeView1";
@@ -97,8 +96,6 @@
             ClientSize = new Size(254, 288);
             Controls.Add(treeView1);
             Margin = new Padding(3, 4, 3, 4);
-            MaximizeBox = false;
-            MinimizeBox = false;
             MinimumSize = new Size(272, 335);
             Name = "HelpWindow";
             Padding = new Padding(0, 60, 0, 0);
@@ -109,6 +106,7 @@
 
         #endregion
 
+        public const bool isChangableSize = true;
         private TreeView treeView1;
     }
 }

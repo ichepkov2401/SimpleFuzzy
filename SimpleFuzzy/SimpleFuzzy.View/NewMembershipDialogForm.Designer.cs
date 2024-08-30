@@ -34,7 +34,6 @@
             // 
             // metroRadioButton1
             // 
-            metroRadioButton1.Anchor = AnchorStyles.Top;
             metroRadioButton1.AutoSize = true;
             metroRadioButton1.Checked = true;
             metroRadioButton1.Location = new Point(12, 12);
@@ -48,7 +47,6 @@
             // 
             // metroRadioButton2
             // 
-            metroRadioButton2.Anchor = AnchorStyles.Top;
             metroRadioButton2.AutoSize = true;
             metroRadioButton2.Location = new Point(303, 12);
             metroRadioButton2.Name = "metroRadioButton2";
@@ -74,5 +72,6 @@
 
         private RadioButton metroRadioButton1;
         private RadioButton metroRadioButton2;
+        public const bool isChangableSize = true;
     }
 }

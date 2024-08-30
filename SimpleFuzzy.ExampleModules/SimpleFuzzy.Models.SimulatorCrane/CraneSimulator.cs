@@ -21,8 +21,8 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         public double dx = 0;
         public double dy = 0;
         public double t = 0.01;
-        public double beamSize = 20; // по умолчанию размер балки 20
-        public double platformPosition = 0;
+        public double beamSize = 100; // по умолчанию размер балки 20
+        public double platformPosition = 20;
         public const double MAX_ANGLE = Math.PI / 2;
         private bool cargoLoaded = false;
 

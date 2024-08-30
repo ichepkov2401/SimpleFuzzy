@@ -40,7 +40,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
@@ -49,7 +48,6 @@
             groupBox1.Controls.Add(button2);
             groupBox1.Controls.Add(button1);
             groupBox1.Location = new Point(3, 3);
-            groupBox1.MinimumSize = new Size(715, 373);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(742, 373);
             groupBox1.TabIndex = 0;
@@ -58,11 +56,10 @@
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Location = new Point(671, 109);
             label2.Name = "label2";
-            label2.Size = new Size(50, 20);
+            label2.Size = new Size(46, 20);
             label2.TabIndex = 11;
             label2.Text = "label2";
             // 
@@ -71,22 +68,22 @@
             label1.AutoSize = true;
             label1.Location = new Point(356, 21);
             label1.Name = "label1";
-            label1.Size = new Size(157, 20);
+            label1.Size = new Size(147, 20);
             label1.TabIndex = 10;
             label1.Text = "Введите имя проекта";
             // 
             // textBox1
             // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Location = new Point(356, 44);
+            textBox1.Multiline = false;
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(375, 27);
+            textBox1.SelectedText = "";
             textBox1.TabIndex = 8;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
             // listBox1
             // 
-            listBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             listBox1.ItemHeight = 20;
             listBox1.Location = new Point(3, 21);
             listBox1.Name = "listBox1";
@@ -96,7 +93,6 @@
             // 
             // button2
             // 
-            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Location = new Point(356, 77);
             button2.Name = "button2";
             button2.Size = new Size(183, 29);

@@ -33,13 +33,18 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         {
             if (radioButton2.Checked)
             {
-                forceTrackBar.Value = (int)simulator.GetFunc(new List<object>() {
+                forceTrackBar.Enabled = false;
+                forceTrackBar.Value = Convert.ToInt32(simulator.GetFunc(new List<object>() {
                     Math.Round((double)numPlatformPosition.Value - simulator.x, 2),
                     (int)Math.Round(simulator.y)
-                })[0];
+                })[0]);
+            }
+            else
+            {
+                forceTrackBar.Enabled = true;
             }
             simulator.Step();
-            if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
+            if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
                 string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
@@ -110,29 +115,17 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 }
             }
 
-            void AddAdaptiveLabel(string text, Control control)
-            {
-                Label label = new Label();
-                label.Text = text;
-                label.AutoSize = true;
-                label.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-                label.Dock = DockStyle.None;
-
-                label.Location = new Point(control.Left, control.Top - 20);
-
-                this.Controls.Add(label);
-            }
-
-            AddAdaptiveLabel("Масса маятника (кг):", numMassPendulum);
-            AddAdaptiveLabel("Масса каретки (кг):", numMassCart);
-            AddAdaptiveLabel("Длина маятника (м):", numLengthPendulum);
-            AddAdaptiveLabel("Коэф. торможения каретки:", numDampingCart);
-            AddAdaptiveLabel("Коэф. затухания колебаний:", numDampingPendulum);
-            AddAdaptiveLabel("Начальная позиция:", numInitialPosition);
-            AddAdaptiveLabel("Начальный угол:", numInitialAngle);
-            AddAdaptiveLabel("Размер балки (м):", numBeamSize);
-            AddAdaptiveLabel("Передвижение каретки:", forceTrackBar);
-            AddAdaptiveLabel("Позиция платформы:", numPlatformPosition);
+            // Добавление подписей к текстовым полям
+            AddLabel("Масса маятника (кг):", numMassPendulum);
+            AddLabel("Масса каретки (кг):", numMassCart);
+            AddLabel("Длина маятника (м):", numLengthPendulum);
+            AddLabel("Коэф. торможения каретки:", numDampingCart);
+            AddLabel("Коэф. затухания колебаний:", numDampingPendulum);
+            AddLabel("Начальная позиция:", numInitialPosition);
+            AddLabel("Начальный угол:", numInitialAngle);
+            AddLabel("Размер балки (м):", numBeamSize);
+            AddLabel("Передвижение каретки:", forceTrackBar);
+            AddLabel("Позиция платформы:", numPlatformPosition);
 
             // Настройка обработчиков событий
             numMassPendulum.ValueChanged += UpdateSimulatorParameters;

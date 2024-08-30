@@ -1,5 +1,4 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 
 
@@ -20,12 +19,17 @@ namespace SimpleFuzzy.View
             extender.AddColumn(buttonAction);
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
+            listView1.GetType()
+                     .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                     .SetValue(listView1, true);
             FillTreeView();
             RefreshLinguisticVariableList();
         }
 
         private void FillTreeView()
         {
+            treeView1.Nodes[0].Nodes.Clear();
+            treeView1.Nodes[1].Nodes.Clear();
             List<IMembershipFunction> list1 = repositoryService.GetCollection<IMembershipFunction>();
             for (int i = 0; i < list1.Count; i++)
             {
@@ -69,7 +73,7 @@ namespace SimpleFuzzy.View
 
                     if (string.IsNullOrWhiteSpace(variableName))
                     {
-                        MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -78,10 +82,10 @@ namespace SimpleFuzzy.View
 
                     if (existingVariable != null)
                     {
-                        MessageBox.Show("Переменная с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Переменная с таким именем уже существует.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    LinguisticVariable newVariable =  new LinguisticVariable(true, true) { Name = variableName };
+                    LinguisticVariable newVariable = new LinguisticVariable(true, true) { Name = variableName };
                     assemblyLoaderService.UseAssembly += newVariable.UnloadingHandler;
                     repositoryService.GetCollection<LinguisticVariable>().Add(newVariable);
 
@@ -91,7 +95,7 @@ namespace SimpleFuzzy.View
         }
         private void OnButtonActionClick(object sender, ListViewColumnMouseEventArgs e)
         {
-            const string message = "Вы уверенны, что хотите удалить выбранную лингвистическую переменную?";
+            const string message = "Удалить лингвистическую переменную?";
             const string caption = "Удаление элемента";
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
@@ -121,12 +125,14 @@ namespace SimpleFuzzy.View
                 if (variable.isRedact)
                     item.SubItems.Add("X");
                 listView1.Items.Add(item);
+                if (!variable.IsActive)
+                    item.ForeColor = Color.Red;
             }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (variableUI != null) 
+            if (variableUI != null)
             {
                 Controls.Remove(variableUI);
                 variableUI.Dispose();
@@ -135,13 +141,21 @@ namespace SimpleFuzzy.View
             {
                 var variable = repositoryService.GetCollection<LinguisticVariable>().FirstOrDefault(v => v.Name == listView1.SelectedItems[0].Text);
                 {
-                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList);
+                    variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList, FillTreeView);
                     Controls.Add(variableUI);
                     variableUI.Location = new Point(325, 0);
-                    variableUI.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                    variableUI.Size = new Size(Width - 325, Height);
                 }
             }
+        }
+
+        private void listView1_MouseLeave(object sender, EventArgs e)
+        {
+            listView1.Invalidate();
+        }
+
+        private void listView1_MouseMove(object sender, MouseEventArgs e)
+        {
+            listView1.Invalidate();
         }
     }
 }

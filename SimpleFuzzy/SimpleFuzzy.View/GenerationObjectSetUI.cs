@@ -1,6 +1,4 @@
-﻿using MetroFramework.Forms;
-using SimpleFuzzy.Abstract;
-using SimpleFuzzy.Service;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
@@ -9,11 +7,13 @@ namespace SimpleFuzzy.View
         IGenerationObjectSetService service;
         ICompileService serviceCompile;
         IProjectListService projectListService;
+        IAssemblyLoaderService assemblyLoaderService;
         public GenerationObjectSetUI()
         {
             service = AutofacIntegration.GetInstance<IGenerationObjectSetService>();
             serviceCompile = AutofacIntegration.GetInstance<ICompileService>();
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();
+            assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             InitializeComponent();
         }
 
@@ -21,16 +21,10 @@ namespace SimpleFuzzy.View
         {
             bool isValid = false;
             string errorMessage = "";
-            if (double.TryParse(this.txtFirst.Text, out double first) &&
-                double.TryParse(this.txtStep.Text, out double step) &&
-                double.TryParse(this.txtLast.Text, out double last))
-            {
-                if (step == 0) errorMessage = "Шаг не может быть равен нулю.";
-                else if (Math.Sign(last - first) != Math.Sign(step)) errorMessage = "Направление шага не соответствует начальному и конечному значению.";
-                else if ((last - first) % step != 0) errorMessage = "Конечное значение не достижимо с заданным шагом.";
-                else isValid = true;
-            }
-            else lblError.Text = "Пожалуйста, введите корректные числовые значения";
+            if (numericUpDown2.Value == 0) errorMessage = "Шаг не может быть равен нулю.";
+            else if (Math.Sign(numericUpDown3.Value - numericUpDown1.Value) != Math.Sign(numericUpDown2.Value)) errorMessage = "Направление шага не соответствует начальному и конечному значению.";
+            else if (string.IsNullOrWhiteSpace(nameTextBox.Text)) errorMessage = "Имя не может быть пустым";
+            else isValid = true;
             btnGenerate.Enabled = isValid;
             lblError.Text = errorMessage;
             lblError.AutoSize = true;
@@ -39,17 +33,20 @@ namespace SimpleFuzzy.View
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
-            double first = double.Parse(txtFirst.Text);
-            double step = double.Parse(txtStep.Text);
-            double last = double.Parse(txtLast.Text);
+            double first = (double)numericUpDown1.Value;
+            double step = (double)numericUpDown2.Value;
+            double last = (double)numericUpDown3.Value;
 
             try
             {
-                string generatedCode = service.ReturnObjectSet(first, step, last);
-                txtGeneratedCode.Text = generatedCode;
-                serviceCompile.Compile(generatedCode, $"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{DateTime.Now}.dll");
+                string generatedCode = service.ReturnObjectSet(first, step, last, nameTextBox.Text);
+                string dllName = $"BaseSet-{DateTime.Now.Ticks}";
+                var compile = serviceCompile.Compile(generatedCode);
+                serviceCompile.Save($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll", compile.Item1);
+                assemblyLoaderService.AssemblyLoader($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll");
+                Close();
             }
-            catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }

@@ -51,34 +51,38 @@ namespace SimpleFuzzy.View
             // 
             // treeView1
             // 
-            treeView1.Location = new Point(5, 3);
+            treeView1.Location = new Point(3, 2);
+            treeView1.Margin = new Padding(3, 2, 3, 2);
             treeView1.Name = "treeView1";
             treeNode1.Name = "";
             treeNode1.Text = "Термы";
             treeNode2.Name = "";
             treeNode2.Text = "Базовые множества";
             treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2 });
-            treeView1.Size = new Size(313, 191);
+            treeView1.Size = new Size(318, 144);
             treeView1.TabIndex = 0;
             // 
             // listView1
             // 
-            listView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             listView1.Columns.AddRange(new ColumnHeader[] { FileName, CloseButton });
             listView1.FullRowSelect = true;
-            listView1.Location = new Point(5, 235);
+            listView1.Location = new Point(3, 176);
+            listView1.Margin = new Padding(3, 2, 3, 2);
             listView1.Name = "listView1";
-            listView1.Size = new Size(313, 235);
+            listView1.Size = new Size(318, 252);
             listView1.TabIndex = 1;
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = System.Windows.Forms.View.Details;
             listView1.SelectedIndexChanged += listView1_SelectedIndexChanged;
+            listView1.MouseLeave += listView1_MouseLeave;
+            listView1.MouseMove += listView1_MouseMove;
             // 
             // button1
             // 
-            button1.Location = new Point(3, 200);
+            button1.Location = new Point(1, 150);
+            button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(316, 29);
+            button1.Size = new Size(320, 22);
             button1.TabIndex = 2;
             button1.Text = "Добавить лингвистическую переменную";
             button1.UseVisualStyleBackColor = true;
@@ -86,14 +90,15 @@ namespace SimpleFuzzy.View
             // 
             // FasificationForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
             Controls.Add(button1);
             Controls.Add(listView1);
             Controls.Add(treeView1);
-            MinimumSize = new Size(932, 473);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FasificationForm";
-            Size = new Size(932, 473);
+            Size = new Size(833, 430);
             ResumeLayout(false);
         }
 

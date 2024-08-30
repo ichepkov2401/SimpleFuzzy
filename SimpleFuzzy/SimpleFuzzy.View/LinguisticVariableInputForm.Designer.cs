@@ -36,7 +36,6 @@
             // 
             // textBox
             // 
-            textBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox.Location = new Point(15, 175);
             textBox.Margin = new Padding(2, 1, 2, 1);
             textBox.Name = "textBox";
@@ -55,7 +54,6 @@
             // 
             // buttonOK
             // 
-            buttonOK.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             buttonOK.Location = new Point(298, 171);
             buttonOK.Margin = new Padding(2, 1, 2, 1);
             buttonOK.Name = "buttonOK";
@@ -67,7 +65,6 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             buttonCancel.Location = new Point(394, 171);
             buttonCancel.Margin = new Padding(2, 1, 2, 1);
             buttonCancel.Name = "buttonCancel";
@@ -86,8 +83,10 @@
             Controls.Add(buttonOK);
             Controls.Add(label1);
             Controls.Add(textBox);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Margin = new Padding(2, 1, 2, 1);
-            MinimumSize = new Size(511, 328);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "LinguisticVariableInputForm";
             Text = "LinguisticVariableInputForm";
             ResumeLayout(false);
@@ -100,5 +99,6 @@
         private Label label1;
         private Button buttonOK;
         private Button buttonCancel;
+        public const bool isChangablesize = false;
     }
 }

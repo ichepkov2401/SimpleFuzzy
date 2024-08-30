@@ -16,5 +16,6 @@
         public string[]? GiveList();
         public void SaveAll(string name = "\\Save.xml");
         public void LoadAll(string name = "\\Save.xml");
+        public void CheckAll();
     }
 }

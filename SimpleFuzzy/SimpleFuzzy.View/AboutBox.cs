@@ -1,9 +1,8 @@
-﻿using MetroFramework.Forms;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace SimpleFuzzy.View
 {
-    partial class AboutBox : Form
+    public partial class AboutBox : Form
     {
         public AboutBox()
         {
@@ -89,5 +88,9 @@ namespace SimpleFuzzy.View
             }
         }
         #endregion
+        public void okButton_Click (object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

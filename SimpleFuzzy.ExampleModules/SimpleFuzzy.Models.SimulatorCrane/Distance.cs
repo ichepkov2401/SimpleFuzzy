@@ -13,14 +13,8 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         public string Name => "Расстояние";
 
-        int i = -10000;
+        public int Count => 20001;
 
-        public object Extraction() => i / 100.0;
-
-        public bool IsEnd() => i > 10000;
-
-        public void MoveNext() => i++;
-
-        public void ToFirst() => i = -10000;
+        public object this[int index] => Math.Round(index * 0.01 - 100, 2);
     }
 }

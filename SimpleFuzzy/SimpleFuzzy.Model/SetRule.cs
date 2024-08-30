@@ -19,17 +19,19 @@ namespace SimpleFuzzy.Model
         public LinguisticVariable outVariable; // выходная переменная
         public SetRule(LinguisticVariable var)
         {
-            /*for (int i = 0; i < outVariable.func.Count; i++)
-            {
-                if (outVariable.func.Count(v => v.Item1.Name == outVariable.func[i].Item1.Name) > 1)
-                    listDic[0].Add(outVariable.func[i].Item1.Name + " - " + outVariable.func[i].Item1.GetType().Name +
-                        " - " + outVariable.func[i].Item1.GetType().Assembly.Location, outVariable.func[i].Item1);
-                else
-                    listDic[0].Add(outVariable.func[i].Item1.Name, outVariable.func[i].Item1);
-            }*/
             outVariable = var;
             rules = new List<Rule>();
             inputVariables = new List<LinguisticVariable>();
+            Dictionary<string, IMembershipFunction> newOutVar = new Dictionary<string, IMembershipFunction>();
+            for (int i = 0; i < outVariable.func.Count; i++)
+            {
+                if (outVariable.func.Count(v => v.Item1.Name == outVariable.func[i].Item1.Name) > 1)
+                    newOutVar.Add(outVariable.func[i].Item1.Name + " - " + outVariable.func[i].Item1.GetType().Name +
+                        " - " + outVariable.func[i].Item1.GetType().Assembly.Location, outVariable.func[i].Item1);
+                else
+                    newOutVar.Add(outVariable.func[i].Item1.Name, outVariable.func[i].Item1);
+            }
+            listDic.Add(newOutVar);
         }
 
         public void UnloadingHandler(object sender, EventArgs e)
@@ -50,7 +52,17 @@ namespace SimpleFuzzy.Model
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }
             inputVariables.Add(inputVar);
-            // дополнить
+
+            Dictionary<string, IMembershipFunction> newInVar = new Dictionary<string, IMembershipFunction>();
+            for (int i = 0; i < inputVar.func.Count; i++)
+            {
+                if (inputVar.func.Count(v => v.Item1.Name == inputVar.func[i].Item1.Name) > 1)
+                    newInVar.Add(inputVar.func[i].Item1.Name + " - " + inputVar.func[i].Item1.GetType().Name +
+                        " - " + inputVar.func[i].Item1.GetType().Assembly.Location, inputVar.func[i].Item1);
+                else
+                    newInVar.Add(inputVar.func[i].Item1.Name, inputVar.func[i].Item1);
+            }
+            listDic.Add(newInVar);
         }
 
         public void DeleteRule(int position)
@@ -71,7 +83,7 @@ namespace SimpleFuzzy.Model
                 }
             }
             foreach (var rule in rules) { rule.DeleteTerm(position); }
-            // почистить словарь
+            listDic.RemoveAt(position);
         }
 
         private bool IsSameRules(Rule rule1, Rule rule2)

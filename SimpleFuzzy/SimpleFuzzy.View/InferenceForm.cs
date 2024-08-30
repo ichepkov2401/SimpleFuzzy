@@ -69,7 +69,8 @@ namespace SimpleFuzzy.View
                     dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
 
                 List<string> termInput = new List<string>();
-                foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
+                foreach (var func in currentOutputVar.ListRules.listDic[0]) { termInput.Add(func.Key); }
+                //foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
             (dataTable.Columns[^3] as DataGridViewComboBoxColumn).DataSource = termInput;
             }
             // Далее заполнение значениями
@@ -410,15 +411,7 @@ namespace SimpleFuzzy.View
         {
             List<IMembershipFunction> list = currentOutputVar.ListRules.rules[e.RowIndex].GiveList();
             bool dublicate = currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
-
-            //currentOutputVar.ListRules.DeleteRule((int)dataTable.Rows[e.RowIndex].Cells[0].Value + 1);//////////////////////
             currentOutputVar.ListRules.DeleteRule(e.RowIndex);
-            /*Id = 0;
-            for (int i = 0; i < dataTable.RowCount; i++)
-            {
-                Id++;
-                dataTable.Rows[i].Cells[0].Value = Id;
-            }*/
             Id--;
             if (!dublicate)
             {
@@ -455,6 +448,5 @@ namespace SimpleFuzzy.View
         {
             if (e.Column.HeaderCell.Size.Width < 50) e.Column.Width = 50;
         }
-
     }
 }

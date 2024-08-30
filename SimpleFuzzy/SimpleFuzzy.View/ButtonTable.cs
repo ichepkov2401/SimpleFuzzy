@@ -30,14 +30,15 @@ namespace SimpleFuzzy.View
         }
         public void AddColumn(DataGridViewComboBoxColumn column)
         {
-            Columns.Insert(1, column);
-            buttons.Insert(0, new Button());
-            Controls.Add(buttons[0]);
-            buttons[0].Text = "X";
-            buttons[0].BackColor = Color.Transparent;
-            buttons[0].FlatStyle = FlatStyle.Flat;
+            Columns.Insert(ColumnCount - 2, column);
+            buttons.Add(new Button());
+            //buttons.Insert(0, new Button());
+            Controls.Add(buttons[^1]);
+            buttons[^1].Text = "X";
+            buttons[^1].BackColor = Color.Transparent;
+            buttons[^1].FlatStyle = FlatStyle.Flat;
 
-            buttons[0].Click += DeleteColumn;
+            buttons[^1].Click += DeleteColumn;
             for (int i = 0; i < buttons.Count; i++)
             {
                 buttons[i].Size = new Size(25, 25);

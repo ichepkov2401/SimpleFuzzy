@@ -58,19 +58,19 @@ namespace SimpleFuzzy.View
 
             if (currentOutputVar.baseSet == null || currentOutputVar.func.Count == 0)
                 dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
-            for (int i = currentOutputVar.ListRules.inputVariables.Count - 1; i >= 0; i--)
+            for (int i = 0; i < currentOutputVar.ListRules.inputVariables.Count; i++)
             {
                 DataGridViewComboBoxColumn comboBoxInput = new DataGridViewComboBoxColumn();
                 comboBoxInput.HeaderText = currentOutputVar.ListRules.inputVariables[i].Name;
                 comboBoxInput.FlatStyle = FlatStyle.Flat;
                 dataTable.AddColumn(comboBoxInput);
-                dataTable.Columns[1].Name = currentOutputVar.ListRules.inputVariables[i].Name;
+                dataTable.Columns[^3].Name = currentOutputVar.ListRules.inputVariables[i].Name;
                 if (currentOutputVar.ListRules.inputVariables[i].baseSet == null || currentOutputVar.ListRules.inputVariables[i].func.Count == 0)
                     dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
 
                 List<string> termInput = new List<string>();
                 foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
-            (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = termInput;
+            (dataTable.Columns[^3] as DataGridViewComboBoxColumn).DataSource = termInput;
             }
             // Далее заполнение значениями
             if (currentOutputVar.ListRules.rules.Count > 0)
@@ -224,7 +224,7 @@ namespace SimpleFuzzy.View
                         column.HeaderText = inputVariablesComboBox.Text;
                         column.FlatStyle = FlatStyle.Flat;
                         dataTable.AddColumn(column);
-                        dataTable.Columns[1].Name = var.Name;
+                        dataTable.Columns[^3].Name = var.Name;
                         currentOutputVar.ListRules.AddInputVar(var);
 
                         List<string> term = new List<string>();

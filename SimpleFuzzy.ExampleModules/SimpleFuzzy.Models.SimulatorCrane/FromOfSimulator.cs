@@ -47,7 +47,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
-                string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
+                string message = (simulator.x <= 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
                 MessageBox.Show(message);
                 Reset();
             }

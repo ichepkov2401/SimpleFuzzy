@@ -42,6 +42,8 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
             UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
             UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
+            Left.Visible = false;
+            Right.Visible = false;
             Locked();
             timer1.Start();
         }

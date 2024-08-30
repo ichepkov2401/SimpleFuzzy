@@ -9,7 +9,6 @@ namespace SimpleFuzzy.View
     public partial class InferenceForm : UserControl
     {
         public IRepositoryService? repositoryService;
-        //public IAssemblyLoaderService assemblyLoaderService;
         public LinguisticVariable currentOutputVar;
         public int Id = 0;
         private string lastValue;
@@ -19,8 +18,6 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
-            //assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
-            //assemblyLoaderService.UseAssembly += UnloadingHandler;
             dataTable.EditMode = DataGridViewEditMode.EditOnEnter;
             foreach (LinguisticVariable variable in repositoryService.GetCollection<LinguisticVariable>())
             {
@@ -32,21 +29,6 @@ namespace SimpleFuzzy.View
                 outputVariableComboBox.SelectedIndex = 0;
             }
         }
-        /*private void UnloadingHandler(object sender, EventArgs e)
-        {
-            string context = sender as string;
-            for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++)
-            {
-                List<IMembershipFunction> list = currentOutputVar.ListRules.rules[i].GiveList();
-                for (int j = 0; j < currentOutputVar.ListRules.rules[i].GiveList().Count; j++)
-                {
-                    if (currentOutputVar.ListRules.rules[i].GiveList()[j].GetType().Assembly.FullName == context)
-                    {
-                        currentOutputVar.ListRules.rules[i].ChangeTermNull(j);
-                    }
-                }
-            } 
-        }*/
         private void StartTable(SetRule setRule)
         {
             if (dataTable != null) dataTable.Columns.Clear();
@@ -202,6 +184,7 @@ namespace SimpleFuzzy.View
             {
                 SetRule setRule = new SetRule(currentOutputVar);
                 currentOutputVar.ListRules = setRule;
+                currentOutputVar.UnloadAssembly += setRule.UnloadingHandler;
             }
             StartTable(currentOutputVar.ListRules);
             dataTable.RowsRemoved += dataTable_RowsRemoved;
@@ -237,7 +220,6 @@ namespace SimpleFuzzy.View
                         }
                         var combobox = (dataTable.Columns[1] as DataGridViewComboBoxColumn);
                         combobox.DataSource = term;
-                        dataTable.AutoResizeColumn(1);
                         break;
                     }
                 }

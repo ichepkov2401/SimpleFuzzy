@@ -21,8 +21,21 @@ namespace SimpleFuzzy.Model
             rules = new List<Rule>();
             inputVariables = new List<LinguisticVariable>();
         }
-
-        public void AddInputVar(LinguisticVariable inputVar)
+        public void UnloadingHandler(object sender, EventArgs e)
+        {
+            for (int i = 0; i < rules.Count; i++)
+            {
+                List<IMembershipFunction> list = rules[i].GiveList();
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (list[j].GetType().Assembly.FullName == sender as string)
+                    {
+                        rules[i].ChangeNullTerm(j);
+                    }
+                }
+            }
+        }
+            public void AddInputVar(LinguisticVariable inputVar)
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }
             inputVariables.Add(inputVar);

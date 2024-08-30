@@ -450,9 +450,58 @@ namespace SimpleFuzzy.Service
                 inputNode.InnerText = linguisticVariable.isInput.ToString();
                 linguisticNode.AppendChild(inputNode);
 
+                if (!linguisticVariable.IsInput)
+                {
+                    XmlElement setruleNode = parentNode.OwnerDocument.CreateElement("ListRules");
+                    parentNode.AppendChild(setruleNode);
+                    foreach (var rule in linguisticVariable.ListRules.rules) {
+                        XmlElement ruleNode = parentNode.OwnerDocument.CreateElement("Rule");
+                        setruleNode.AppendChild(ruleNode);
+
+                        XmlElement relevanceNode = parentNode.OwnerDocument.CreateElement("relevance");
+                        relevanceNode.InnerText = rule.relevance.ToString();
+                        ruleNode.AppendChild(relevanceNode);
+
+                        XmlElement IsActiveNode = parentNode.OwnerDocument.CreateElement("IsActive");
+                        IsActiveNode.InnerText = rule.IsActive.ToString();
+                        ruleNode.AppendChild(IsActiveNode);
+
+                        XmlElement IsDublicateNode = parentNode.OwnerDocument.CreateElement("IsDublicate");
+                        relevanceNode.InnerText = rule.IsDublicate.ToString();
+                        ruleNode.AppendChild(IsDublicateNode);
+
+                        XmlElement termsNode = parentNode.OwnerDocument.CreateElement("terms");
+                        if (!rule.isEmpty())
+                        {
+                            foreach (var function in linguisticVariable.func)
+                            {
+                                XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Oneterm");
+                                functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
+                                termsNode.AppendChild(functionNode);
+                                XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
+                                moduleNameXML.Value = function.Item2.R.ToString();
+                                functionNode.Attributes.Append(moduleNameXML);
+                                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
+                                moduleNameXML.Value = function.Item2.G.ToString();
+                                functionNode.Attributes.Append(moduleNameXML);
+                                moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
+                                moduleNameXML.Value = function.Item2.B.ToString();
+                                functionNode.Attributes.Append(moduleNameXML);
+                            }
+                        }
+                        else
+                        {
+                            termsNode.InnerText = "Нет термов";
+                        }
+                    }
+                    XmlElement inputVarablesNode = parentNode.OwnerDocument.CreateElement("inputVariables");
+                    parentNode.AppendChild(inputVarablesNode);
+
+                }
                 XmlElement redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
                 redactNode.InnerText = linguisticVariable.isRedact.ToString();
                 linguisticNode.AppendChild(redactNode);
+
                 XmlElement objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
                 if (linguisticVariable.baseSet != null)
                 {
@@ -465,6 +514,62 @@ namespace SimpleFuzzy.Service
                 linguisticNode.AppendChild(objectsetNode);
                 XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
                 if (linguisticVariable.func.Count != 0) {
+                    foreach (var function in linguisticVariable.func)
+                    {
+                        XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
+                        functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
+                        funcNode.AppendChild(functionNode);
+                        XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
+                        moduleNameXML.Value = function.Item2.R.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
+                        moduleNameXML = parentNode.OwnerDocument.CreateAttribute("G");
+                        moduleNameXML.Value = function.Item2.G.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
+                        moduleNameXML = parentNode.OwnerDocument.CreateAttribute("B");
+                        moduleNameXML.Value = function.Item2.B.ToString();
+                        functionNode.Attributes.Append(moduleNameXML);
+                    }
+                }
+                else
+                {
+                    funcNode.InnerText = "Нет термов";
+                }
+                linguisticNode.AppendChild(funcNode);
+            }
+        }
+
+        private void SaveinputVariables(XmlElement parentNode, List<LinguisticVariable> inputVariables)
+        {
+            foreach (var linguisticVariable in inputVariables)
+            {
+                XmlElement linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
+                parentNode.AppendChild(linguisticNode);
+
+                XmlElement nameNode = parentNode.OwnerDocument.CreateElement("name");
+                nameNode.InnerText = linguisticVariable.name;
+                linguisticNode.AppendChild(nameNode);
+
+                XmlElement inputNode = parentNode.OwnerDocument.CreateElement("isInput");
+                inputNode.InnerText = linguisticVariable.isInput.ToString();
+                linguisticNode.AppendChild(inputNode);
+
+                XmlElement redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
+                redactNode.InnerText = linguisticVariable.isRedact.ToString();
+                linguisticNode.AppendChild(redactNode);
+
+                XmlElement objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
+                if (linguisticVariable.baseSet != null)
+                {
+                    objectsetNode.InnerText = linguisticVariable.baseSet.GetType().FullName + " " + linguisticVariable.baseSet.GetType().Assembly.FullName;
+                }
+                else
+                {
+                    objectsetNode.InnerText = "Нет базового множества";
+                }
+                linguisticNode.AppendChild(objectsetNode);
+                XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
+                if (linguisticVariable.func.Count != 0)
+                {
                     foreach (var function in linguisticVariable.func)
                     {
                         XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");

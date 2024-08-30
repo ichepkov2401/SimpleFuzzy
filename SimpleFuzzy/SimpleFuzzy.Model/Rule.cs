@@ -74,5 +74,9 @@ namespace SimpleFuzzy.Model
             }
             IsActive = true;
         }
+        public bool isEmpty()
+        {
+            return terms.Count == 0;
+        }
     }
 }

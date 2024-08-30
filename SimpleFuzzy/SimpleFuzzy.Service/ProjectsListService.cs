@@ -45,8 +45,6 @@ namespace SimpleFuzzy.Service
         {
             if (!IsContainsName(name))
             {
-                if (name == "") throw new InvalidOperationException("Имя проекта не может быть пустым");
-                if (name[0] == ' ') throw new InvalidOperationException("Имя проекта не может начинаться с пробела");
                 CurrentProjectName = name;
                 FileStream file = new FileStream(pathPL, FileMode.Append);
                 StreamWriter writer = new StreamWriter(file);

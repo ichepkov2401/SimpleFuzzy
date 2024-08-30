@@ -70,7 +70,6 @@ namespace SimpleFuzzy.View
                 if (inputBox.ShowDialog() == DialogResult.OK)
                 {
                     string variableName = inputBox.InputText;
-
                     if (string.IsNullOrWhiteSpace(variableName))
                     {
                         MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -11,9 +11,6 @@ namespace SimpleFuzzy.Model
 {
     public class SetRule
     {
-        // список словарей
-        public List<Dictionary<string, IMembershipFunction>> listDic = new List<Dictionary<string, IMembershipFunction>>();
-
         public List<Rule> rules; // список правил с одной и той же выходной переменной
         public List<LinguisticVariable> inputVariables; // список входных переменных
         public LinguisticVariable outVariable; // выходная переменная
@@ -22,16 +19,6 @@ namespace SimpleFuzzy.Model
             outVariable = var;
             rules = new List<Rule>();
             inputVariables = new List<LinguisticVariable>();
-            Dictionary<string, IMembershipFunction> newOutVar = new Dictionary<string, IMembershipFunction>();
-            for (int i = 0; i < outVariable.func.Count; i++)
-            {
-                if (outVariable.func.Count(v => v.Item1.Name == outVariable.func[i].Item1.Name) > 1)
-                    newOutVar.Add(outVariable.func[i].Item1.Name + " - " + outVariable.func[i].Item1.GetType().Name +
-                        " - " + outVariable.func[i].Item1.GetType().Assembly.Location, outVariable.func[i].Item1);
-                else
-                    newOutVar.Add(outVariable.func[i].Item1.Name, outVariable.func[i].Item1);
-            }
-            listDic.Add(newOutVar);
         }
 
         public void UnloadingHandler(object sender, EventArgs e)
@@ -52,17 +39,6 @@ namespace SimpleFuzzy.Model
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }
             inputVariables.Add(inputVar);
-
-            Dictionary<string, IMembershipFunction> newInVar = new Dictionary<string, IMembershipFunction>();
-            for (int i = 0; i < inputVar.func.Count; i++)
-            {
-                if (inputVar.func.Count(v => v.Item1.Name == inputVar.func[i].Item1.Name) > 1)
-                    newInVar.Add(inputVar.func[i].Item1.Name + " - " + inputVar.func[i].Item1.GetType().Name +
-                        " - " + inputVar.func[i].Item1.GetType().Assembly.Location, inputVar.func[i].Item1);
-                else
-                    newInVar.Add(inputVar.func[i].Item1.Name, inputVar.func[i].Item1);
-            }
-            listDic.Add(newInVar);
         }
 
         public void DeleteRule(int position)
@@ -83,7 +59,6 @@ namespace SimpleFuzzy.Model
                 }
             }
             foreach (var rule in rules) { rule.DeleteTerm(position); }
-            listDic.RemoveAt(position);
         }
 
         private bool IsSameRules(Rule rule1, Rule rule2)

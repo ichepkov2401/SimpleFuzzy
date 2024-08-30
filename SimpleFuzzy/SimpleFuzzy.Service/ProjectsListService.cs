@@ -450,7 +450,7 @@ namespace SimpleFuzzy.Service
                 inputNode.InnerText = linguisticVariable.isInput.ToString();
                 linguisticNode.AppendChild(inputNode);
 
-                if (!linguisticVariable.IsInput)
+                if (!linguisticVariable.IsInput && linguisticVariable.ListRules != null)
                 {
                     XmlElement setruleNode = parentNode.OwnerDocument.CreateElement("ListRules");
                     parentNode.AppendChild(setruleNode);
@@ -467,7 +467,7 @@ namespace SimpleFuzzy.Service
                         ruleNode.AppendChild(IsActiveNode);
 
                         XmlElement IsDublicateNode = parentNode.OwnerDocument.CreateElement("IsDublicate");
-                        relevanceNode.InnerText = rule.IsDublicate.ToString();
+                        IsDublicateNode.InnerText = rule.IsDublicate.ToString();
                         ruleNode.AppendChild(IsDublicateNode);
 
                         XmlElement termsNode = parentNode.OwnerDocument.CreateElement("terms");
@@ -488,15 +488,22 @@ namespace SimpleFuzzy.Service
                                 moduleNameXML.Value = function.Item2.B.ToString();
                                 functionNode.Attributes.Append(moduleNameXML);
                             }
+                            ruleNode.AppendChild(termsNode);
                         }
                         else
                         {
                             termsNode.InnerText = "Нет термов";
+                            ruleNode.AppendChild(termsNode);
                         }
                     }
                     XmlElement inputVarablesNode = parentNode.OwnerDocument.CreateElement("inputVariables");
-                    parentNode.AppendChild(inputVarablesNode);
-
+                    foreach (var lingvistic in linguisticVariable.ListRules.inputVariables)
+                    {
+                        XmlElement inputVar = parentNode.OwnerDocument.CreateElement("inputVarName");
+                        inputVar.InnerText = lingvistic.Name;
+                        inputVarablesNode.AppendChild(inputVar);
+                    }
+                    setruleNode.AppendChild(inputVarablesNode);
                 }
                 XmlElement redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
                 redactNode.InnerText = linguisticVariable.isRedact.ToString();

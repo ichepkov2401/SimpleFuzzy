@@ -71,7 +71,7 @@ namespace SimpleFuzzy.View
             nameLabel.AutoSize = true;
             nameLabel.Location = new Point(0, 0);
             nameLabel.Name = "nameLabel";
-            nameLabel.Size = new Size(205, 15);
+            nameLabel.Size = new Size(258, 20);
             nameLabel.TabIndex = 0;
             nameLabel.Text = "Имя лингвистической переменной:";
             // 
@@ -79,7 +79,7 @@ namespace SimpleFuzzy.View
             // 
             nameTextBox.Location = new Point(0, 24);
             nameTextBox.Name = "nameTextBox";
-            nameTextBox.Size = new Size(200, 23);
+            nameTextBox.Size = new Size(200, 27);
             nameTextBox.TabIndex = 1;
             nameTextBox.LostFocus += NameChangedHandler;
             // 
@@ -88,7 +88,7 @@ namespace SimpleFuzzy.View
             baseSetLabel.AutoSize = true;
             baseSetLabel.Location = new Point(0, 75);
             baseSetLabel.Name = "baseSetLabel";
-            baseSetLabel.Size = new Size(119, 15);
+            baseSetLabel.Size = new Size(152, 20);
             baseSetLabel.TabIndex = 2;
             baseSetLabel.Text = "Базовое множество:";
             // 
@@ -97,7 +97,7 @@ namespace SimpleFuzzy.View
             termsLabel.AutoSize = true;
             termsLabel.Location = new Point(0, 119);
             termsLabel.Name = "termsLabel";
-            termsLabel.Size = new Size(47, 15);
+            termsLabel.Size = new Size(59, 20);
             termsLabel.TabIndex = 4;
             termsLabel.Text = "Термы:";
             // 
@@ -139,10 +139,12 @@ namespace SimpleFuzzy.View
             termsListView.View = System.Windows.Forms.View.Details;
             termsListView.SelectedIndexChanged += termView_SelectedIndexChanged;
             termsListView.MouseDoubleClick += termsListView_MouseDoubleClick;
+            termsListView.MouseLeave += termsListView_MouseLeave;
+            termsListView.MouseMove += termsListView_MouseMove;
             // 
             // HeightLabel
             // 
-            HeightLabel.Location = new Point(260, 311);
+            HeightLabel.Location = new Point(260, 322);
             HeightLabel.Name = "HeightLabel";
             HeightLabel.Size = new Size(70, 20);
             HeightLabel.TabIndex = 10;
@@ -153,10 +155,10 @@ namespace SimpleFuzzy.View
             // 
             NumericUpDown1.DecimalPlaces = 2;
             NumericUpDown1.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            NumericUpDown1.Location = new Point(336, 309);
+            NumericUpDown1.Location = new Point(336, 320);
             NumericUpDown1.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
             NumericUpDown1.Name = "NumericUpDown1";
-            NumericUpDown1.Size = new Size(150, 23);
+            NumericUpDown1.Size = new Size(150, 27);
             NumericUpDown1.TabIndex = 11;
             NumericUpDown1.Value = new decimal(new int[] { 5, 0, 0, 65536 });
             NumericUpDown1.Visible = false;
@@ -164,7 +166,7 @@ namespace SimpleFuzzy.View
             // 
             // SetProperty
             // 
-            SetProperty.Location = new Point(260, 339);
+            SetProperty.Location = new Point(260, 350);
             SetProperty.Name = "SetProperty";
             SetProperty.Size = new Size(430, 100);
             SetProperty.TabIndex = 9;
@@ -174,7 +176,7 @@ namespace SimpleFuzzy.View
             trackBar.Location = new Point(260, 230);
             trackBar.Maximum = 100;
             trackBar.Name = "trackBar";
-            trackBar.Size = new Size(215, 45);
+            trackBar.Size = new Size(215, 56);
             trackBar.TabIndex = 12;
             trackBar.Value = 50;
             trackBar.ValueChanged += FazificationObjectChaged;
@@ -188,7 +190,7 @@ namespace SimpleFuzzy.View
             // 
             // FazificationDescription
             // 
-            FazificationDescription.Location = new Point(260, 278);
+            FazificationDescription.Location = new Point(260, 289);
             FazificationDescription.Name = "FazificationDescription";
             FazificationDescription.Size = new Size(430, 22);
             FazificationDescription.TabIndex = 14;
@@ -216,7 +218,7 @@ namespace SimpleFuzzy.View
             baseSetComboBox.FormattingEnabled = true;
             baseSetComboBox.Location = new Point(3, 93);
             baseSetComboBox.Name = "baseSetComboBox";
-            baseSetComboBox.Size = new Size(197, 23);
+            baseSetComboBox.Size = new Size(197, 28);
             baseSetComboBox.TabIndex = 17;
             baseSetComboBox.SelectedIndexChanged += BaseSetChange;
             // 
@@ -225,7 +227,7 @@ namespace SimpleFuzzy.View
             termsComboBox.FormattingEnabled = true;
             termsComboBox.Location = new Point(3, 137);
             termsComboBox.Name = "termsComboBox";
-            termsComboBox.Size = new Size(197, 23);
+            termsComboBox.Size = new Size(197, 28);
             termsComboBox.TabIndex = 18;
             // 
             // radioButton1
@@ -233,7 +235,7 @@ namespace SimpleFuzzy.View
             radioButton1.AutoSize = true;
             radioButton1.Location = new Point(3, 53);
             radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(70, 19);
+            radioButton1.Size = new Size(88, 24);
             radioButton1.TabIndex = 19;
             radioButton1.TabStop = true;
             radioButton1.Text = "Входная";
@@ -243,9 +245,9 @@ namespace SimpleFuzzy.View
             // radioButton2
             // 
             radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(79, 53);
+            radioButton2.Location = new Point(88, 53);
             radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(79, 19);
+            radioButton2.Size = new Size(99, 24);
             radioButton2.TabIndex = 20;
             radioButton2.TabStop = true;
             radioButton2.Text = "Выходная";

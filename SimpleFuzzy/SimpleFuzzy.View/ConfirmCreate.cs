@@ -6,21 +6,37 @@ namespace SimpleFuzzy.View
     {
         IRepositoryService repositoryService;
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmCreate()
         {
             InitializeComponent();
             textBox2.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
-            catch (Exception ex)
+            textBox1.Text = textBox1.Text.TrimEnd('.');// Для файла
+            textBox1.Text = textBox1.Text.Trim(' ');
+            textBox2.Text = textBox2.Text.TrimEnd('/');//Для пути
+            textBox2.Text = textBox2.Text.TrimEnd('.');
+            if (validator.IsValidFileName(textBox1.Text)&&validator.IsValidDirectoryName(textBox2.Text))
             {
-                MessageBox.Show(ex.Message);
+
+                try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
+catch (Exception ex)
+{
+    MessageBox.Show($"{ex.Message}", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    return;
+}
+            }
+            else
+            {
+                MessageBox.Show("Неверное имя файла или путь к нему!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
             // Дальше открывается проект
             projectList.OpenProjectfromName(projectList.CurrentProjectName);
             if (Parent is MainWindow parent)

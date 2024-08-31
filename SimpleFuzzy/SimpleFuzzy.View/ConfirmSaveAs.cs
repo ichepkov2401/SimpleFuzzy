@@ -5,11 +5,13 @@ namespace SimpleFuzzy.View
     public partial class ConfirmSaveAs : UserControl
     {
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmSaveAs()
         {
             InitializeComponent();
             textBox1.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -23,17 +25,25 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (metroTextBox1 == null)
+            metroTextBox1.Text = metroTextBox1.Text.TrimEnd('.');// Для файла
+            metroTextBox1.Text = metroTextBox1.Text.Trim(' ');
+            textBox1.Text = textBox1.Text.TrimEnd('/');//Для пути
+            textBox1.Text = textBox1.Text.TrimEnd('.');
+            if (validator.IsValidFileName(metroTextBox1.Text) && validator.IsValidDirectoryName(textBox1.Text))
             {
-                MessageBox.Show("Введите новое имя проекта");
+                try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неверное имя или путь к файлу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
+            
             button3_Click(sender, e);
         }
 

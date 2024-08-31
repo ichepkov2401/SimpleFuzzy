@@ -3,9 +3,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
-using System.Collections.Generic;
 using System.Data;
-
 namespace SimpleFuzzy.View
 {
     public partial class FuzzyOperationUI : UserControl
@@ -77,10 +75,9 @@ namespace SimpleFuzzy.View
             var list = repositoryService.GetCollection<IMembershipFunction>();
             if (ObjectSet != null)
             {
-                ObjectSet.ToFirst();
                 foreach (var item in list)
                 {
-                    if (item.InputType != ObjectSet.Extraction().GetType()) continue;
+                    if (item.InputType != ObjectSet[0].GetType()) continue;
                     Queue<IMembershipFunction> queue = new Queue<IMembershipFunction>();
                     queue.Enqueue(item);
                     bool check = false;
@@ -103,13 +100,9 @@ namespace SimpleFuzzy.View
                     string name = $"{item.Name}";
                     if (list.Count(t => t.Name == item.Name) > 1)
                     {
-                        name = $"{item.Name} - {item.GetType()}";
-                        if (list.Where(x => x.Name == item.Name).Count(x => x.GetType() == item.GetType()) > 1)
-                        {
-                            name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.FullName}";
-                        }
+                        name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.Location}";
                     }
-                    termsName.Add(item.Name, item);
+                    termsName.Add(name, item);
                 }
             }
             if (fuzzyOperation.Operand1 == null)
@@ -118,7 +111,7 @@ namespace SimpleFuzzy.View
                 if (operand1.Items.Count > 0)
                     operand1.SelectedIndex = 0;
             }
-            else 
+            else
             {
                 operand1.DataSource = termsName.Keys.ToList();
                 operand1.SelectedItem = termsName.FirstOrDefault(t => t.Value == fuzzyOperation.Operand1).Key;
@@ -208,16 +201,14 @@ namespace SimpleFuzzy.View
                 Title = "Результат операции",
                 Color = OxyColor.FromRgb(0, 255, 0)
             };
-            ObjectSet.ToFirst();
-            while (!ObjectSet.IsEnd())
+            for (int i = 0; i < ObjectSet.Count; i++)
             {
-                var x = ObjectSet.Extraction();
+                var x = ObjectSet[i];
                 operand1Series.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.Operand1.MembershipFunction(x)));
                 if (fuzzyOperation.Operand2 != null)
                     operand2Series.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.Operand2.MembershipFunction(x)));
                 if (fuzzyOperation.Operand2 != null || Uno.Checked)
                     resSeries.Points.Add(new DataPoint(Convert.ToDouble(x), fuzzyOperation.MembershipFunction(x)));
-                ObjectSet.MoveNext();
             }
             plotModel.Series.Add(operand1Series);
             plotModel.Series.Add(operand2Series);
@@ -235,6 +226,19 @@ namespace SimpleFuzzy.View
         private void operations_SelectedIndexChanged(object sender, EventArgs e)
         {
             fuzzyOperation.Func = (string)operations.SelectedItem;
+            if (Bin.Checked)
+            {
+                if ((string)operations.SelectedItem == bins[0] || (string)operations.SelectedItem == bins[1] || (string)operations.SelectedItem == bins[2] || (string)operations.SelectedItem == bins[^1] || (string)operations.SelectedItem == bins[^2])
+                {
+                    pLabel.Visible = true;
+                    pNumericUpDown.Visible = true;
+                }
+                else
+                {
+                    pLabel.Visible = false;
+                    pNumericUpDown.Visible = false;
+                }
+            }
             GraphicUpdate();
         }
 
@@ -244,12 +248,12 @@ namespace SimpleFuzzy.View
             {
                 if (string.IsNullOrWhiteSpace(nameTextBox.Text))
                 {
-                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Имя терма не может быть пустым.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else if (repositoryService.GetCollection<LinguisticVariable>().Exists(x => x.Name == nameTextBox.Text))
                 {
-                    MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Терм с таким именем уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 repositoryService.GetCollection<IMembershipFunction>().Add(fuzzyOperation);
@@ -271,18 +275,24 @@ namespace SimpleFuzzy.View
         {
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
-                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя терма не может быть пустым.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else if (repositoryService.GetCollection<IMembershipFunction>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Терм с таким именем уже существует. Пожалуйста, введите другое имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Терм с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 nameTextBox.Text = oldName;
             }
             else
             {
                 fuzzyOperation.Name = nameTextBox.Text;
             }
+        }
+
+        private void pNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            fuzzyOperation.p = (double)pNumericUpDown.Value;
+            GraphicUpdate();
         }
     }
 }

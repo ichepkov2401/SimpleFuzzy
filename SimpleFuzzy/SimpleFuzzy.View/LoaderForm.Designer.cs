@@ -21,14 +21,11 @@ namespace SimpleFuzzy.View
 
         private void InitializeComponent()
         {
-            TreeNode treeNode1 = new TreeNode("Термы");
-            TreeNode treeNode2 = new TreeNode("Базовые множества");
-            TreeNode treeNode3 = new TreeNode("Симуляции");
             filePathTextBox = new TextBox();
             browseButton = new Button();
             loadButton = new Button();
             messageTextBox = new TextBox();
-            treeView1 = new NoClickTree();
+            treeView1 = new RadioTree();
             dllListView = new ListView();
             FileName = new ColumnHeader();
             CloseButton = new ColumnHeader();
@@ -76,20 +73,13 @@ namespace SimpleFuzzy.View
             // 
             // treeView1
             // 
-            treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Name = "";
-            treeNode1.Text = "Термы";
-            treeNode2.Name = "";
-            treeNode2.Text = "Базовые множества";
-            treeNode3.Name = "";
-            treeNode3.Text = "Симуляции";
-            treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
-            treeView1.ShowNodeToolTips = true;
             treeView1.Size = new Size(398, 227);
             treeView1.TabIndex = 0;
-            treeView1.AfterCheck += treeView1_AfterCheck;
+            treeView1.BaseSetCheckedChange += BaseSetCheck;
+            treeView1.TermCheckedChange += TermCheck;
+            treeView1.SimulatorCheckedChange += SimulatorCheck;
             // 
             // dllListView
             // 
@@ -163,7 +153,7 @@ namespace SimpleFuzzy.View
         private Button browseButton;
         private Button loadButton;
         private TextBox messageTextBox;
-        private NoClickTree treeView1;
+        private RadioTree treeView1;
         public ListView dllListView;
         private ColumnHeader FileName;
         private ColumnHeader CloseButton;

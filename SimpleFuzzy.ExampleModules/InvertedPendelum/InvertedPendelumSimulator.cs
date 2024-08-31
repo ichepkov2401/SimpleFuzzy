@@ -17,7 +17,6 @@ namespace InvertedPendelum
 
         public void SetController(Func<List<object>, List<object>> controller)
         {
-            throw new NotImplementedException();
         }
     }
 }

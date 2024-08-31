@@ -27,7 +27,7 @@ namespace SimpleFuzzy.View
             AddInbutton = new Button();
             inputVariablesComboBox = new ComboBox();
             label1 = new Label();
-            dataTable = new DataGridView();
+            dataTable = new ButtonTable();
             ((System.ComponentModel.ISupportInitialize)dataTable).BeginInit();
             SuspendLayout();
             // 
@@ -51,7 +51,7 @@ namespace SimpleFuzzy.View
             // windowHeaderLabel
             // 
             windowHeaderLabel.AutoSize = true;
-            windowHeaderLabel.Location = new Point(384, 10);
+            windowHeaderLabel.Location = new Point(384, 11);
             windowHeaderLabel.Name = "windowHeaderLabel";
             windowHeaderLabel.Size = new Size(144, 20);
             windowHeaderLabel.TabIndex = 2;
@@ -87,6 +87,9 @@ namespace SimpleFuzzy.View
             // 
             // dataTable
             // 
+            dataTable.AllowUserToResizeColumns = false;
+            dataTable.AllowUserToResizeRows = false;
+            dataTable.BackgroundColor = SystemColors.ControlLight;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -104,15 +107,20 @@ namespace SimpleFuzzy.View
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
-            dataTable.Location = new Point(3, 129);
+            dataTable.Dock = DockStyle.Bottom;
+            dataTable.EnableHeadersVisualStyles = false;
+            dataTable.Location = new Point(0, 146);
             dataTable.Name = "dataTable";
-            dataTable.RowHeadersVisible = false;
             dataTable.RowHeadersWidth = 51;
+            dataTable.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(753, 345);
+            dataTable.Size = new Size(941, 345);
             dataTable.TabIndex = 7;
+            dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
-            dataTable.RowsAdded += dataTable_RowsAdded;
+            dataTable.ColumnRemoved += dataTable_ColumnRemoved;
+            dataTable.ColumnWidthChanged += dataTable_ColumnWidthChanged;
+            dataTable.RowsRemoved += dataTable_RowsRemoved;
             // 
             // InferenceForm
             // 
@@ -126,7 +134,7 @@ namespace SimpleFuzzy.View
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
             Name = "InferenceForm";
-            Size = new Size(941, 490);
+            Size = new Size(941, 491);
             ((System.ComponentModel.ISupportInitialize)dataTable).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -140,6 +148,6 @@ namespace SimpleFuzzy.View
         private Button AddInbutton;
         private ComboBox inputVariablesComboBox;
         private Label label1;
-        private DataGridView dataTable;
+        private ButtonTable dataTable;
     }
 }

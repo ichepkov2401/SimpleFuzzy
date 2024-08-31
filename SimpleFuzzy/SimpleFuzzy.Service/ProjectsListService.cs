@@ -9,29 +9,42 @@ using System.Xml;
 using System.Xml.Linq;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
+using System.Data;
 
 namespace SimpleFuzzy.Service
 {
     public class ProjectListService : IProjectListService
     {
         public string pathPL = Directory.GetCurrentDirectory() + "\\ProjectsList.tt";
+        public string pathPR = Directory.GetCurrentDirectory() + "\\Projects";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
+        private IDefazificationService defazificationService;
         Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
-        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
+        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService, IDefazificationService defazificationService)
         {
             repository = repositoryService;
             this.loaderService = loaderService;
             pair.Add("activeModules", ChooseActive);
             pair.Add("allLinguisticVariables", LoadLinguisticVariable);
+            this.defazificationService = defazificationService;
         }
         public string? CurrentProjectName { get; set; }
+
+        public void CheckAll()
+        {
+            string[] list = GiveList();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (i % 3 == 0) ContainsCheckName(list[i]);
+            }
+            ContainsCheckPath();
+        }
+
         public void AddProject(string name, string path)
         {
             if (!IsContainsName(name))
             {
-                if (name == "") throw new InvalidOperationException("Имя не может быть пустым");
-                if (name[0] == ' ') throw new InvalidOperationException("Имя не может начинаться с пробела");
                 CurrentProjectName = name;
                 FileStream file = new FileStream(pathPL, FileMode.Append);
                 StreamWriter writer = new StreamWriter(file);
@@ -98,6 +111,7 @@ namespace SimpleFuzzy.Service
                 if (module != null)
                 {
                     module.Active = status;
+                    (module as ISimulator).SetController(defazificationService.DefazificationSimulator);
                     continue;
                 }
             }
@@ -146,17 +160,22 @@ namespace SimpleFuzzy.Service
         }
         public void OpenProjectfromName(string name)
         {
-            if (IsContainsName(name))
+            if (ContainsCheckName(name))
             {
-                OpenProjectfromPath(GivePath(name, true));
+                if (IsContainsName(name))
+                {
+                    OpenProjectfromPath(GivePath(name, true));
+                }
+                else
+                {
+                    throw new InvalidOperationException("Проекта с таким именем не существует");
+                }
             }
-            else
-            {
-                throw new InvalidOperationException("Проекта с таким именем не существует");
-            }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void OpenProjectfromPath(string path) 
         {
+            ContainsCheckPath();
             if (IsContainsPath(path))
             {
                 // открытие проекта
@@ -168,43 +187,70 @@ namespace SimpleFuzzy.Service
             }
             else
             {
-                throw new InvalidOperationException("Проекта по данному пути не существует");
+                throw new InvalidOperationException("Проекта по указаному пути не существует");
             }
         }
         public void CopyProject(string name, string path, bool save)
         {
-            string lastName = CurrentProjectName;
-            SaveAll("\\SaveCopy.xml");
-            AddProject(name, path);
-            DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
-            DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
-            foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" +  item.Name, true); }
-            File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
-            if (save)
+            if (ContainsCheckName(name))
             {
-                if (File.Exists(GivePath(name, true) + "\\Save.xml")) File.Delete(GivePath(name, true) + "\\Save.xml");
-                File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
-                OpenProjectfromName(name);
-            }
-            else
-            {
-                if (File.Exists(GivePath(name, true) + "\\Save.xml"))
+                string lastName = CurrentProjectName;
+                SaveAll("\\SaveCopy.xml");
+                AddProject(name, path);
+                DirectoryInfo source = new DirectoryInfo(GivePath(lastName, true));
+                DirectoryInfo destin = new DirectoryInfo(GivePath(name, true));
+                foreach (var item in source.GetFiles()) { item.CopyTo(destin + "\\" + item.Name, true); }
+                File.Delete(GivePath(lastName, true) + "\\SaveCopy.xml");
+                if (save)
                 {
-                    File.Move(GivePath(name, true) + "\\Save.xml", GivePath(name, true) + "\\Save1.xml");
+                    if (File.Exists(GivePath(name, true) + "\\Save.xml")) File.Delete(GivePath(name, true) + "\\Save.xml");
                     File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
-                    File.Move(GivePath(name, true) + "\\Save1.xml", GivePath(name, true) + "\\SaveCopy.xml");
+                    OpenProjectfromName(name);
                 }
-                else { File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml"); }
+                else
+                {
+                    if (File.Exists(GivePath(name, true) + "\\Save.xml"))
+                    {
+                        File.Move(GivePath(name, true) + "\\Save.xml", GivePath(name, true) + "\\Save1.xml");
+                        File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
+                        File.Move(GivePath(name, true) + "\\Save1.xml", GivePath(name, true) + "\\SaveCopy.xml");
+                    }
+                    else { File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml"); }
+                }
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public void DeleteProject(string name)
         {
-            if (IsContainsName(name))
+            if (ContainsCheckName(name))
             {
-                DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
-                loaderService.UnloadAllAssemblies();
-                foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
-                Directory.Delete(GivePath(name, true), true);
+                if (IsContainsName(name))
+                {
+                    DirectoryInfo directory = new DirectoryInfo(GivePath(name, true));
+                    loaderService.UnloadAllAssemblies();
+                    foreach (FileInfo file1 in directory.GetFiles()) { file1.Delete(); }
+                    Directory.Delete(GivePath(name, true), true);
+                    string[] text = GiveList();
+                    FileStream file = new FileStream(pathPL, FileMode.Truncate);
+                    StreamWriter writer = new StreamWriter(file);
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text[i] != name) { writer.WriteLine(text[i]); }
+                        else { i += 2; }
+                    }
+                    writer.Close();
+                    file.Close();
+                    CurrentProjectName = null;
+                }
+                else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
+            }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
+        }
+        public void DeleteOnlyInList(string name)
+        {
+            if (ContainsCheckName(name))
+            {
+                if (CurrentProjectName == name) { CurrentProjectName = null; }
                 string[] text = GiveList();
                 FileStream file = new FileStream(pathPL, FileMode.Truncate);
                 StreamWriter writer = new StreamWriter(file);
@@ -215,37 +261,25 @@ namespace SimpleFuzzy.Service
                 }
                 writer.Close();
                 file.Close();
-                CurrentProjectName = null;
             }
             else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
-        public void DeleteOnlyInList(string name)
-        {
-            if (CurrentProjectName == name) { CurrentProjectName = null; }
-            string[] text = GiveList();
-            FileStream file = new FileStream(pathPL, FileMode.Truncate);
-            StreamWriter writer = new StreamWriter(file);
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] != name) { writer.WriteLine(text[i]); }
-                else { i += 2; }
-            }
-            writer.Close();
-            file.Close();
-        }
         public void RenameProject(string name)
         {
-            string lastName = CurrentProjectName;
-            CopyProject(name, GivePath(CurrentProjectName, false) + $"\\{name}", false);
-            string currentName = CurrentProjectName;
-            DeleteProject(lastName);
-            CurrentProjectName = currentName;
-            OpenProjectfromName(currentName);
-            File.Delete(GivePath(name, true) + "\\Save.xml");
-            if (File.Exists(GivePath(name, true) + "\\SaveCopy.xml"))
-            {
-                File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
+            if (ContainsCheckName(name)) { 
+                string lastName = CurrentProjectName;
+                CopyProject(name, GivePath(CurrentProjectName, false) + $"\\{name}", false);
+                string currentName = CurrentProjectName;
+                DeleteProject(lastName);
+                CurrentProjectName = currentName;
+                OpenProjectfromName(currentName);
+                File.Delete(GivePath(name, true) + "\\Save.xml");
+                if (File.Exists(GivePath(name, true) + "\\SaveCopy.xml"))
+                {
+                    File.Move(GivePath(name, true) + "\\SaveCopy.xml", GivePath(name, true) + "\\Save.xml");
+                }
             }
+            else { throw new InvalidOperationException("Проекта с таким именем не существует"); }
         }
         public bool IsContainsName(string name)
         {
@@ -286,6 +320,28 @@ namespace SimpleFuzzy.Service
             }
             return false;
         }
+
+        public void ContainsCheckPath()
+        {
+            var directories = Directory.GetDirectories(pathPR);
+            bool checker = false;
+            foreach (var dirPath in directories)
+            {
+                Console.WriteLine(dirPath);
+                try { AddProject(dirPath.Split('\\')[^1].Split('.')[0], dirPath);}
+                catch (InvalidOperationException e) {
+                    if (e.Message == "Проект с таким именем уже существует") continue;
+                }
+            }
+        }
+
+        public bool ContainsCheckName(string name)
+        {
+            try { GivePath(name, true); }
+            catch (InvalidOperationException e) { DeleteProject(name); return false; }
+            return true;
+        }
+
         public string GivePath(string name, bool isFull) 
         {
             if (IsContainsName(name))
@@ -325,6 +381,7 @@ namespace SimpleFuzzy.Service
                 {
                     list.Add(line);
                 }
+
             }
             reader.Close();
             file.Close();

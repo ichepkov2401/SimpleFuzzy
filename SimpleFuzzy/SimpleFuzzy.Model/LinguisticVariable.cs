@@ -1,6 +1,7 @@
-﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Abstract;
+using System.Text;
 using System.Drawing;
-using System.Xml;
+
 
 namespace SimpleFuzzy.Model
 {
@@ -8,11 +9,12 @@ namespace SimpleFuzzy.Model
     {
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
+        public event EventHandler? UnloadAssembly;
         public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
         public readonly bool isRedact; // Возможность редактирования
-        public SetRule listRules; // Список правил для выходной переменной
+        public SetRule ListRules { get; set; } // Список правил для выходной переменной
         private Dictionary<IMembershipFunction, double> heightCache = new Dictionary<IMembershipFunction, double>();
         private Dictionary<IMembershipFunction, string> typeCache = new Dictionary<IMembershipFunction, string>();
         private Dictionary<IMembershipFunction, List<object>> areaOfInfluenceCache = new Dictionary<IMembershipFunction, List<object>>();
@@ -22,6 +24,11 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
             this.isInput = isInput;
+            if (!isInput)
+            {
+                ListRules = new SetRule(this);
+                UnloadAssembly += ListRules.UnloadingHandler;
+            }
         }
         public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
@@ -65,7 +72,7 @@ namespace SimpleFuzzy.Model
                     if (func.Count == 0) { baseSet = value; }
                     else
                     {
-                        if (func[0].Item1.InputType == value.Extraction().GetType()) { baseSet = value; }
+                        if (func[0].Item1.InputType == value[0].GetType()) { baseSet = value; }
                         else { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
                     }
             }
@@ -79,7 +86,7 @@ namespace SimpleFuzzy.Model
                 else if (term.Item1.InputType == func[0].Item1.InputType) { func.Add(term); }
                 else { throw new InvalidOperationException("Тип данных добавляемого терма не совпадает с уже имеющимися термами в списке"); }
             }
-            else if (baseSet.Extraction().GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
+            else if (baseSet[0].GetType() != term.Item1.InputType) { throw new InvalidOperationException("Выводимый и запрашиваемый тип данных не совпадают"); }
             else { func.Add(term); } // Проверка типов данных
         }
 
@@ -105,14 +112,22 @@ namespace SimpleFuzzy.Model
             return list;
         }
 
+        public List<object> ObjectSetToList()
+        {
+            var list = new List<object>();
+            for (int i = 0; i < baseSet.Count; i++)
+            {
+                list.Add(baseSet[i]);
+            }
+            return list;
+        }
+
         public List<(object, double[])> Graphic()
         {
             var graphicList = new List<(object, double[])>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                graphicList.Add((baseSet.Extraction(), Fazzification(baseSet.Extraction())));
-                baseSet.MoveNext();
+                graphicList.Add((baseSet[i], Fazzification(baseSet[i])));
             }
             return graphicList;
         }
@@ -144,7 +159,7 @@ namespace SimpleFuzzy.Model
                 ("Наполовину", new double[2] { 0.6, 0.4 }),
                 ("Немного", new double[2] { 0.4, 0.2 }),
                 ("Совсем немного", new double[2] { 0.2, 0.1 }),
-                ("Едва ли", new double[2] { 0.1, 0.01 })
+                ("Едва ли", new double[2] { 0.1, Double.Epsilon })
             };
             int countTerms = 0;
             foreach (var pair in toStringList)
@@ -159,7 +174,11 @@ namespace SimpleFuzzy.Model
                     }
                 }
             }
-            result = result.Remove(result.Length - 2);
+            if (result.Length > 2)
+            {
+                result = result.Remove(result.Length - 2);
+            }
+            
             if (countTerms > 1)
             {
                 string and = " и ";
@@ -171,7 +190,9 @@ namespace SimpleFuzzy.Model
         }
 
         //Расчет свойств нечеткого множества
-        public Tuple<double, string,List<object>, List<object>, List<object>> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+
+        public Tuple<double,string,string,string,string> CalculationFuzzySetProperties(IMembershipFunction term, double sectionHeight) {
+
 
             if (!heightCache.ContainsKey(term))
             {
@@ -195,19 +216,17 @@ namespace SimpleFuzzy.Model
 
             List<object> section = CalculateSection(term, sectionHeight);
 
-            return Tuple.Create( heightCache[term], typeCache[term], areaOfInfluenceCache[term], coreCache[term], section);
+            return Tuple.Create( heightCache[term], typeCache[term],RemoveSequences(areaOfInfluenceCache[term]), RemoveSequences(coreCache[term]), RemoveSequences(section));
         }
         private double CalculateHeight(IMembershipFunction term) {
             double maxHeight = 0;
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > maxHeight)
                 {
                     maxHeight = membershipValue;
                 }
-                baseSet.MoveNext();
             }
             return maxHeight;
         }
@@ -216,10 +235,9 @@ namespace SimpleFuzzy.Model
         {
             bool allZero = true;
             bool allOne = true;
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue != 0)
                 {
                     allZero = false;
@@ -228,7 +246,6 @@ namespace SimpleFuzzy.Model
                 {
                     allOne = false;
                 }
-                baseSet.MoveNext();
             }
             if (allZero)
             {
@@ -250,16 +267,14 @@ namespace SimpleFuzzy.Model
 
         private List<object> CalculateAreaOfInfluence(IMembershipFunction term)
         {
-            var areaOfInfluence = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            List<object> areaOfInfluence = new List<object>();
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > 0)
                 {
-                    areaOfInfluence.Add(baseSet.Extraction());
+                    areaOfInfluence.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return areaOfInfluence;
         }
@@ -267,33 +282,107 @@ namespace SimpleFuzzy.Model
         private List<object> CalculateCore(IMembershipFunction term)
         {
             List<object> result = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue == 1)
                 {
-                    result.Add(baseSet.Extraction());
+                    result.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return result;
         }
         private List<object> CalculateSection(IMembershipFunction term, double sectionHeight)
         {
-            var section = new List<object>();
-            baseSet.ToFirst();
-            while (!baseSet.IsEnd())
+            List<object> section = new List<object>();
+            for (int i = 0; i < baseSet.Count; i++)
             {
-                double membershipValue = term.MembershipFunction(baseSet.Extraction());
+                double membershipValue = term.MembershipFunction(baseSet[i]);
                 if (membershipValue > sectionHeight)
                 {
-                    section.Add(baseSet.Extraction());
+                    section.Add(baseSet[i]);
                 }
-                baseSet.MoveNext();
             }
             return section;
         }
+        string RemoveSequences(List<object> input)
+        {
+            if (input == null || input.Count == 0)
+            {
+                return "{}";
+            }
+
+            if (input.Count == 1)
+            {
+                return $"{{{input[0]}}}";
+            }
+
+            StringBuilder output = new StringBuilder();
+            output.Append("{");
+            int start = 0;
+            dynamic step = null;
+
+            // Погрешность для сравнения double
+            const double accuracy = 1e-10;
+
+            for (int i = 1; i < input.Count; i++)
+            {
+                if (input[i] is int || input[i] is double)
+                {
+                    dynamic current = Convert.ChangeType(input[i], input[i].GetType());
+                    dynamic previous = Convert.ChangeType(input[i - 1], input[i - 1].GetType());
+
+                    if (step == null)
+                    {
+                        step = current - previous; // Вычисляем шаг, если он еще не определен
+                    }
+
+                    bool isStepEqual;
+                    if (current is double && previous is double)
+                    {
+                        isStepEqual = Math.Abs((current - previous) - step) < accuracy;
+                    }
+                    else
+                    {
+                        isStepEqual = (current - previous).CompareTo(step) == 0;
+                    }
+
+                    if (!isStepEqual)
+                    {
+                        if (i - start > 1)
+                        {
+                            output.Append($"[{input[start]}; {input[i - 1]}], ");
+                        }
+                        else
+                        {
+                            output.Append($"{input[start]}, ");
+                        }
+                        start = i;
+                        step = null; // Сбрасываем шаг при разрыве последовательности
+                    }
+                }
+                else
+                {
+                    start = i; // Сброс начала последовательности
+                    step = null;
+                }
+            }
+
+            // Обработка последней последовательности
+            if (input.Count - start > 1)
+            {
+                output.Append($"[{input[start]}; {input[input.Count - 1]}]");
+            }
+            else if (start < input.Count)
+            {
+                output.Append($"{input[start]}");
+            }
+
+            output.Append("}");
+
+            return output.ToString();
+        }
+
     }
 }
 

@@ -33,16 +33,21 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         {
             if (radioButton2.Checked)
             {
-                forceTrackBar.Value = (int)simulator.GetFunc(new List<object>() {
+                forceTrackBar.Enabled = false;
+                forceTrackBar.Value = Convert.ToInt32(simulator.GetFunc(new List<object>() {
                     Math.Round((double)numPlatformPosition.Value - simulator.x, 2),
                     (int)Math.Round(simulator.y)
-                })[0];
+                })[0]);
+            }
+            else
+            {
+                forceTrackBar.Enabled = true;
             }
             simulator.Step();
-            if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
+            if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
-                string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
+                string message = (simulator.x <= 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
                 MessageBox.Show(message);
                 Reset();
             }

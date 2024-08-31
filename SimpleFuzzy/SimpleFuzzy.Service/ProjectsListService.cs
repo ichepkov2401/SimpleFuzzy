@@ -27,6 +27,7 @@ namespace SimpleFuzzy.Service
             this.loaderService = loaderService;
             pair.Add("activeModules", ChooseActive);
             pair.Add("allLinguisticVariables", LoadLinguisticVariable);
+            pair.Add("simulator", SimulatorStateLoad);
             this.defazificationService = defazificationService;
         }
         public string? CurrentProjectName { get; set; }
@@ -158,6 +159,14 @@ namespace SimpleFuzzy.Service
                 repository.GetCollection<LinguisticVariable>().Add(linguistic);
             }
         }
+
+        private void SimulatorStateLoad(XmlNodeList list)
+        {
+            var simulator = repository.GetCollection<ISimulator>().FirstOrDefault(x => x.Active);
+            if (simulator != null)
+                simulator.LoadState(list[0]);
+        }
+
         public void OpenProjectfromName(string name)
         {
             if (ContainsCheckName(name))

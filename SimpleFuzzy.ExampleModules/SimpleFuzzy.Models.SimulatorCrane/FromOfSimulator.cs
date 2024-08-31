@@ -22,9 +22,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         {
             simulator = crane;
             InitializeComponent();
-            SetupControls();
             visualCrane = new VisualCrane(crane);
             cranePanel.Controls.Add(visualCrane);
+            SetupControls();
             timer = new System.Windows.Forms.Timer { Interval = 16 }; // ~60 FPS
             timer.Tick += TimerTick;
         }
@@ -127,17 +127,6 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             AddLabel("Передвижение каретки:", forceTrackBar);
             AddLabel("Позиция платформы:", numPlatformPosition);
 
-            // Настройка обработчиков событий
-            numMassPendulum.ValueChanged += UpdateSimulatorParameters;
-            numMassCart.ValueChanged += UpdateSimulatorParameters;
-            numLengthPendulum.ValueChanged += UpdateSimulatorParameters;
-            numDampingCart.ValueChanged += UpdateSimulatorParameters;
-            numDampingPendulum.ValueChanged += UpdateSimulatorParameters;
-            numInitialPosition.ValueChanged += UpdateSimulatorParameters;
-            numInitialAngle.ValueChanged += UpdateSimulatorParameters;
-            numBeamSize.ValueChanged += numBeamSize_ValueChanged;
-            numPlatformPosition.ValueChanged += UpdateSimulatorParameters;
-
             // Установка начальных значений
             SetInitialValues();
         }
@@ -169,6 +158,19 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             numPlatformPosition.Maximum = numBeamSize.Value * 0.525M;
             numInitialPosition.Minimum = 0;
             numInitialPosition.Maximum = numBeamSize.Value;
+
+            Reset();
+
+            // Настройка обработчиков событий
+            numMassPendulum.ValueChanged += UpdateSimulatorParameters;
+            numMassCart.ValueChanged += UpdateSimulatorParameters;
+            numLengthPendulum.ValueChanged += UpdateSimulatorParameters;
+            numDampingCart.ValueChanged += UpdateSimulatorParameters;
+            numDampingPendulum.ValueChanged += UpdateSimulatorParameters;
+            numInitialPosition.ValueChanged += UpdateSimulatorParameters;
+            numInitialAngle.ValueChanged += UpdateSimulatorParameters;
+            numBeamSize.ValueChanged += numBeamSize_ValueChanged;
+            numPlatformPosition.ValueChanged += UpdateSimulatorParameters;
 
         }
 

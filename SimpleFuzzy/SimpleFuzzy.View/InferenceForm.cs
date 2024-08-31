@@ -311,7 +311,8 @@ namespace SimpleFuzzy.View
                 if (dataTable.Rows[position].Cells[i].Value == null) dataTable.Rows[position].Cells[i].Style.ForeColor = Color.Black;
             }
             double n;
-            if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
+            if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value != null &&
+                double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
                 dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
             if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value != null)
             {

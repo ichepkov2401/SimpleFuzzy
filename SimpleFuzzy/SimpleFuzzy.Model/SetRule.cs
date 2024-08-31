@@ -11,7 +11,6 @@ namespace SimpleFuzzy.Model
 {
     public class SetRule
     {
-        // список словарей
         public List<Rule> rules; // список правил с одной и той же выходной переменной
         public List<LinguisticVariable> inputVariables; // список входных переменных
         public LinguisticVariable outVariable; // выходная переменная
@@ -22,6 +21,20 @@ namespace SimpleFuzzy.Model
             inputVariables = new List<LinguisticVariable>();
         }
 
+        public void UnloadingHandler(object sender, EventArgs e)
+        {
+            for (int i = 0; i < rules.Count; i++)
+            {
+                List<IMembershipFunction> list = rules[i].GiveList();
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (list[j].GetType().Assembly.FullName == sender as string)
+                    {
+                        rules[i].ChangeNullTerm(j);
+                    }
+                }
+            }
+        }
         public void AddInputVar(LinguisticVariable inputVar)
         {
             foreach (var rule in rules) { rule.AddNullTerm(); }

@@ -1,6 +1,7 @@
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 using System;
+using System.Collections.Specialized;
 using System.Data.Common;
 using System.Windows.Forms;
 
@@ -8,8 +9,8 @@ namespace SimpleFuzzy.View
 {
     public partial class InferenceForm : UserControl
     {
+        //public List<Dictionary<string, IMembershipFunction>> listDic;
         public IRepositoryService? repositoryService;
-        //public IAssemblyLoaderService assemblyLoaderService;
         public LinguisticVariable currentOutputVar;
         public int Id = 0;
         private string lastValue;
@@ -19,38 +20,25 @@ namespace SimpleFuzzy.View
         {
             InitializeComponent();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
-            //assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
-            //assemblyLoaderService.UseAssembly += UnloadingHandler;
             dataTable.EditMode = DataGridViewEditMode.EditOnEnter;
             foreach (LinguisticVariable variable in repositoryService.GetCollection<LinguisticVariable>())
             {
-                if (!variable.IsInput) outputVariableComboBox.Items.Add(variable.Name);
-                else inputVariablesComboBox.Items.Add(variable.Name);
+                {
+                    if (!variable.IsInput) outputVariableComboBox.Items.Add(variable.Name);
+                }
             }
             if (outputVariableComboBox.Items.Count > 0)
             {
                 outputVariableComboBox.SelectedIndex = 0;
             }
         }
-        /*private void UnloadingHandler(object sender, EventArgs e)
-        {
-            string context = sender as string;
-            for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++)
-            {
-                List<IMembershipFunction> list = currentOutputVar.ListRules.rules[i].GiveList();
-                for (int j = 0; j < currentOutputVar.ListRules.rules[i].GiveList().Count; j++)
-                {
-                    if (currentOutputVar.ListRules.rules[i].GiveList()[j].GetType().Assembly.FullName == context)
-                    {
-                        currentOutputVar.ListRules.rules[i].ChangeTermNull(j);
-                    }
-                }
-            } 
-        }*/
         private void StartTable(SetRule setRule)
         {
+            dataTable.ButtonsClear();
             if (dataTable != null) dataTable.Columns.Clear();
+            Id = 0;
             dataTable.Columns.Add("", "Номер");
+            dataTable.Columns[0].HeaderText = "Номер";
             dataTable.Columns[0].ReadOnly = true;
             dataTable.Columns[0].Width = 70;
             dataTable.Columns[0].Name = "ID";
@@ -69,27 +57,29 @@ namespace SimpleFuzzy.View
             List<string> term = new List<string>();
             foreach (var func in currentOutputVar.func) { term.Add(func.Item1.Name); }
                 (dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = term;
+            //(dataTable.Columns[2] as DataGridViewComboBoxColumn).DataSource = listDic[0].ToList().ConvertAll(x => x.Key);
 
-            if (currentOutputVar.ListRules != null && currentOutputVar.ListRules.rules.Count > 0)
+            if (currentOutputVar.baseSet == null || currentOutputVar.func.Count == 0)
+                dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
+            for (int i = 0; i < currentOutputVar.ListRules.inputVariables.Count; i++)
             {
-                if (currentOutputVar.baseSet == null || currentOutputVar.func.Count == 0)
+                DataGridViewComboBoxColumn comboBoxInput = new DataGridViewComboBoxColumn();
+                comboBoxInput.HeaderText = currentOutputVar.ListRules.inputVariables[i].Name;
+                comboBoxInput.FlatStyle = FlatStyle.Flat;
+                dataTable.AddColumn(comboBoxInput);
+                dataTable.Columns[^3].Name = currentOutputVar.ListRules.inputVariables[i].Name;
+                if (currentOutputVar.ListRules.inputVariables[i].baseSet == null || currentOutputVar.ListRules.inputVariables[i].func.Count == 0)
                     dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
-                for (int i = currentOutputVar.ListRules.inputVariables.Count - 1; i >= 0; i--)
-                {
-                    DataGridViewComboBoxColumn comboBoxInput = new DataGridViewComboBoxColumn();
-                    comboBoxInput.HeaderText = currentOutputVar.ListRules.inputVariables[i].Name;
-                    comboBoxInput.FlatStyle = FlatStyle.Flat;
-                    dataTable.AddColumn(comboBoxInput);
-                    dataTable.Columns[1].Name = currentOutputVar.ListRules.inputVariables[i].Name;
-                    if (currentOutputVar.ListRules.inputVariables[i].baseSet == null || currentOutputVar.ListRules.inputVariables[i].func.Count == 0)
-                        dataTable.Columns[2].HeaderCell.Style.ForeColor = Color.Red;
 
-                    List<string> termInput = new List<string>();
-                    foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
-                (dataTable.Columns[1] as DataGridViewComboBoxColumn).DataSource = termInput;
-                }
-                // Далее заполнение значениями
-                for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++)
+                List<string> termInput = new List<string>();
+                foreach (var func in currentOutputVar.ListRules.inputVariables[i].func) { termInput.Add(func.Item1.Name); }
+                (dataTable.Columns[i + 1] as DataGridViewComboBoxColumn).DataSource = termInput;
+                //(dataTable.Columns[^3] as DataGridViewComboBoxColumn).DataSource = listDic[i].ToList().ConvertAll(x => x.Key);
+            }
+            // Далее заполнение значениями
+            if (currentOutputVar.ListRules.rules.Count > 0)
+            {
+                for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++)
                 {
                     int cells = 0;
                     dataTable.Rows.Add();
@@ -99,7 +89,8 @@ namespace SimpleFuzzy.View
                     List<IMembershipFunction> list = currentOutputVar.ListRules.rules[i].GiveList();
                     for (int j = 1; j < list.Count; j++)
                     {
-                        if (list[j] != null && IsContainsTermInRep(list[j].Name))
+                        if (list[j] != null && IsContainsTermInRep(list[j].Name) 
+                            && (dataTable.Columns[cells] as DataGridViewComboBoxColumn).Items.Contains(list[j].Name))
                         {
                             dataTable.Rows[i].Cells[cells].Value = list[j].Name;
                             dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorTerm(dataTable.Columns[cells].Name, list[j], 1);
@@ -108,10 +99,11 @@ namespace SimpleFuzzy.View
                         }
                         cells++;
                     }
-                    dataTable.Rows[i].Cells[cells].Value = currentOutputVar.ListRules.rules[i].relevance;
+                    dataTable.Rows[i].Cells[cells].Value = currentOutputVar.ListRules.rules[i].relevance.ToString().Replace(',', '.');
                     dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorToRelevation(currentOutputVar.ListRules.rules[i].relevance, 1);
                     cells++;
-                    if (list[0] != null && IsContainsTermInRep(list[0].Name))
+                    if (list.Count > 0 && list[0] != null && IsContainsTermInRep(list[0].Name) 
+                        && (dataTable.Columns[cells] as DataGridViewComboBoxColumn).Items.Contains(list[0].Name))
                     {
                         dataTable.Rows[i].Cells[cells].Value = list[0].Name;
                         dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorTerm(dataTable.Columns[cells].Name, list[0], 1);
@@ -119,8 +111,11 @@ namespace SimpleFuzzy.View
                         else dataTable.Rows[i].Cells[cells].Style.ForeColor = Color.White;
                     }
                 }
-                for (int i = 0; i < currentOutputVar.ListRules.rules.Count - 1; i++) ChangeActiveRules(i, currentOutputVar.ListRules.rules[i].IsDublicate);
-                for (int i = 0; i < dataTable.ColumnCount; i++) dataTable.AutoResizeColumn(i); // пока не работает почему то(
+                for (int i = 0; i < currentOutputVar.ListRules.rules.Count; i++) ChangeActiveRules(i, currentOutputVar.ListRules.rules[i].IsDublicate);
+            }
+            foreach (DataGridViewColumn column in dataTable.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
         }
 
@@ -179,35 +174,55 @@ namespace SimpleFuzzy.View
 
         private void OutputVariableComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (outputVariableComboBox.SelectedIndex == -1) return;
-            LinguisticVariable temp = null;
+            inputVariablesComboBox.Items.Clear();
             foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
             {
-                if (currentOutputVar != null && var == currentOutputVar)
-                {
-                    outputVariableComboBox.Items.Remove(var.Name);
-                }
                 if (var.Name == outputVariableComboBox.SelectedItem.ToString())
                 {
-                    temp = var;
+                    currentOutputVar = var;
+                    break;
                 }
             }
-            currentOutputVar = temp;
-            outputVariableComboBox.Items.Remove(outputVariableComboBox.SelectedItem);
-
+            foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
+            {
+                if (currentOutputVar.ListRules == null)
+                {
+                    if (var.IsInput) inputVariablesComboBox.Items.Add(var.Name);
+                }
+                else if (!currentOutputVar.ListRules.inputVariables.Contains(var) && var.isInput)
+                {
+                    inputVariablesComboBox.Items.Add(var.Name);
+                }
+            }
+            // отменяем подписку
             dataTable.RowsRemoved -= dataTable_RowsRemoved;
             dataTable.CellBeginEdit -= dataTable_CellBeginEdit;
             dataTable.CellValueChanged -= dataTable_CellValueChanged;
+            dataTable.ColumnRemoved -= dataTable_ColumnRemoved;
             if (currentOutputVar.ListRules == null)
             {
                 SetRule setRule = new SetRule(currentOutputVar);
                 currentOutputVar.ListRules = setRule;
+                currentOutputVar.UnloadAssembly += setRule.UnloadingHandler;
             }
+            /*listDic = new List<Dictionary<string, IMembershipFunction>>();
+
+            Dictionary<string, IMembershipFunction> newOutVar = new Dictionary<string, IMembershipFunction>();
+            for (int i = 0; i < currentOutputVar.ListRules.outVariable.func.Count; i++)
+            {
+                if (currentOutputVar.ListRules.outVariable.func.Count(v => v.Item1.Name == currentOutputVar.ListRules.outVariable.func[i].Item1.Name) > 1)
+                    newOutVar.Add(currentOutputVar.ListRules.outVariable.func[i].Item1.Name + " - " + currentOutputVar.ListRules.outVariable.func[i].Item1.GetType().Name +
+                        " - " + currentOutputVar.ListRules.outVariable.func[i].Item1.GetType().Assembly.Location, currentOutputVar.ListRules.outVariable.func[i].Item1);
+                else
+                    newOutVar.Add(currentOutputVar.ListRules.outVariable.func[i].Item1.Name, currentOutputVar.ListRules.outVariable.func[i].Item1);
+            }
+            listDic.Add(newOutVar);*/
+
             StartTable(currentOutputVar.ListRules);
             dataTable.RowsRemoved += dataTable_RowsRemoved;
             dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
-            outputVariableComboBox.SelectedIndex = -1;
+            dataTable.ColumnRemoved += dataTable_ColumnRemoved;
         }
         private void inputVariablesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -218,6 +233,7 @@ namespace SimpleFuzzy.View
         {
             if (inputVariablesComboBox.Text != null)
             {
+
                 foreach (LinguisticVariable var in repositoryService.GetCollection<LinguisticVariable>())
                 {
                     if (var.Name == inputVariablesComboBox.Text)
@@ -227,7 +243,7 @@ namespace SimpleFuzzy.View
                         column.HeaderText = inputVariablesComboBox.Text;
                         column.FlatStyle = FlatStyle.Flat;
                         dataTable.AddColumn(column);
-                        dataTable.Columns[1].Name = var.Name;
+                        dataTable.Columns[^3].Name = var.Name;
                         currentOutputVar.ListRules.AddInputVar(var);
 
                         List<string> term = new List<string>();
@@ -235,9 +251,19 @@ namespace SimpleFuzzy.View
                         {
                             term.Add(func.Item1.Name);
                         }
-                        var combobox = (dataTable.Columns[1] as DataGridViewComboBoxColumn);
+                        var combobox = (dataTable.Columns[^3] as DataGridViewComboBoxColumn);
                         combobox.DataSource = term;
-                        dataTable.AutoResizeColumn(1);
+
+                        /*Dictionary<string, IMembershipFunction> newInVar = new Dictionary<string, IMembershipFunction>();
+                        for (int i = 0; i < currentOutputVar.ListRules.inputVariables[^1].func.Count; i++)
+                        {
+                            if (currentOutputVar.ListRules.inputVariables[^1].func.Count(v => v.Item1.Name == currentOutputVar.ListRules.inputVariables[^1].func[i].Item1.Name) > 1)
+                                newInVar.Add(currentOutputVar.ListRules.inputVariables[^1].func[i].Item1.Name + " - " + currentOutputVar.ListRules.inputVariables[^1].func[i].Item1.GetType().Name +
+                                    " - " + currentOutputVar.ListRules.inputVariables[^1].func[i].Item1.GetType().Assembly.Location, currentOutputVar.ListRules.inputVariables[^1].func[i].Item1);
+                            else
+                                newInVar.Add(currentOutputVar.ListRules.inputVariables[^1].func[i].Item1.Name, currentOutputVar.ListRules.inputVariables[^1].func[i].Item1);
+                        }
+                        listDic.Add(newInVar);*/
                         break;
                     }
                 }
@@ -284,9 +310,11 @@ namespace SimpleFuzzy.View
                     GiveFunc(dataTable.Rows[position].Cells[i].Value.ToString(), currentOutputVar.ListRules.inputVariables[i - 1]), active);
                 if (IsGoodView(dataTable.Rows[position].Cells[i].Style.BackColor)) dataTable.Rows[position].Cells[i].Style.ForeColor = Color.Black;
                 else dataTable.Rows[position].Cells[i].Style.ForeColor = Color.White;
+                if (dataTable.Rows[position].Cells[i].Value == null) dataTable.Rows[position].Cells[i].Style.ForeColor = Color.Black;
             }
             double n;
-            if (double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
+            if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value != null &&
+                double.TryParse(dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Value.ToString(), out n))
                 dataTable.Rows[position].Cells[dataTable.Columns.Count - 2].Style.BackColor = SetColorToRelevation(n, active);
             if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value != null)
             {
@@ -297,6 +325,8 @@ namespace SimpleFuzzy.View
                 dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor = SetColorTerm(name, func, active);
                 if (IsGoodView(dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.BackColor)) dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.Black;
                 else dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.White;
+                if (dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Value == null) 
+                    dataTable.Rows[position].Cells[dataTable.Columns.Count - 1].Style.ForeColor = Color.Black;
             }
         }
 
@@ -313,21 +343,17 @@ namespace SimpleFuzzy.View
                 dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
                 if (IsGoodView(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor)) dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                 else dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.White;
+                if (dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null) 
+                    dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                 ChangeActiveRules(e.RowIndex, currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate);
                 dataTable.AutoResizeColumn(e.ColumnIndex);
             }
             else if (e.ColumnIndex == dataTable.ColumnCount - 2) // РЕЛЕВАНТНОСТЬ
             {
                 string rel = dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                string newRel = "";
-                for (int i = 0; i < rel.Length; i++)
-                {
-                    if (rel[i] == '.') newRel += ',';
-                    else newRel += rel[i];
-                }
-                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = newRel;
+                dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = rel.Replace(',', '.');
                 double n;
-                if (double.TryParse(newRel, out n) && n >= 0 && n <= 1)
+                if (double.TryParse(rel.Replace('.', ','), out n) && n >= 0 && n <= 1)
                 {
                     currentOutputVar.ListRules.rules[e.RowIndex].relevance = n;
                     byte active = 1;
@@ -356,6 +382,8 @@ namespace SimpleFuzzy.View
                         dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = SetColorTerm(dataTable.Columns[e.ColumnIndex].Name, func, active);
                         if (IsGoodView(dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor)) dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                         else dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.White;
+                        if (dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null) 
+                            dataTable.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
                         break;
                     }
                 }
@@ -398,6 +426,7 @@ namespace SimpleFuzzy.View
                             term.Add(func.Item1.Name);
                         }
                         (dataTable.Columns[dataTable.ColumnCount - 1] as DataGridViewComboBoxColumn).DataSource = term;
+                        //(dataTable.Columns[^1] as DataGridViewComboBoxColumn).DataSource = listDic[0].ToList().ConvertAll(x => x.Key);
                     }
                     else
                     {
@@ -406,6 +435,7 @@ namespace SimpleFuzzy.View
                             term.Add(func.Item1.Name);
                         }
                         (dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = term;
+                        //(dataTable.Columns[i] as DataGridViewComboBoxColumn).DataSource = listDic[i].ToList().ConvertAll(x => x.Key);
                     }
                 }
                 if (e.ColumnIndex != dataTable.Columns.Count - 2)
@@ -421,12 +451,8 @@ namespace SimpleFuzzy.View
             List<IMembershipFunction> list = currentOutputVar.ListRules.rules[e.RowIndex].GiveList();
             bool dublicate = currentOutputVar.ListRules.rules[e.RowIndex].IsDublicate;
             currentOutputVar.ListRules.DeleteRule(e.RowIndex);
-            Id = 0;
-            for (int i = 0; i < dataTable.RowCount; i++)
-            {
-                Id++;
-                dataTable.Rows[i].Cells[0].Value = Id;
-            }
+            //listDic.RemoveAt(e.RowIndex);
+            Id--;
             if (!dublicate)
             {
                 int position = currentOutputVar.ListRules.CheckAfterDelete(list, e.RowIndex);
@@ -448,7 +474,7 @@ namespace SimpleFuzzy.View
             inputVariablesComboBox.Items.Add(name);
             currentOutputVar.ListRules.DeleteInputVar(name, e.Column.Index);
 
-            for (int i = dataTable.RowCount - 1; i >= 0; i--)
+            for (int i = dataTable.RowCount - 2; i >= 0; i--)
             {
                 if (currentOutputVar.ListRules.rules.Count > 0)
                 {
@@ -461,6 +487,24 @@ namespace SimpleFuzzy.View
         private void dataTable_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             if (e.Column.HeaderCell.Size.Width < 50) e.Column.Width = 50;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (currentOutputVar.ListRules.inputVariables.Count > 0)
+            {
+                int[] counter = currentOutputVar.ListRules.inputVariables.ConvertAll(x => x.CountFunc).ToArray();
+                for (int i = 0; i <= counter.Aggregate((x, y) => x * y); i++)
+                {
+                    int value = i;
+                    currentOutputVar.ListRules.rules.Add(new Rule(counter.Length + 1, currentOutputVar.ListRules));
+                    for (int j = 0; j < counter.Length; j++)
+                    {
+                        currentOutputVar.ListRules.rules[^1].RedactTerm(currentOutputVar.ListRules.inputVariables[j].func[value % counter[j]].Item1, j + 1);
+                        value /= counter[j];
+                    }
+                }
+            }
         }
     }
 }

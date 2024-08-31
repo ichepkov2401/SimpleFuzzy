@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimpleFuzzy.Model
 {
-    public struct ActiveRule
+    public class ActiveRule
     {
         public IMembershipFunction function;
         public double values;

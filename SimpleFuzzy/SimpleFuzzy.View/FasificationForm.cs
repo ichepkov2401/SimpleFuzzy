@@ -70,7 +70,6 @@ namespace SimpleFuzzy.View
                 if (inputBox.ShowDialog() == DialogResult.OK)
                 {
                     string variableName = inputBox.InputText;
-
                     if (string.IsNullOrWhiteSpace(variableName))
                     {
                         MessageBox.Show("Имя переменной не может быть пустым.", "Ошибка при создании переменной", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -145,7 +144,7 @@ namespace SimpleFuzzy.View
                     Controls.Add(variableUI);
                     variableUI.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
                     variableUI.Size = new Size(Width-1, Height); 
-                    variableUI.Location = new Point(363+5, 0);
+                    variableUI.Location = new Point(listView1.Width + listView1.Location.X + 5, 0);
                 }
             }
         }

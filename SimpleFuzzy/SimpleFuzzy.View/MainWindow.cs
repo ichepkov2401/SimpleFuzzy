@@ -42,6 +42,8 @@ namespace SimpleFuzzy.View
             UserControls.Add(UserControlsEnum.Inference, () => new InferenceForm());
             UserControls.Add(UserControlsEnum.Defasification, () => new DefasificationForm());
             UserControls.Add(UserControlsEnum.Simulation, () => AddSimulation());
+            Left.Visible = false;
+            Right.Visible = false;
             Locked();
             timer1.Start();
         }
@@ -67,6 +69,11 @@ namespace SimpleFuzzy.View
         {
             if (projectList.CurrentProjectName != null) label1.Text = "Имя текущего проекта: " + projectList.CurrentProjectName;
             SwichUserControl(UserControlsEnum.Loader, button7);
+        }
+        public void UpdateSimulatorState()
+        {
+            isContainSimulator = repositoryService.GetCollection<ISimulator>().Any(t => t.Active);
+            button11.Enabled = isContainSimulator;
         }
         public void Locked()
         {

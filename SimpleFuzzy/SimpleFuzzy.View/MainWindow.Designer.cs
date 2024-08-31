@@ -183,7 +183,7 @@ namespace SimpleFuzzy.View
             // timer1
             // 
             timer1.Interval = 1000;
-            timer1.Tick += timer1_Tick;
+            //timer1.Tick += timer1_Tick;
             // 
             // Left
             // 
@@ -224,10 +224,13 @@ namespace SimpleFuzzy.View
             Controls.Add(menuStrip2);
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
+            Location = new Point(0, 0);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1000, 750);
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
+            ShowIcon = false;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             menuStrip2.ResumeLayout(false);

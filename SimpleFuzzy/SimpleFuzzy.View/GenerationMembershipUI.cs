@@ -162,11 +162,17 @@ namespace SimpleFuzzy.View
             {
                 AddCondition(control.Condition.Text, control.Value.Text);
             }
-            string generatedCode = generator.GenerateCode(objectSet[0].GetType(), textBox1.Text, _conditions);
-            var compile = compileService.Compile(generatedCode);
-            compilation = compile.Item1;
-            VisualizeFunction(compile.Item2 as IMembershipFunction);
-            compile.Item3.Unload();
+            try
+            {
+                string generatedCode = generator.GenerateCode(objectSet[0].GetType(), textBox1.Text, _conditions);
+                var compile = compileService.Compile(generatedCode);
+                compilation = compile.Item1;
+                VisualizeFunction(compile.Item2 as IMembershipFunction);
+                compile.Item3.Unload();
+            }
+            catch (ArgumentNullException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show("Неверный ввод условий.", "Ошибка"); }
+
         }
 
         private void buttonVisualize_Click(object sender, EventArgs e)

@@ -5,22 +5,36 @@ namespace SimpleFuzzy.View
     public partial class ConfirmRename : UserControl
     {
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmRename()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            try
+            textBox1.Text = textBox1.Text.TrimEnd('.');// Для файла
+            textBox1.Text = textBox1.Text.Trim(' ');
+            
+            if (validator.IsValidFileName(textBox1.Text))
             {
-                projectList.RenameProject(textBox1.Text);
+                try
+                {
+                    projectList.RenameProject(textBox1.Text);
+                }
+                catch (Exception ex)
+                {
+                   MessageBox.Show(ex.Message, "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Неверное имя файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
             button2_Click(sender, e);
         }
 

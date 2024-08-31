@@ -40,6 +40,7 @@
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button1.BackColor = Color.Transparent;
             button1.Location = new Point(677, 20);
             button1.Margin = new Padding(4, 5, 4, 5);
@@ -52,6 +53,7 @@
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.BackColor = SystemColors.Window;
             textBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             textBox1.ForeColor = SystemColors.ControlText;
@@ -63,6 +65,7 @@
             // 
             // button2
             // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Location = new Point(467, 63);
             button2.Margin = new Padding(4, 5, 4, 5);
             button2.Name = "button2";
@@ -74,6 +77,7 @@
             // 
             // button3
             // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button3.Location = new Point(681, 63);
             button3.Margin = new Padding(4, 5, 4, 5);
             button3.Name = "button3";
@@ -85,6 +89,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(textBox1);
             groupBox1.Controls.Add(button1);
@@ -109,6 +114,7 @@
             // 
             // metroTextBox1
             // 
+            metroTextBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             metroTextBox1.Location = new Point(110, 63);
             metroTextBox1.Name = "metroTextBox1";
             metroTextBox1.Size = new Size(350, 27);

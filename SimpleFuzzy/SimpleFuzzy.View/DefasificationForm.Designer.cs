@@ -49,11 +49,11 @@
             // 
             // OutputVariables
             // 
+            OutputVariables.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             OutputVariables.FormattingEnabled = true;
-            OutputVariables.Location = new Point(308, 17);
-            OutputVariables.Margin = new Padding(3, 2, 3, 2);
+            OutputVariables.Location = new Point(352, 23);
             OutputVariables.Name = "OutputVariables";
-            OutputVariables.Size = new Size(347, 23);
+            OutputVariables.Size = new Size(396, 28);
             OutputVariables.TabIndex = 0;
             OutputVariables.SelectedIndexChanged += OutputVariables_SelectedIndexChanged;
             // 
@@ -61,10 +61,9 @@
             // 
             MaxProd.AutoSize = true;
             MaxProd.Checked = true;
-            MaxProd.Location = new Point(9, 15);
-            MaxProd.Margin = new Padding(3, 2, 3, 2);
+            MaxProd.Location = new Point(10, 20);
             MaxProd.Name = "MaxProd";
-            MaxProd.Size = new Size(78, 19);
+            MaxProd.Size = new Size(95, 24);
             MaxProd.TabIndex = 1;
             MaxProd.TabStop = true;
             MaxProd.Text = "Max-Prod";
@@ -74,10 +73,9 @@
             // MaxMin
             // 
             MaxMin.AutoSize = true;
-            MaxMin.Location = new Point(9, 34);
-            MaxMin.Margin = new Padding(3, 2, 3, 2);
+            MaxMin.Location = new Point(10, 45);
             MaxMin.Name = "MaxMin";
-            MaxMin.Size = new Size(74, 19);
+            MaxMin.Size = new Size(89, 24);
             MaxMin.TabIndex = 2;
             MaxMin.Text = "Max-Min";
             MaxMin.UseVisualStyleBackColor = true;
@@ -86,10 +84,9 @@
             // 
             MaximumMethod.AutoSize = true;
             MaximumMethod.Checked = true;
-            MaximumMethod.Location = new Point(9, 15);
-            MaximumMethod.Margin = new Padding(3, 2, 3, 2);
+            MaximumMethod.Location = new Point(10, 20);
             MaximumMethod.Name = "MaximumMethod";
-            MaximumMethod.Size = new Size(127, 19);
+            MaximumMethod.Size = new Size(157, 24);
             MaximumMethod.TabIndex = 3;
             MaximumMethod.TabStop = true;
             MaximumMethod.Text = "Метод максимума";
@@ -99,10 +96,9 @@
             // MethodAverageMax
             // 
             MethodAverageMax.AutoSize = true;
-            MethodAverageMax.Location = new Point(9, 52);
-            MethodAverageMax.Margin = new Padding(3, 2, 3, 2);
+            MethodAverageMax.Location = new Point(10, 69);
             MethodAverageMax.Name = "MethodAverageMax";
-            MethodAverageMax.Size = new Size(241, 19);
+            MethodAverageMax.Size = new Size(304, 24);
             MethodAverageMax.TabIndex = 4;
             MethodAverageMax.Text = "Метод среднего значения максимумов";
             MethodAverageMax.UseVisualStyleBackColor = true;
@@ -111,10 +107,9 @@
             // MetodLeftLineDef
             // 
             MetodLeftLineDef.AutoSize = true;
-            MetodLeftLineDef.Location = new Point(9, 71);
-            MetodLeftLineDef.Margin = new Padding(3, 2, 3, 2);
+            MetodLeftLineDef.Location = new Point(10, 95);
             MetodLeftLineDef.Name = "MetodLeftLineDef";
-            MetodLeftLineDef.Size = new Size(251, 19);
+            MetodLeftLineDef.Size = new Size(316, 24);
             MetodLeftLineDef.TabIndex = 5;
             MetodLeftLineDef.Text = "Метод линейной дефазификации (слева)";
             MetodLeftLineDef.UseVisualStyleBackColor = true;
@@ -123,10 +118,9 @@
             // MethodRightLineDef
             // 
             MethodRightLineDef.AutoSize = true;
-            MethodRightLineDef.Location = new Point(9, 90);
-            MethodRightLineDef.Margin = new Padding(3, 2, 3, 2);
+            MethodRightLineDef.Location = new Point(10, 120);
             MethodRightLineDef.Name = "MethodRightLineDef";
-            MethodRightLineDef.Size = new Size(258, 19);
+            MethodRightLineDef.Size = new Size(326, 24);
             MethodRightLineDef.TabIndex = 6;
             MethodRightLineDef.Text = "Метод линейной дефазификации (справа)";
             MethodRightLineDef.UseVisualStyleBackColor = true;
@@ -135,10 +129,9 @@
             // MethodSenterGravity
             // 
             MethodSenterGravity.AutoSize = true;
-            MethodSenterGravity.Location = new Point(9, 34);
-            MethodSenterGravity.Margin = new Padding(3, 2, 3, 2);
+            MethodSenterGravity.Location = new Point(10, 45);
             MethodSenterGravity.Name = "MethodSenterGravity";
-            MethodSenterGravity.Size = new Size(148, 19);
+            MethodSenterGravity.Size = new Size(186, 24);
             MethodSenterGravity.TabIndex = 7;
             MethodSenterGravity.Text = "Метод центра тяжести";
             MethodSenterGravity.UseVisualStyleBackColor = true;
@@ -148,11 +141,9 @@
             // 
             MethodsOfInference.Controls.Add(MaxProd);
             MethodsOfInference.Controls.Add(MaxMin);
-            MethodsOfInference.Location = new Point(6, 134);
-            MethodsOfInference.Margin = new Padding(3, 2, 3, 2);
+            MethodsOfInference.Location = new Point(7, 179);
             MethodsOfInference.Name = "MethodsOfInference";
-            MethodsOfInference.Padding = new Padding(3, 2, 3, 2);
-            MethodsOfInference.Size = new Size(150, 58);
+            MethodsOfInference.Size = new Size(171, 77);
             MethodsOfInference.TabIndex = 8;
             MethodsOfInference.TabStop = false;
             MethodsOfInference.Text = "Методы инференции";
@@ -164,41 +155,45 @@
             MethodsOfDefasification.Controls.Add(MetodLeftLineDef);
             MethodsOfDefasification.Controls.Add(MethodRightLineDef);
             MethodsOfDefasification.Controls.Add(MethodSenterGravity);
-            MethodsOfDefasification.Location = new Point(6, 17);
-            MethodsOfDefasification.Margin = new Padding(3, 2, 3, 2);
+            MethodsOfDefasification.Location = new Point(7, 23);
             MethodsOfDefasification.Name = "MethodsOfDefasification";
-            MethodsOfDefasification.Padding = new Padding(3, 2, 3, 2);
-            MethodsOfDefasification.Size = new Size(296, 113);
+            MethodsOfDefasification.Size = new Size(338, 151);
             MethodsOfDefasification.TabIndex = 9;
             MethodsOfDefasification.TabStop = false;
             MethodsOfDefasification.Text = "Методы дефазификации";
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(308, 45);
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pictureBox1.Location = new Point(352, 60);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(347, 231);
+            pictureBox1.Size = new Size(397, 308);
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(308, 282);
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            textBox1.Location = new Point(352, 376);
+            textBox1.Margin = new Padding(3, 4, 3, 4);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(347, 23);
+            textBox1.Size = new Size(396, 27);
             textBox1.TabIndex = 11;
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(308, 311);
+            pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pictureBox2.Location = new Point(352, 415);
+            pictureBox2.Margin = new Padding(3, 4, 3, 4);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(347, 237);
+            pictureBox2.Size = new Size(397, 316);
             pictureBox2.TabIndex = 12;
             pictureBox2.TabStop = false;
             // 
             // DefasificationForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             Controls.Add(pictureBox2);
@@ -207,9 +202,8 @@
             Controls.Add(MethodsOfDefasification);
             Controls.Add(MethodsOfInference);
             Controls.Add(OutputVariables);
-            Margin = new Padding(3, 2, 3, 2);
             Name = "DefasificationForm";
-            Size = new Size(737, 566);
+            Size = new Size(760, 738);
             MethodsOfInference.ResumeLayout(false);
             MethodsOfInference.PerformLayout();
             MethodsOfDefasification.ResumeLayout(false);

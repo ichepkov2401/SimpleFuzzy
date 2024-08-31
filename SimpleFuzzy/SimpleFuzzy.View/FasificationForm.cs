@@ -143,7 +143,9 @@ namespace SimpleFuzzy.View
                 {
                     variableUI = new LinguisticVariableUI(variable, RefreshLinguisticVariableList, FillTreeView);
                     Controls.Add(variableUI);
-                    variableUI.Location = new Point(325, 0);
+                    variableUI.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                    variableUI.Size = new Size(Width-1, Height); 
+                    variableUI.Location = new Point(363+5, 0);
                 }
             }
         }

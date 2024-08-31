@@ -47,7 +47,7 @@
             operand1.Location = new Point(3, 100);
             operand1.Margin = new Padding(3, 4, 3, 4);
             operand1.Name = "operand1";
-            operand1.Size = new Size(140, 29);
+            operand1.Size = new Size(140, 28);
             operand1.TabIndex = 0;
             operand1.SelectedIndexChanged += operand1_SelectedIndexChanged;
             // 
@@ -96,22 +96,22 @@
             // operations
             // 
             operations.FormattingEnabled = true;
-            operations.ItemHeight = 23;
+            operations.ItemHeight = 20;
             operations.Location = new Point(149, 100);
             operations.Margin = new Padding(3, 4, 3, 4);
             operations.Name = "operations";
-            operations.Size = new Size(140, 29);
+            operations.Size = new Size(140, 28);
             operations.TabIndex = 5;
             operations.SelectedIndexChanged += operations_SelectedIndexChanged;
             // 
             // operand2
             // 
             operand2.FormattingEnabled = true;
-            operand2.ItemHeight = 23;
+            operand2.ItemHeight = 20;
             operand2.Location = new Point(295, 100);
             operand2.Margin = new Padding(3, 4, 3, 4);
             operand2.Name = "operand2";
-            operand2.Size = new Size(140, 29);
+            operand2.Size = new Size(140, 28);
             operand2.TabIndex = 6;
             operand2.SelectedIndexChanged += operand2_SelectedIndexChanged;
             // 
@@ -137,10 +137,11 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox1.Location = new Point(441, 4);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(366, 207);
+            pictureBox1.Size = new Size(377, 237);
             pictureBox1.TabIndex = 9;
             pictureBox1.TabStop = false;
             // 

@@ -29,7 +29,8 @@ namespace SimpleFuzzy.View
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             ObjectSet = objectSet;
             GenerationMembershipUI generationMembershipUI = new GenerationMembershipUI(ObjectSet, () => Close());
-            generationMembershipUI.Location = new Point(0, 20);
+            generationMembershipUI.Location = new Point(0, 30);
+            generationMembershipUI.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
             UserControl = generationMembershipUI;
             Controls.Add(generationMembershipUI);
         }

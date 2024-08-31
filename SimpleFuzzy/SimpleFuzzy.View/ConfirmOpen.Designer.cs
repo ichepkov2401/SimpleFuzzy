@@ -40,6 +40,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
@@ -49,33 +50,35 @@
             groupBox1.Controls.Add(button1);
             groupBox1.Location = new Point(3, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(753, 373);
+            groupBox1.Size = new Size(1020, 495);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Открытие проекта";
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(692, 109);
+            label2.Location = new Point(959, 109);
             label2.Name = "label2";
-            label2.Size = new Size(46, 20);
+            label2.Size = new Size(50, 20);
             label2.TabIndex = 11;
             label2.Text = "label2";
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(356, 21);
+            label1.Location = new Point(623, 21);
             label1.Name = "label1";
-            label1.Size = new Size(147, 20);
+            label1.Size = new Size(157, 20);
             label1.TabIndex = 10;
             label1.Text = "Введите имя проекта";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(356, 44);
-            textBox1.Multiline = false;
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            textBox1.Location = new Point(623, 44);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(386, 27);
             textBox1.TabIndex = 8;
@@ -83,16 +86,18 @@
             // 
             // listBox1
             // 
+            listBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             listBox1.ItemHeight = 20;
             listBox1.Location = new Point(3, 21);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(347, 344);
+            listBox1.Size = new Size(614, 464);
             listBox1.TabIndex = 7;
             listBox1.DoubleClick += listBox1_DoubleClick;
             // 
             // button2
             // 
-            button2.Location = new Point(356, 77);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.Location = new Point(623, 77);
             button2.Name = "button2";
             button2.Size = new Size(192, 29);
             button2.TabIndex = 5;
@@ -102,7 +107,7 @@
             // button1
             // 
             button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.Location = new Point(550, 77);
+            button1.Location = new Point(817, 77);
             button1.Name = "button1";
             button1.Size = new Size(192, 29);
             button1.TabIndex = 4;
@@ -115,7 +120,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);
             Name = "ConfirmOpen";
-            Size = new Size(756, 379);
+            Size = new Size(1023, 501);
             Load += ConfirmOpen_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

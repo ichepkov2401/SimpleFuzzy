@@ -45,6 +45,7 @@
             // 
             // treeView1
             // 
+            treeView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             treeView1.Location = new Point(5, 9);
             treeView1.Margin = new Padding(3, 4, 3, 4);
             treeView1.Name = "treeView1";

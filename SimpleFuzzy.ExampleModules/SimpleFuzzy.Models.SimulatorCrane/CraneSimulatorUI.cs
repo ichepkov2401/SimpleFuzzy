@@ -22,20 +22,32 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             context = BufferedGraphicsManager.Current;
             grafx = context.Allocate(CreateGraphics(), DisplayRectangle);
             var assembly = Assembly.GetExecutingAssembly();
-            try
-            {
-                string spritesPath = Path.Combine(System.Windows.Forms.Application.StartupPath, "assets", "sprites");
-                backgroundImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "port.png"));
-                cartImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "carriage.png"));
-                containerImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cable and weight.png"));
-                constructImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "construct.png"));
-                cargoImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "cargo.png"));
-                platformImage = System.Drawing.Image.FromFile(Path.Combine(spritesPath, "platform.png"));
-            }
-            catch { }
+
+            LoadImages();
+
             Paint += OnPaint;
+            Resize += OnResize;
             Dock = DockStyle.Fill;
         }
+
+        private void LoadImages()
+        {
+            try
+            {
+                string spritesPath = Path.Combine(Application.StartupPath, "assets", "sprites");
+                backgroundImage = Image.FromFile(Path.Combine(spritesPath, "port.png"));
+                cartImage = Image.FromFile(Path.Combine(spritesPath, "carriage.png"));
+                containerImage = Image.FromFile(Path.Combine(spritesPath, "cable and weight.png"));
+                constructImage = Image.FromFile(Path.Combine(spritesPath, "construct.png"));
+                cargoImage = Image.FromFile(Path.Combine(spritesPath, "cargo.png"));
+                platformImage = Image.FromFile(Path.Combine(spritesPath, "platform.png"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке изображений: {ex.Message}");
+            }
+        }
+
 
         public VisualCrane(CraneSimulator crane) : this()
         {
@@ -50,36 +62,39 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             // Фон (порт)
             g.DrawImage(backgroundImage, 0, 0, Width, Height);
 
-            float leftBoundary = Width / 6;
-            float rightBoundary = Width - Width / 20;
+            float leftBoundary = Width * 0.16f;
+            float rightBoundary = Width * 0.95f;
             float craneWidth = rightBoundary - leftBoundary;
 
             // Каретка
-            float cartWidth = 40; // Ширина каретки
+            float cartWidth = Width * 0.0584f; // Ширина каретки
+            float cartHeight = Height * 0.0563f; // Высота каретки
             float cartX = (float)(craneSimulator.x / craneSimulator.beamSize * (craneWidth - cartWidth) + leftBoundary);
-            g.DrawImage(cartImage, cartX, 150, cartWidth, 30);
+            float cartY = Height * 0.285f;
+            g.DrawImage(cartImage, cartX, cartY, cartWidth, cartHeight);
 
             // Кран
-            g.DrawImage(constructImage, -130, -100, 800, 658);
+            g.DrawImage(constructImage, Width * -0.19f, Height * -0.185f, Width * 1.168f, Height * 1.2346f);
+
 
             // Трос
-            float ropeStartX = cartX + 20;
-            float ropeStartY = 180;
+            float ropeStartX = cartX + Width * 0.03f;
+            float ropeStartY = Height * 0.338f;
             float ropeEndX = (float)(ropeStartX + Math.Sin(craneSimulator.y) * visualLength);
             float ropeEndY = (float)(ropeStartY + Math.Cos(craneSimulator.y) * visualLength);
             g.DrawLine(new Pen(Color.Black, 2), ropeStartX, ropeStartY, ropeEndX, ropeEndY);
 
             // Контейнер (груз)
-            g.DrawImage(containerImage, ropeEndX - 20, ropeEndY - 15, 40, 30);
+            g.DrawImage(containerImage, ropeEndX - Width * 0.03f, ropeEndY - Height * 0.028f, Width * 0.0584f, Height * 0.0563f);
 
             // Грузовой корабль
-            g.DrawImage(cargoImage, 440, 110, Width, Height);
+            g.DrawImage(cargoImage, Width * 0.64f, Height * 0.206f, Width, Height);
 
             // Платформа
-            float platformWidth = 70;
-            float platformHeight = 25;
-            float platformX = (float)(craneSimulator.platformPosition / craneSimulator.beamSize * craneWidth + leftBoundary+15);
-            float platformY = Height - 45;
+            float platformWidth = Width * 0.102f;
+            float platformHeight = Height * 0.047f;
+            float platformX = (float)(craneSimulator.platformPosition / craneSimulator.beamSize * craneWidth + leftBoundary + Width * 0.022f);
+            float platformY = Height - Height * 0.0844f;
             g.DrawImage(platformImage, platformX, platformY, platformWidth, platformHeight);
 
             // Отображение текущих параметров
@@ -89,6 +104,19 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 g.DrawString($"Угол: {craneSimulator.y * 180 / Math.PI:F2}°", font, Brushes.Black, 10, 30);
             }
         }
+
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            if (grafx != null)
+            {
+                grafx.Dispose();
+            }
+            grafx = context.Allocate(CreateGraphics(), DisplayRectangle);
+            Invalidate();
+
+        }
+
 
         private void InitializeComponent()
         {

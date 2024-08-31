@@ -36,7 +36,8 @@
             // 
             // textBox
             // 
-            textBox.Location = new Point(15, 175);
+            textBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            textBox.Location = new Point(11, 52);
             textBox.Margin = new Padding(2, 1, 2, 1);
             textBox.Name = "textBox";
             textBox.Size = new Size(275, 27);
@@ -45,7 +46,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(21, 49);
+            label1.Location = new Point(21, 22);
             label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
             label1.Size = new Size(50, 20);
@@ -54,7 +55,8 @@
             // 
             // buttonOK
             // 
-            buttonOK.Location = new Point(298, 171);
+            buttonOK.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonOK.Location = new Point(293, 52);
             buttonOK.Margin = new Padding(2, 1, 2, 1);
             buttonOK.Name = "buttonOK";
             buttonOK.Size = new Size(93, 29);
@@ -65,7 +67,8 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(394, 171);
+            buttonCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonCancel.Location = new Point(389, 52);
             buttonCancel.Margin = new Padding(2, 1, 2, 1);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(93, 29);
@@ -78,7 +81,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(493, 281);
+            ClientSize = new Size(493, 103);
             Controls.Add(buttonCancel);
             Controls.Add(buttonOK);
             Controls.Add(label1);

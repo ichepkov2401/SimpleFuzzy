@@ -71,6 +71,7 @@ namespace SimpleFuzzy.View
             if (text == null) return;
             Label txt = new Label();
             txt.Name = "textBox1";
+            txt.AutoSize = true;
             txt.Text = text;
             txt.TabIndex = currentTabIndex + 1;
             currentTabIndex++;
@@ -99,6 +100,7 @@ namespace SimpleFuzzy.View
             if (id == null || text == null) return;
             LinkLabel lbl = new LinkLabel();
             lbl.Name = "linkLabel1";
+            lbl.AutoSize = true;
             lbl.Text = text;
             lbl.TabIndex = currentTabIndex + 1;
             currentTabIndex++;

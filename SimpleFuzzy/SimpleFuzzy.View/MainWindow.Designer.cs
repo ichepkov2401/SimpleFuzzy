@@ -1,5 +1,4 @@
 ﻿
-using MetroFramework.Controls;
 using System.Resources;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -49,10 +48,13 @@ namespace SimpleFuzzy.View
             button11 = new ToolStripMenuItem();
             logoBox = new PictureBox();
             toolTip1 = new ToolTip(components);
+            toolTip2 = new ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            Left = new Button();
+            Right = new Button();
+            label1 = new Label();
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
-            metroLabel1 = new MetroLabel();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -82,7 +84,6 @@ namespace SimpleFuzzy.View
             // 
             // button3
             // 
-            button3.Enabled = false;
             button3.Name = "button3";
             button3.Size = new Size(79, 24);
             button3.Text = "Удалить";
@@ -90,7 +91,6 @@ namespace SimpleFuzzy.View
             // 
             // button4
             // 
-            button4.Enabled = false;
             button4.Name = "button4";
             button4.Size = new Size(135, 24);
             button4.Text = "Переименовать";
@@ -98,16 +98,13 @@ namespace SimpleFuzzy.View
             // 
             // button5
             // 
-            button5.Enabled = false;
             button5.Name = "button5";
-            button5.Size = new Size(67, 24);
-            button5.Size = new Size(107, 39);
+            button5.Size = new Size(123, 24);
             button5.Text = "Сохранить как";
             button5.Click += button5_Click;
             // 
             // button6
             // 
-            button6.Enabled = false;
             button6.Name = "button6";
             button6.Size = new Size(97, 24);
             button6.Text = "Сохранить";
@@ -185,37 +182,54 @@ namespace SimpleFuzzy.View
             // 
             // timer1
             // 
-            timer1.Tick += timer1_Tick;
+            timer1.Interval = 1000;
+            //timer1.Tick += timer1_Tick;
             // 
-            // metroLabel1
+            // Left
             // 
-            metroLabel1.AutoSize = true;
-            metroLabel1.CustomBackground = false;
-            metroLabel1.FontSize = MetroFramework.MetroLabelSize.Medium;
-            metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Light;
-            metroLabel1.LabelMode = MetroLabelMode.Default;
-            metroLabel1.Location = new Point(540, 22);
-            metroLabel1.Name = "metroLabel1";
-            metroLabel1.Size = new Size(84, 20);
-            metroLabel1.Style = MetroFramework.MetroColorStyle.Blue;
-            metroLabel1.StyleManager = null;
-            metroLabel1.TabIndex = 13;
-            metroLabel1.Text = "";
-            metroLabel1.Theme = MetroFramework.MetroThemeStyle.Light;
-            metroLabel1.UseStyleColors = false;
+            Left.Location = new Point(3, 119);
+            Left.Name = "Left";
+            Left.Size = new Size(94, 29);
+            Left.TabIndex = 2;
+            Left.Text = "Влево";
+            Left.UseVisualStyleBackColor = true;
+            Left.Click += Left_Click;
+            // 
+            // Right
+            // 
+            Right.Location = new Point(538, 119);
+            Right.Name = "Right";
+            Right.Size = new Size(94, 29);
+            Right.TabIndex = 3;
+            Right.Text = "Вправо";
+            Right.UseVisualStyleBackColor = true;
+            Right.Click += Right_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(490, 19);
+            label1.Name = "label1";
+            label1.Size = new Size(0, 20);
+            label1.TabIndex = 14;
             // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(914, 600);
+            Controls.Add(label1);
+            Controls.Add(Right);
+            Controls.Add(Left);
             Controls.Add(menuStrip2);
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
             Location = new Point(0, 0);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
+            ShowIcon = false;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             menuStrip2.ResumeLayout(false);
@@ -242,9 +256,15 @@ namespace SimpleFuzzy.View
         private ToolStripMenuItem button11;
         private ToolStripMenuItem button12;
         private ToolStripMenuItem button13;
+        public AboutBox aboutBox;
+        public  HelpWindow helpWindow;
         private PictureBox logoBox;
         private ToolTip toolTip1;
+        private ToolTip toolTip2;
         private System.Windows.Forms.Timer timer1;
-        private MetroLabel metroLabel1;
+        private Button Left;
+        private Button Right;
+        private Label label1;
+        public const bool isChangableSize = true;
     }
 }

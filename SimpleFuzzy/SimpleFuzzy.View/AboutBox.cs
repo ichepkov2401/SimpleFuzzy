@@ -1,13 +1,16 @@
-﻿using MetroFramework.Forms;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace SimpleFuzzy.View
 {
-    partial class AboutBox : MetroForm
+    public partial class AboutBox : Form
     {
         public AboutBox()
         {
             InitializeComponent();
+            labelProductName.Text += AssemblyTitle;
+            labelVersion.Text += AssemblyVersion;
+            labelCopyright.Text += AssemblyCopyright;
+            labelCompanyName.Text += AssemblyCompany;
         }
 
         #region Методы доступа к атрибутам сборки
@@ -33,7 +36,16 @@ namespace SimpleFuzzy.View
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyFileVersionAttribute titleAttribute = (AssemblyFileVersionAttribute)attributes[0];
+                    if (titleAttribute.Version != "")
+                    {
+                        return titleAttribute.Version + "𝜋";
+                    }
+                }
+                return "1.0";
             }
         }
 
@@ -89,5 +101,9 @@ namespace SimpleFuzzy.View
             }
         }
         #endregion
+        public void okButton_Click (object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

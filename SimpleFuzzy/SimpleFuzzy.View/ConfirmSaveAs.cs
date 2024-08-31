@@ -1,16 +1,17 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmSaveAs : MetroUserControl
+    public partial class ConfirmSaveAs : UserControl
     {
         IProjectListService projectList;
+        IFilesPathsNamesValidator validator;
         public ConfirmSaveAs()
         {
             InitializeComponent();
             textBox1.Text = Directory.GetCurrentDirectory() + "\\Projects";
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
+            validator = AutofacIntegration.GetInstance<IFilesPathsNamesValidator>();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -24,36 +25,36 @@ namespace SimpleFuzzy.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (metroTextBox1 == null)
+            metroTextBox1.Text = metroTextBox1.Text.TrimEnd('.');// Для файла
+            metroTextBox1.Text = metroTextBox1.Text.Trim(' ');
+            textBox1.Text = textBox1.Text.TrimEnd('/');//Для пути
+            textBox1.Text = textBox1.Text.TrimEnd('.');
+            if (validator.IsValidFileName(metroTextBox1.Text) && validator.IsValidDirectoryName(textBox1.Text))
             {
-                MessageBox.Show("Введите новое имя проекта");
+                try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text, true); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неверное имя или путь к файлу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            try { projectList.CopyProject(metroTextBox1.Text, textBox1.Text + "\\" + metroTextBox1.Text); }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
-            if (Parent is MainWindow parent)
-            {
-                parent.OpenButtons();
-                parent.OpenLoader();
-            }
+            
+            button3_Click(sender, e);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent) 
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
-                parent.OpenButtons();
+                parent.ChangeNameOfProject();
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
-            Parent.Controls.Remove(this);
-        }
-
-        private void ConfirmCopy_Load(object sender, EventArgs e)
-        {
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            else { Parent.Controls.Remove(this); }
         }
     }
 }

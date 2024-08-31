@@ -1,16 +1,15 @@
-﻿using MetroFramework.Controls;
-using SimpleFuzzy.Abstract;
+﻿using SimpleFuzzy.Abstract;
 
 namespace SimpleFuzzy.View
 {
-    public partial class ConfirmOpen : MetroUserControl
+    public partial class ConfirmOpen : UserControl
     {
         IProjectListService projectList;
         public ConfirmOpen()
         {
             InitializeComponent();
             projectList = AutofacIntegration.GetInstance<IProjectListService>();
-            if (Parent is MainWindow parent) { parent.BlockButtons(); }
+            projectList.CheckAll();
             label2.Visible = false;
             string[] list = projectList.GiveList();
             for (int i = 1; i < list.Length; i += 3)
@@ -37,26 +36,30 @@ namespace SimpleFuzzy.View
                 projectList.OpenProjectfromPath(dialog.SelectedPath);
                 if (Parent is MainWindow parent)
                 {
-                    parent.OpenButtons();
                     parent.Locked();
                     parent.OpenLoader();
+                    // Обновляем состояние симулятора после открытия проекта
+                    parent.UpdateSimulatorState();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"{ex.Message}", "Ошибка открытия", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Parent is MainWindow parent)
+            if (Parent is MainWindow parent && parent.lastControlEnum != null)
             {
-                parent.OpenButtons();
-                parent.Locked();
+                parent.SwichUserControl(parent.lastControlEnum, parent.lastButton);
             }
-            Parent.Controls.Remove(this);
+            else if (Parent is MainWindow parent1)
+            {
+                parent1.ColorDelete();
+                Parent.Controls.Remove(this);
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -95,23 +98,20 @@ namespace SimpleFuzzy.View
             if (listBox1.SelectedItem != null)
             {
                 string projectName = listBox1.SelectedItem.ToString();
-                try
+                // открытие проекта
+                projectList.OpenProjectfromName(projectName);
+                if (Parent is MainWindow parent)
                 {
-                    // открытие проекта
-                    projectList.OpenProjectfromName(projectName);
-                    if (Parent is MainWindow parent)
-                    {
-                        parent.OpenButtons();
-                        parent.Locked();
-                        parent.OpenLoader();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return;
+                    parent.Locked();
+                    parent.OpenLoader();
+                    // Обновляем состояние симулятора после открытия проекта
+                    parent.UpdateSimulatorState();
                 }
             }
+        }
+        private void ConfirmOpen_Load(object sender, EventArgs e)
+        {
+            if (Parent is MainWindow parent) parent.Locked();
         }
     }
 }

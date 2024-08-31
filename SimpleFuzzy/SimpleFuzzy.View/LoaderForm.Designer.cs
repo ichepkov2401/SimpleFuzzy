@@ -21,14 +21,11 @@ namespace SimpleFuzzy.View
 
         private void InitializeComponent()
         {
-            TreeNode treeNode1 = new TreeNode("Термы");
-            TreeNode treeNode2 = new TreeNode("Базовые множества");
-            TreeNode treeNode3 = new TreeNode("Симуляции");
-            filePathTextBox = new MetroFramework.Controls.MetroTextBox();
-            browseButton = new MetroFramework.Controls.MetroButton();
-            loadButton = new MetroFramework.Controls.MetroButton();
-            messageTextBox = new MetroFramework.Controls.MetroTextBox();
-            treeView1 = new NoClickTree();
+            filePathTextBox = new TextBox();
+            browseButton = new Button();
+            loadButton = new Button();
+            messageTextBox = new TextBox();
+            treeView1 = new RadioTree();
             dllListView = new ListView();
             FileName = new ColumnHeader();
             CloseButton = new ColumnHeader();
@@ -42,81 +39,50 @@ namespace SimpleFuzzy.View
             // 
             // filePathTextBox
             // 
-            filePathTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
-            filePathTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-            filePathTextBox.Location = new Point(8, 49);
-            filePathTextBox.Multiline = false;
+            filePathTextBox.Location = new Point(8, 51);
             filePathTextBox.Name = "filePathTextBox";
-            filePathTextBox.SelectedText = "";
-            filePathTextBox.Size = new Size(358, 23);
-            filePathTextBox.Style = MetroFramework.MetroColorStyle.Blue;
-            filePathTextBox.StyleManager = null;
+            filePathTextBox.Size = new Size(358, 27);
             filePathTextBox.TabIndex = 0;
-            filePathTextBox.Theme = MetroFramework.MetroThemeStyle.Light;
-            filePathTextBox.UseStyleColors = false;
             // 
             // browseButton
             // 
-            browseButton.Highlight = false;
-            browseButton.Location = new Point(372, 49);
+            browseButton.Location = new Point(372, 51);
             browseButton.Name = "browseButton";
-            browseButton.Size = new Size(99, 23);
-            browseButton.Style = MetroFramework.MetroColorStyle.Blue;
-            browseButton.StyleManager = null;
+            browseButton.Size = new Size(99, 27);
             browseButton.TabIndex = 1;
             browseButton.Text = "Обзор";
-            browseButton.Theme = MetroFramework.MetroThemeStyle.Light;
             browseButton.Click += browseButton_Click;
             // 
             // loadButton
             // 
-            loadButton.Highlight = false;
-            loadButton.Location = new Point(8, 20);
+            loadButton.Location = new Point(8, 18);
             loadButton.Name = "loadButton";
-            loadButton.Size = new Size(463, 23);
-            loadButton.Style = MetroFramework.MetroColorStyle.Blue;
-            loadButton.StyleManager = null;
+            loadButton.Size = new Size(463, 30);
             loadButton.TabIndex = 2;
             loadButton.Text = "Загрузить модуль";
-            loadButton.Theme = MetroFramework.MetroThemeStyle.Light;
             loadButton.Click += loadButton_Click;
             // 
             // messageTextBox
             // 
             messageTextBox.Enabled = false;
-            messageTextBox.FontSize = MetroFramework.MetroTextBoxSize.Small;
-            messageTextBox.FontWeight = MetroFramework.MetroTextBoxWeight.Regular;
-            messageTextBox.Location = new Point(8, 78);
+            messageTextBox.Location = new Point(8, 84);
             messageTextBox.Multiline = true;
             messageTextBox.Name = "messageTextBox";
-            messageTextBox.SelectedText = "";
-            messageTextBox.Size = new Size(463, 169);
-            messageTextBox.Style = MetroFramework.MetroColorStyle.Blue;
-            messageTextBox.StyleManager = null;
+            messageTextBox.Size = new Size(463, 163);
             messageTextBox.TabIndex = 3;
-            messageTextBox.Theme = MetroFramework.MetroThemeStyle.Light;
-            messageTextBox.UseStyleColors = false;
             // 
             // treeView1
             // 
-            treeView1.CheckBoxes = true;
             treeView1.Location = new Point(10, 20);
             treeView1.Name = "treeView1";
-            treeNode1.Name = "";
-            treeNode1.Text = "Термы";
-            treeNode2.Name = "";
-            treeNode2.Text = "Базовые множества";
-            treeNode3.Name = "";
-            treeNode3.Text = "Симуляции";
-            treeView1.Nodes.AddRange(new TreeNode[] { treeNode1, treeNode2, treeNode3 });
-            treeView1.ShowNodeToolTips = true;
             treeView1.Size = new Size(398, 227);
             treeView1.TabIndex = 0;
-            treeView1.AfterCheck += treeView1_AfterCheck;
+            treeView1.BaseSetCheckedChange += BaseSetCheck;
+            treeView1.TermCheckedChange += TermCheck;
+            treeView1.SimulatorCheckedChange += SimulatorCheck;
             // 
             // dllListView
             // 
-            dllListView.Columns.AddRange(new ColumnHeader[] { FileName });
             dllListView.FullRowSelect = true;
             dllListView.Location = new Point(10, 23);
             dllListView.Name = "dllListView";
@@ -125,9 +91,13 @@ namespace SimpleFuzzy.View
             dllListView.TabIndex = 6;
             dllListView.UseCompatibleStateImageBehavior = false;
             dllListView.View = System.Windows.Forms.View.Details;
-            dllListView.Scrollable = true;
-            dllListView.ShowItemToolTips = true;
+            // 
+            // FileName
+            // 
             FileName.Text = "Имя";
+            // 
+            // CloseButton
+            // 
             CloseButton.Text = "";
             // 
             // groupBoxLoader
@@ -172,17 +142,18 @@ namespace SimpleFuzzy.View
             Name = "LoaderForm";
             Size = new Size(916, 490);
             groupBoxLoader.ResumeLayout(false);
+            groupBoxLoader.PerformLayout();
             groupBoxModules.ResumeLayout(false);
             groupBoxDLL.ResumeLayout(false);
             ResumeLayout(false);
         }
         #endregion
 
-        private MetroFramework.Controls.MetroTextBox filePathTextBox;
-        private MetroFramework.Controls.MetroButton browseButton;
-        private MetroFramework.Controls.MetroButton loadButton;
-        private MetroFramework.Controls.MetroTextBox messageTextBox;
-        private NoClickTree treeView1;
+        private TextBox filePathTextBox;
+        private Button browseButton;
+        private Button loadButton;
+        private TextBox messageTextBox;
+        private RadioTree treeView1;
         public ListView dllListView;
         private ColumnHeader FileName;
         private ColumnHeader CloseButton;

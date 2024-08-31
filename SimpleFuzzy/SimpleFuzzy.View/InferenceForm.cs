@@ -89,7 +89,8 @@ namespace SimpleFuzzy.View
                     List<IMembershipFunction> list = currentOutputVar.ListRules.rules[i].GiveList();
                     for (int j = 1; j < list.Count; j++)
                     {
-                        if (list[j] != null && IsContainsTermInRep(list[j].Name))
+                        if (list[j] != null && IsContainsTermInRep(list[j].Name) 
+                            && (dataTable.Columns[cells] as DataGridViewComboBoxColumn).Items.Contains(list[j].Name))
                         {
                             dataTable.Rows[i].Cells[cells].Value = list[j].Name;
                             dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorTerm(dataTable.Columns[cells].Name, list[j], 1);
@@ -101,7 +102,8 @@ namespace SimpleFuzzy.View
                     dataTable.Rows[i].Cells[cells].Value = currentOutputVar.ListRules.rules[i].relevance.ToString().Replace(',', '.');
                     dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorToRelevation(currentOutputVar.ListRules.rules[i].relevance, 1);
                     cells++;
-                    if (list[0] != null && IsContainsTermInRep(list[0].Name))
+                    if (list.Count > 0 && list[0] != null && IsContainsTermInRep(list[0].Name) 
+                        && (dataTable.Columns[cells] as DataGridViewComboBoxColumn).Items.Contains(list[0].Name))
                     {
                         dataTable.Rows[i].Cells[cells].Value = list[0].Name;
                         dataTable.Rows[i].Cells[cells].Style.BackColor = SetColorTerm(dataTable.Columns[cells].Name, list[0], 1);

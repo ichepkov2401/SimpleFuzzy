@@ -46,6 +46,7 @@ namespace SimpleFuzzy.View
                 assemblyLoaderService.AssemblyLoader($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll");
                 Close();
             }
+            catch (ArgumentNullException ex) { MessageBox.Show(ex.Message, "Имя не может быть пустым", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }

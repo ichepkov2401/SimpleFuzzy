@@ -93,7 +93,11 @@ namespace SimpleFuzzy.Model
         }
         public bool isEmpty()
         {
-            return terms.Count == 0;
+            foreach (var term in terms)
+            {
+                if (term != null) return false;
+            }
+            return true; ;
         }
     }
 }

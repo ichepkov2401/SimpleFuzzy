@@ -170,7 +170,7 @@ namespace SimpleFuzzy.View
                 VisualizeFunction(compile.Item2 as IMembershipFunction);
                 compile.Item3.Unload();
             }
-            catch (ArgumentNullException ex) { MessageBox.Show(ex.Message, "Имя не может быть пустым", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (ArgumentNullException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             catch (Exception ex) { MessageBox.Show("Неверный ввод условий.", "Ошибка"); }
 
         }

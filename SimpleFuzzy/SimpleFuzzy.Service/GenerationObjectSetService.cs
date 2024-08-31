@@ -1,5 +1,4 @@
 ﻿using SimpleFuzzy.Abstract;
-using System.Data;
 
 namespace SimpleFuzzy.Service
 {
@@ -7,7 +6,7 @@ namespace SimpleFuzzy.Service
     {
         public string ReturnObjectSet(double first, double stepik, double last, string name)
         {
-            if (name.Replace(" ", "") == "") throw new ArgumentNullException("name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("Имя не может быть пустым");
             int digits = 0;
             for (var values = (first, stepik, last);
                 (int)values.first != values.first ||

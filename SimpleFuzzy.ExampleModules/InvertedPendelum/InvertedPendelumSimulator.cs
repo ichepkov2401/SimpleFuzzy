@@ -1,4 +1,5 @@
 ﻿using SimpleFuzzy.Abstract;
+using System.Xml;
 
 namespace InvertedPendelum
 {
@@ -13,6 +14,13 @@ namespace InvertedPendelum
         public object GetVisualObject()
         {
             throw new NotImplementedException();
+        }
+
+        public XmlNode SaveState(XmlDocument xmlDocument)
+            => xmlDocument.CreateElement("");
+
+        public void LoadState(XmlNode node)
+        {
         }
 
         public void SetController(Func<List<object>, List<object>> controller)

@@ -47,7 +47,7 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
-                string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
+                string message = (simulator.x <= 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
                 MessageBox.Show(message);
                 Reset();
             }
@@ -155,21 +155,21 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         private void SetInitialValues()
         {
-            numMassPendulum.Value = (decimal)simulator.m;
-            numMassCart.Value = (decimal)simulator.M;
-            numLengthPendulum.Value = (decimal)simulator.l;
+            numBeamSize.Value = (decimal)simulator.beamSize;
+            numInitialPosition.Value = (decimal)simulator.initPositionX;
+            numInitialAngle.Value = (decimal)simulator.initPositionY;
             numDampingCart.Value = (decimal)simulator.k1;
             numDampingPendulum.Value = (decimal)simulator.k2;
-            numInitialPosition.Value = (decimal)simulator.x;
-            numInitialAngle.Value = (decimal)simulator.y;
-            numBeamSize.Value = (decimal)simulator.beamSize;
-
+            numLengthPendulum.Value = (decimal)simulator.l;
+            numMassCart.Value = (decimal)simulator.M;
+            numMassPendulum.Value = (decimal)simulator.m;
 
             numPlatformPosition.Value = (decimal)simulator.platformPosition;
             numPlatformPosition.Minimum = 0;
             numPlatformPosition.Maximum = numBeamSize.Value * 0.525M;
             numInitialPosition.Minimum = 0;
             numInitialPosition.Maximum = numBeamSize.Value;
+
         }
 
         private void UpdateSimulatorParameters(object sender, EventArgs e)
@@ -184,6 +184,10 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 simulator.x = (double)numInitialPosition.Value;
                 simulator.y = (double)numInitialAngle.Value * Math.PI / 180;
                 simulator.platformPosition = (double)numPlatformPosition.Value;
+
+                simulator.initPositionX = (double)numInitialPosition.Value;
+                simulator.initPositionY = (double)numInitialAngle.Value;
+                simulator.beamSize = (double)numBeamSize.Value;
             }
         }
 

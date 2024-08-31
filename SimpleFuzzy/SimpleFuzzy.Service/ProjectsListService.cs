@@ -406,6 +406,8 @@ namespace SimpleFuzzy.Service
             // методы сохранения
             SaveActiveModulesXML(activeModules);
             SaveAllLinguisticVariable(linguistic);
+            // сохранение симуляции
+            SaveSimulator(doc.DocumentElement);
             // сохранение xml файла
             doc.Save(GivePath(CurrentProjectName, true) + name);
         }
@@ -547,6 +549,17 @@ namespace SimpleFuzzy.Service
                     }
                     setruleNode.AppendChild(inputVarablesNode);
                 }
+            }
+        }
+
+        private void SaveSimulator(XmlElement parentNode)
+        {
+            var simulator = repository.GetCollection<ISimulator>().FirstOrDefault(x => x.Active);
+            if (simulator != null)
+            {
+                XmlNode xmlNode = parentNode.OwnerDocument.CreateElement("simulator");
+                xmlNode.AppendChild(simulator.SaveState(parentNode.OwnerDocument));
+                parentNode.AppendChild(xmlNode);
             }
         }
 

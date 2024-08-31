@@ -47,6 +47,7 @@ namespace SimpleFuzzy.View
                 Close();
             }
             catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (ArgumentNullException ex) { MessageBox.Show(ex.Message, "Имя не может быть пустым", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }

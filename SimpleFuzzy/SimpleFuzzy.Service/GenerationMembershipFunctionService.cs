@@ -8,6 +8,7 @@ namespace SimpleFuzzy.Service
 
         public string GenerateCode(Type inputType, string name, List<(string Condition, string Value)> conditions)
         {
+            if(name.Replace(" ", "") == "") throw new ArgumentNullException("name");
             var conditionsCode = string.Join(", ", conditions.Select(c => $"(({c.Condition}), ({c.Value}))"));
 
             return $@"

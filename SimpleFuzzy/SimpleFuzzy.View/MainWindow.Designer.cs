@@ -225,9 +225,11 @@ namespace SimpleFuzzy.View
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
             Location = new Point(0, 0);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
+            ShowIcon = false;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             menuStrip2.ResumeLayout(false);

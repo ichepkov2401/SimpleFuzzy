@@ -100,13 +100,9 @@ namespace SimpleFuzzy.View
                     string name = $"{item.Name}";
                     if (list.Count(t => t.Name == item.Name) > 1)
                     {
-                        name = $"{item.Name} - {item.GetType()}";
-                        if (list.Where(x => x.Name == item.Name).Count(x => x.GetType() == item.GetType()) > 1)
-                        {
-                            name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.FullName}";
-                        }
+                        name = $"{item.Name} - {item.GetType()} - {item.GetType().Assembly.Location}";
                     }
-                    termsName.Add(item.Name, item);
+                    termsName.Add(name, item);
                 }
             }
             if (fuzzyOperation.Operand1 == null)

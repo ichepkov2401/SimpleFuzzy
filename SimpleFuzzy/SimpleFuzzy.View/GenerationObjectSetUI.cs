@@ -63,7 +63,6 @@ namespace SimpleFuzzy.View
                 }
                 catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             }
-            
         }
     }
 }

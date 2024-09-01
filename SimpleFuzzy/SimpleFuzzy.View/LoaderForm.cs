@@ -74,15 +74,17 @@ namespace SimpleFuzzy.View
                         throw new FileLoadException("Загружаемый dll файл уже есть в домене приложения");
                     }
                 }
-                moduleLoaderService.AssemblyLoader(filePath);
+                string newPath = Directory.GetCurrentDirectory() + "\\Projects\\" +
+                    projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1];
+                File.Copy(filePath, newPath);
+                moduleLoaderService.AssemblyLoader(newPath);
                 foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
                 {
-                    if (assemblyLoadContext.AssemblyName == filePath)
+                    if (assemblyLoadContext.AssemblyName == newPath)
                     {
                         messageTextBox.Text = assemblyLoadContext.AssemblyName;
                     }
                 }
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1]);
                 RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
                 TreeViewShow();
             }

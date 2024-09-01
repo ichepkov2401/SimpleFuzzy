@@ -91,5 +91,13 @@ namespace SimpleFuzzy.Model
             }
             IsActive = true;
         }
+        public bool isEmpty()
+        {
+            foreach (var term in terms)
+            {
+                if (term != null) return false;
+            }
+            return true; ;
+        }
     }
 }

@@ -8,12 +8,14 @@ namespace SimpleFuzzy.View
         ICompileService serviceCompile;
         IProjectListService projectListService;
         IAssemblyLoaderService assemblyLoaderService;
+        IRepositoryService repositoryService;
         public GenerationObjectSetUI()
         {
             service = AutofacIntegration.GetInstance<IGenerationObjectSetService>();
             serviceCompile = AutofacIntegration.GetInstance<ICompileService>();
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();
             assemblyLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
+            repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             InitializeComponent();
         }
 
@@ -43,16 +45,25 @@ namespace SimpleFuzzy.View
                 MessageBox.Show("Имя множества не может быть пустым.", "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            try
+            else if (repositoryService.GetCollection<IObjectSet>().Exists(x => x.Name == nameTextBox.Text))
             {
-                string generatedCode = service.ReturnObjectSet(first, step, last, nameTextBox.Text);
-                string dllName = $"BaseSet-{DateTime.Now.Ticks}";
-                var compile = serviceCompile.Compile(generatedCode);
-                serviceCompile.Save($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll", compile.Item1);
-                assemblyLoaderService.AssemblyLoader($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll");
-                Close();
+                MessageBox.Show("Множество с таким именем уже существует.", "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            else
+            {
+                try
+                {
+                    string generatedCode = service.ReturnObjectSet(first, step, last, nameTextBox.Text);
+                    string dllName = $"BaseSet-{DateTime.Now.Ticks}";
+                    var compile = serviceCompile.Compile(generatedCode);
+                    serviceCompile.Save($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll", compile.Item1);
+                    assemblyLoaderService.AssemblyLoader($"{projectListService.GivePath(projectListService.CurrentProjectName, true)}\\{dllName}.dll");
+                    Close();
+                }
+                catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Ошибка при создании множества", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            
         }
     }
 }

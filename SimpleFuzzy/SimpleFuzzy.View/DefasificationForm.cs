@@ -56,22 +56,22 @@ namespace SimpleFuzzy.View
                 outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
                 pictureBox1.Controls.Add(DrawInput(output));
                 var newInput = output.ListRules.inputVariables;
-                for (int i = 0; i < newInput.Count; i++)
+                for (int i = 0; i < newInput.Count; i++) 
                 {
                     PictureBox pictureBox = new PictureBox();
                     pictureBox.Size = new Size(287, 193);
-                    pictureBox.Location = new Point(15, 197 + i * 250);
+                    pictureBox.Location = new Point(15, MethodsOfInference.Location.Y + MethodsOfInference.Size.Height + 10 + i * 250);
                     pictureBox.Controls.Add(DrawInput(newInput[i]));
                     Controls.Add(pictureBox);
                     TrackBar trackBar = new TrackBar();
                     trackBar.Size = new Size(148, 45);
-                    trackBar.Location = new Point(15, 396 + i * 250);
+                    trackBar.Location = new Point(15, pictureBox.Location.Y + pictureBox.Size.Height + 10 + i * 250);
                     trackBar.ValueChanged += InputChanged;
                     trackBar.Maximum = newInput[i].BaseSet.Count - 1;
                     Controls.Add(trackBar);
                     Label label = new Label();
                     label.Text = newInput[i].Name;
-                    label.Location = new Point(169, 405 + i * 250);
+                    label.Location = new Point(trackBar.Location.X + trackBar.Size.Width + 10, trackBar.Location.Y + 10 + i * 250);
                     Controls.Add(label);
                     inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
                 }
@@ -147,7 +147,7 @@ namespace SimpleFuzzy.View
             {
                 pictureBox2.Controls.Clear();
                 PlotView plotView = new PlotView() { Dock = DockStyle.Fill };
-                PlotModel plotModel = new PlotModel() { Title = "График передаточных характерестики" };
+                PlotModel plotModel = new PlotModel() { Title = "График передаточных характеристик" };
                 LineSeries series = new LineSeries();
                 foreach (PointF point in list)
                 {

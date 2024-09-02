@@ -195,7 +195,6 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
             Controls.Add(pictureBox2);
             Controls.Add(textBox1);
             Controls.Add(pictureBox1);

@@ -36,7 +36,7 @@
             // 
             btnGenerate.Anchor = AnchorStyles.Top;
             btnGenerate.Location = new Point(203, 219);
-            btnGenerate.Margin = new Padding(5, 5, 5, 5);
+            btnGenerate.Margin = new Padding(5);
             btnGenerate.Name = "btnGenerate";
             btnGenerate.Size = new Size(133, 35);
             btnGenerate.TabIndex = 6;
@@ -100,9 +100,9 @@
             grpInput.Controls.Add(btnGenerate);
             grpInput.Controls.Add(lblError);
             grpInput.Location = new Point(16, 19);
-            grpInput.Margin = new Padding(5, 5, 5, 5);
+            grpInput.Margin = new Padding(5);
             grpInput.Name = "grpInput";
-            grpInput.Padding = new Padding(5, 5, 5, 5);
+            grpInput.Padding = new Padding(5);
             grpInput.Size = new Size(350, 268);
             grpInput.TabIndex = 0;
             grpInput.TabStop = false;
@@ -164,7 +164,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(382, 309);
             Controls.Add(grpInput);
-            Margin = new Padding(5, 5, 5, 5);
+            Margin = new Padding(5);
             Name = "GenerationObjectSetUI";
             Text = "Генератор ObjectSet";
             grpInput.ResumeLayout(false);

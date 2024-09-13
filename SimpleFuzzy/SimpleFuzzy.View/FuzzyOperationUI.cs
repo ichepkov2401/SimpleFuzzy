@@ -280,7 +280,7 @@ namespace SimpleFuzzy.View
             }
             else if (repositoryService.GetCollection<IMembershipFunction>().Exists(x => x.Name == nameTextBox.Text) && oldName != nameTextBox.Text)
             {
-                MessageBox.Show("Терм с таким именем уже существует.", "Ошибка переименования", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Терм с таким именем уже существует.", "Ошибка при создании терма", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 nameTextBox.Text = oldName;
             }
             else

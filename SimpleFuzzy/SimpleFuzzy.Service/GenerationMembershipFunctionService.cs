@@ -8,6 +8,7 @@ namespace SimpleFuzzy.Service
 
         public string GenerateCode(Type inputType, string name, List<(string Condition, string Value)> conditions)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("Имя не может быть пустым");
             var conditionsCode = string.Join(", ", conditions.Select(c => $"(({c.Condition}), ({c.Value}))"));
 
             return $@"

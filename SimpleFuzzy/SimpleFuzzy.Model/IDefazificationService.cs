@@ -17,6 +17,10 @@ namespace SimpleFuzzy.Model
             CenterOfWight
         }
 
-        object Defazification(LinguisticVariable output, List<object> input, Methods method, Rule.Inference inference);
+        object Defazification(LinguisticVariable output, List<object> input, Methods method, Rule.Inference inference, out List<ActiveRule> activeRules);
+
+        List<object> DefazificationSimulator(List<object> input);
+
+
     }
 }

@@ -9,6 +9,7 @@ namespace SimpleFuzzy.Model
     {
         public string name; // Имя лингвистической переменной
         public bool isInput; // входная или выходная переменная
+        public event EventHandler? UnloadAssembly;
         public bool IsActive => baseSet != null && func.Count > 0;
         public IObjectSet baseSet; // Базовое множество
         public List<(IMembershipFunction, Color)> func = new List<(IMembershipFunction, Color)>(); // Список термов
@@ -23,7 +24,11 @@ namespace SimpleFuzzy.Model
         {
             this.isRedact = isRedact;
             this.isInput = isInput;
-            this.ListRules = new SetRule(this);
+            if (!isInput)
+            {
+                ListRules = new SetRule(this);
+                UnloadAssembly += ListRules.UnloadingHandler;
+            }
         }
         public LinguisticVariable(string name, bool isInput, bool isRedact, IObjectSet baseSet, List<(IMembershipFunction, Color)> func)
         {
@@ -169,7 +174,11 @@ namespace SimpleFuzzy.Model
                     }
                 }
             }
-            result = result.Remove(result.Length - 2);
+            if (result.Length > 2)
+            {
+                result = result.Remove(result.Length - 2);
+            }
+            
             if (countTerms > 1)
             {
                 string and = " и ";

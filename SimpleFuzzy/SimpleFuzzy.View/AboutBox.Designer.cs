@@ -86,7 +86,7 @@
             labelProductName.Name = "labelProductName";
             labelProductName.Size = new Size(362, 27);
             labelProductName.TabIndex = 19;
-            labelProductName.Text = "Название продукта";
+            labelProductName.Text = "Название продукта: ";
             labelProductName.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelVersion
@@ -98,7 +98,7 @@
             labelVersion.Name = "labelVersion";
             labelVersion.Size = new Size(362, 27);
             labelVersion.TabIndex = 0;
-            labelVersion.Text = "Версия";
+            labelVersion.Text = "Версия: ";
             labelVersion.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelCopyright
@@ -110,7 +110,7 @@
             labelCopyright.Name = "labelCopyright";
             labelCopyright.Size = new Size(362, 27);
             labelCopyright.TabIndex = 21;
-            labelCopyright.Text = "Авторские права";
+            labelCopyright.Text = "Авторские права: ";
             labelCopyright.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelCompanyName
@@ -122,7 +122,7 @@
             labelCompanyName.Name = "labelCompanyName";
             labelCompanyName.Size = new Size(362, 27);
             labelCompanyName.TabIndex = 22;
-            labelCompanyName.Text = "Название организации";
+            labelCompanyName.Text = "Название организации: ";
             labelCompanyName.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // okButton

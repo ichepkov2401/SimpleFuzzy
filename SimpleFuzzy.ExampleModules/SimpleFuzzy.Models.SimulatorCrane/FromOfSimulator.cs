@@ -22,9 +22,9 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         {
             simulator = crane;
             InitializeComponent();
-            SetupControls();
             visualCrane = new VisualCrane(crane);
             cranePanel.Controls.Add(visualCrane);
+            SetupControls();
             timer = new System.Windows.Forms.Timer { Interval = 16 }; // ~60 FPS
             timer.Tick += TimerTick;
         }
@@ -33,16 +33,21 @@ namespace SimpleFuzzy.Models.SimulatorCrane
         {
             if (radioButton2.Checked)
             {
-                forceTrackBar.Value = (int)simulator.GetFunc(new List<object>() {
+                forceTrackBar.Enabled = false;
+                forceTrackBar.Value = Convert.ToInt32(simulator.GetFunc(new List<object>() {
                     Math.Round((double)numPlatformPosition.Value - simulator.x, 2),
                     (int)Math.Round(simulator.y)
-                })[0];
+                })[0]);
+            }
+            else
+            {
+                forceTrackBar.Enabled = true;
             }
             simulator.Step();
-            if (simulator.x < 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
+            if (simulator.x <= 0 || simulator.x >= simulator.beamSize || Math.Abs(simulator.y) >= CraneSimulator.MAX_ANGLE)
             {
                 timer.Stop();
-                string message = (simulator.x < 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
+                string message = (simulator.x <= 0 || simulator.x >= simulator.beamSize) ? "Каретка достигла края платформы!" : "Контейнер запрокинулся!";
                 MessageBox.Show(message);
                 Reset();
             }
@@ -122,17 +127,6 @@ namespace SimpleFuzzy.Models.SimulatorCrane
             AddLabel("Передвижение каретки:", forceTrackBar);
             AddLabel("Позиция платформы:", numPlatformPosition);
 
-            // Настройка обработчиков событий
-            numMassPendulum.ValueChanged += UpdateSimulatorParameters;
-            numMassCart.ValueChanged += UpdateSimulatorParameters;
-            numLengthPendulum.ValueChanged += UpdateSimulatorParameters;
-            numDampingCart.ValueChanged += UpdateSimulatorParameters;
-            numDampingPendulum.ValueChanged += UpdateSimulatorParameters;
-            numInitialPosition.ValueChanged += UpdateSimulatorParameters;
-            numInitialAngle.ValueChanged += UpdateSimulatorParameters;
-            numBeamSize.ValueChanged += numBeamSize_ValueChanged;
-            numPlatformPosition.ValueChanged += UpdateSimulatorParameters;
-
             // Установка начальных значений
             SetInitialValues();
         }
@@ -150,21 +144,34 @@ namespace SimpleFuzzy.Models.SimulatorCrane
 
         private void SetInitialValues()
         {
-            numMassPendulum.Value = (decimal)simulator.m;
-            numMassCart.Value = (decimal)simulator.M;
-            numLengthPendulum.Value = (decimal)simulator.l;
+            numBeamSize.Value = (decimal)simulator.beamSize;
+            numInitialPosition.Value = (decimal)simulator.initPositionX;
+            numInitialAngle.Value = (decimal)simulator.initPositionY;
             numDampingCart.Value = (decimal)simulator.k1;
             numDampingPendulum.Value = (decimal)simulator.k2;
-            numInitialPosition.Value = (decimal)simulator.x;
-            numInitialAngle.Value = (decimal)simulator.y;
-            numBeamSize.Value = (decimal)simulator.beamSize;
-
+            numLengthPendulum.Value = (decimal)simulator.l;
+            numMassCart.Value = (decimal)simulator.M;
+            numMassPendulum.Value = (decimal)simulator.m;
 
             numPlatformPosition.Value = (decimal)simulator.platformPosition;
             numPlatformPosition.Minimum = 0;
             numPlatformPosition.Maximum = numBeamSize.Value * 0.525M;
             numInitialPosition.Minimum = 0;
             numInitialPosition.Maximum = numBeamSize.Value;
+
+            Reset();
+
+            // Настройка обработчиков событий
+            numMassPendulum.ValueChanged += UpdateSimulatorParameters;
+            numMassCart.ValueChanged += UpdateSimulatorParameters;
+            numLengthPendulum.ValueChanged += UpdateSimulatorParameters;
+            numDampingCart.ValueChanged += UpdateSimulatorParameters;
+            numDampingPendulum.ValueChanged += UpdateSimulatorParameters;
+            numInitialPosition.ValueChanged += UpdateSimulatorParameters;
+            numInitialAngle.ValueChanged += UpdateSimulatorParameters;
+            numBeamSize.ValueChanged += numBeamSize_ValueChanged;
+            numPlatformPosition.ValueChanged += UpdateSimulatorParameters;
+
         }
 
         private void UpdateSimulatorParameters(object sender, EventArgs e)
@@ -179,6 +186,10 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 simulator.x = (double)numInitialPosition.Value;
                 simulator.y = (double)numInitialAngle.Value * Math.PI / 180;
                 simulator.platformPosition = (double)numPlatformPosition.Value;
+
+                simulator.initPositionX = (double)numInitialPosition.Value;
+                simulator.initPositionY = (double)numInitialAngle.Value;
+                simulator.beamSize = (double)numBeamSize.Value;
             }
         }
 

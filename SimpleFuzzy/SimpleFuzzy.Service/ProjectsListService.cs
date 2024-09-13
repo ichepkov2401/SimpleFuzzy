@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 using System.Data;
+using Microsoft.CodeAnalysis;
 
 namespace SimpleFuzzy.Service
 {
@@ -19,13 +20,17 @@ namespace SimpleFuzzy.Service
         public string pathPR = Directory.GetCurrentDirectory() + "\\Projects";
         public IRepositoryService repository;
         public IAssemblyLoaderService loaderService;
+        private IDefazificationService defazificationService;
         Dictionary<string, Action<XmlNodeList>> pair = new Dictionary<string, Action<XmlNodeList>>();
-        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService)
+        public ProjectListService(IAssemblyLoaderService loaderService, IRepositoryService repositoryService, IDefazificationService defazificationService)
         {
             repository = repositoryService;
             this.loaderService = loaderService;
             pair.Add("activeModules", ChooseActive);
             pair.Add("allLinguisticVariables", LoadLinguisticVariable);
+            pair.Add("simulator", SimulatorStateLoad);
+            pair.Add("fuzzyOperations", LoadFuzzyOperations);
+            this.defazificationService = defazificationService;
         }
         public string? CurrentProjectName { get; set; }
 
@@ -43,8 +48,6 @@ namespace SimpleFuzzy.Service
         {
             if (!IsContainsName(name))
             {
-                if (name == "") throw new InvalidOperationException("Имя проекта не может быть пустым");
-                if (name[0] == ' ') throw new InvalidOperationException("Имя проекта не может начинаться с пробела");
                 CurrentProjectName = name;
                 FileStream file = new FileStream(pathPL, FileMode.Append);
                 StreamWriter writer = new StreamWriter(file);
@@ -84,7 +87,6 @@ namespace SimpleFuzzy.Service
                 }
             }
         }
-
         private void ChooseActive(XmlNodeList list)
         {
             foreach (XmlNode moduleNode in list)
@@ -111,11 +113,12 @@ namespace SimpleFuzzy.Service
                 if (module != null)
                 {
                     module.Active = status;
+                    (module as ISimulator).SetController(defazificationService.DefazificationSimulator);
                     continue;
                 }
             }
         }
-        public void LoadLinguisticVariable(XmlNodeList list)
+        private void LoadLinguisticVariable(XmlNodeList list)
         {
             foreach (XmlNode xmlLinguistic in list)
             {
@@ -126,7 +129,10 @@ namespace SimpleFuzzy.Service
                 if (xmlLinguistic["baseSet"].InnerText != "Нет базового множества") {
                     foreach (var objectSet in repository.GetCollection<IObjectSet>())
                     {
-                        if (objectSet.GetType().FullName + " " + objectSet.GetType().Assembly.FullName == xmlLinguistic["baseSet"].InnerText)
+                        
+                        if (objectSet.GetType().FullName + " " +
+                                     objectSet.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "")
+                                     == xmlLinguistic["baseSet"].InnerText)
                         {
                             newSet = objectSet;
                             break;
@@ -140,7 +146,9 @@ namespace SimpleFuzzy.Service
                     {
                         foreach (XmlNode childnode in xmlLinguistic["func"].ChildNodes)
                         {
-                            if (function.GetType().FullName + " " + function.GetType().Assembly.FullName == childnode.InnerText)
+
+                            if (function.Name + " " + function.GetType().FullName + " " +
+                                     function.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "") == childnode.InnerText)
                             {
                                 string r = childnode.Attributes["R"].Value;
                                 string g = childnode.Attributes["G"].Value;
@@ -155,8 +163,103 @@ namespace SimpleFuzzy.Service
                 }
                 var linguistic = new LinguisticVariable(namefromNode, inputfromNode, redactfromNode, newSet, membershipFunctions);
                 repository.GetCollection<LinguisticVariable>().Add(linguistic);
+
+                if (xmlLinguistic["ListRules"] != null)
+                {
+                    SetRule setRule = new SetRule(linguistic);
+                    foreach (XmlNode rule in xmlLinguistic["ListRules"].ChildNodes)
+                    {
+                        if (rule.Name == "Rule")
+                        {
+                            double relevance = 0;
+                            bool isActive = true;
+                            bool isDublicate = false;
+                            List<IMembershipFunction> terms = new List<IMembershipFunction>();
+                            foreach (XmlNode ruleChild in rule.ChildNodes)
+                            {
+                                if (ruleChild.Name == "relevance")
+                                    relevance = double.Parse(ruleChild.InnerText);
+                                if (ruleChild.Name == "IsActive")
+                                    isActive = bool.Parse(ruleChild.InnerText);
+                                if (ruleChild.Name == "IsDublicate")
+                                    isDublicate = bool.Parse(ruleChild.InnerText);
+                                if (ruleChild.Name == "terms")
+                                {
+                                    foreach (XmlNode term in ruleChild.ChildNodes)
+                                    {
+                                        if (term.Name == "Oneterm")
+                                        {
+                                            if (term.InnerText != "Нет терма")
+                                                terms.Add(repository.GetCollection<IMembershipFunction>().FirstOrDefault(x => x.Name + " " + x.GetType().FullName + " " +
+                                                    x.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "") == term.InnerText));
+                                            else terms.Add(null);
+                                        }
+                                    }
+                                }
+                            }
+                            Model.Rule nowRule = new Model.Rule(terms.Count, setRule);
+                            nowRule.relevance = relevance;
+                            nowRule.IsActive = isActive;
+                            nowRule.IsDublicate = isDublicate;
+                            for (int i = 0; i < terms.Count; i++)
+                                nowRule.RedactTerm(terms[i], i);
+                            setRule.rules.Add(nowRule);
+                        }
+                        else if (rule.Name == "inputVariables")
+                        {
+                            foreach(XmlNode value in rule.ChildNodes)
+                            {
+                                if (value.Name == "inputVarName")
+                                {
+                                    var variable = repository.GetCollection<LinguisticVariable>().FirstOrDefault(x => x.Name == value.InnerText);
+                                    if (variable != null)
+                                        setRule.AddInputVar(variable);
+                                }
+                            }
+                        }
+                    }
+                    linguistic.ListRules = setRule;
+                }
             }
         }
+
+        private void SimulatorStateLoad(XmlNodeList list)
+        {
+            var simulator = repository.GetCollection<ISimulator>().FirstOrDefault(x => x.Active);
+            if (simulator != null)
+                simulator.LoadState(list[0]); 
+        }
+
+        private void LoadFuzzyOperations(XmlNodeList list)
+        {
+            foreach (XmlNode node in list) 
+            {
+                FuzzyOperation newOperation = new FuzzyOperation();
+                newOperation.Name = node["name"].InnerText;
+                newOperation.Func = node["nameOperation"].InnerText;
+                List<IMembershipFunction> functions = repository.GetCollection<IMembershipFunction>();
+                for (int i = 0; i < functions.Count; i++)
+                {
+                    if (functions[i].GetType().FullName + " " + 
+                        functions[i].GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "") == node["operand1"].InnerText)
+                    {
+                        newOperation.Operand1 = functions[i];
+                        continue;
+                    }
+                    if (functions[i].GetType().FullName + " " +
+                        functions[i].GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "") == node["operand2"]?.InnerText)
+                    {
+                        newOperation.Operand2 = functions[i];
+                        continue;
+                    }
+                }
+                double n;
+                if (double.TryParse(node["pValue"].InnerText, out n))
+                newOperation.p = n;
+                repository.GetCollection<IMembershipFunction>().Add(newOperation);
+            }
+        }
+
         public void OpenProjectfromName(string name)
         {
             if (ContainsCheckName(name))
@@ -400,15 +503,19 @@ namespace SimpleFuzzy.Service
             doc.AppendChild(root);
             XmlElement activeModules = doc.CreateElement("activeModules");
             XmlElement linguistic = doc.CreateElement("allLinguisticVariables");
+            XmlElement fuzzyOperations = doc.CreateElement("fuzzyOperations");
             root.AppendChild(activeModules);
             root.AppendChild(linguistic);
+            root.AppendChild(fuzzyOperations);
             // методы сохранения
             SaveActiveModulesXML(activeModules);
-            SaveAllLinguisticVariable(linguistic);
+            SaveAllLinguisticVariable(linguistic, true);
+            SaveAllLinguisticVariable(linguistic, false);
+            SaveFuzzyOperation(fuzzyOperations);
+            SaveSimulator(doc.DocumentElement);
             // сохранение xml файла
             doc.Save(GivePath(CurrentProjectName, true) + name);
         }
-
         private void SaveActiveModulesXML(XmlElement activeModules)
         {
             var s = repository.GetCollection<IMembershipFunction>().Cast<IModulable>().
@@ -435,10 +542,55 @@ namespace SimpleFuzzy.Service
                 module.InnerText = active;
             }
         }
-        
-        public void SaveAllLinguisticVariable(XmlElement parentNode)
+        public void SaveFuzzyOperation(XmlElement fuzzyOperation)
         {
-            foreach (var linguisticVariable in repository.GetCollection<LinguisticVariable>()) {
+            foreach (IMembershipFunction operation in repository.GetCollection<IMembershipFunction>())
+            {
+                if (operation.GetType() == typeof(FuzzyOperation))
+                {
+                    XmlElement fuzzyOperations = fuzzyOperation.OwnerDocument.CreateElement("FuzzyOperation"); 
+                    fuzzyOperation.AppendChild(fuzzyOperations);
+
+                    XmlElement name = fuzzyOperation.OwnerDocument.CreateElement("name");
+                    name.InnerText = operation.Name;
+                    fuzzyOperations.AppendChild(name);
+
+                    XmlElement operand1 = fuzzyOperation.OwnerDocument.CreateElement("operand1");
+                    operand1.InnerText = (operation as FuzzyOperation).Operand1.GetType().FullName + " " +
+                        (operation as FuzzyOperation).Operand1.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "");
+                    fuzzyOperations.AppendChild(operand1);
+
+                    if ((operation as FuzzyOperation).Operand2 != null)
+                    {
+                        XmlElement operand2 = fuzzyOperation.OwnerDocument.CreateElement("operand2");
+                        operand2.InnerText = (operation as FuzzyOperation).Operand2.GetType().FullName + " " +
+                        (operation as FuzzyOperation).Operand2.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "");
+                        fuzzyOperations.AppendChild(operand2);
+                    }
+
+                    XmlElement nameOperation = fuzzyOperation.OwnerDocument.CreateElement("nameOperation");
+                    nameOperation.InnerText = (operation as FuzzyOperation).Func;
+                    fuzzyOperations.AppendChild(nameOperation);
+
+                    XmlElement pValue = fuzzyOperation.OwnerDocument.CreateElement("pValue");
+                    pValue.InnerText = (operation as FuzzyOperation).p.ToString();
+                    fuzzyOperations.AppendChild(pValue);
+                }
+            }
+        }
+        private void SaveSimulator(XmlElement parentNode)
+        {
+            var simulator = repository.GetCollection<ISimulator>().FirstOrDefault(x => x.Active);
+            if (simulator != null)
+            {
+                XmlNode xmlNode = parentNode.OwnerDocument.CreateElement("simulator");
+                xmlNode.AppendChild(simulator.SaveState(parentNode.OwnerDocument));
+                parentNode.AppendChild(xmlNode);
+            }
+        }
+        public void SaveAllLinguisticVariable(XmlElement parentNode, bool isInput)
+        {
+            foreach (var linguisticVariable in repository.GetCollection<LinguisticVariable>().Where(x => x.isInput == isInput)) {
                 XmlElement linguisticNode = parentNode.OwnerDocument.CreateElement("LingiusticVariable");
                 parentNode.AppendChild(linguisticNode);
 
@@ -453,10 +605,12 @@ namespace SimpleFuzzy.Service
                 XmlElement redactNode = parentNode.OwnerDocument.CreateElement("isRedact");
                 redactNode.InnerText = linguisticVariable.isRedact.ToString();
                 linguisticNode.AppendChild(redactNode);
+
                 XmlElement objectsetNode = parentNode.OwnerDocument.CreateElement("baseSet");
                 if (linguisticVariable.baseSet != null)
                 {
-                    objectsetNode.InnerText = linguisticVariable.baseSet.GetType().FullName + " " + linguisticVariable.baseSet.GetType().Assembly.FullName;
+                    objectsetNode.InnerText = linguisticVariable.baseSet.GetType().FullName + " " + 
+                        linguisticVariable.baseSet.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "");
                 }
                 else
                 {
@@ -464,11 +618,13 @@ namespace SimpleFuzzy.Service
                 }
                 linguisticNode.AppendChild(objectsetNode);
                 XmlElement funcNode = parentNode.OwnerDocument.CreateElement("func");
-                if (linguisticVariable.func.Count != 0) {
+                if (linguisticVariable.func.Count != 0)
+                {
                     foreach (var function in linguisticVariable.func)
                     {
                         XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Onefunction");
-                        functionNode.InnerText = function.Item1.GetType().FullName + " " + function.Item1.GetType().Assembly.FullName;
+                        functionNode.InnerText = function.Item1.Name + " " + function.Item1.GetType().FullName + " " + 
+                            function.Item1.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "");
                         funcNode.AppendChild(functionNode);
                         XmlAttribute moduleNameXML = parentNode.OwnerDocument.CreateAttribute("R");
                         moduleNameXML.Value = function.Item2.R.ToString();
@@ -486,6 +642,65 @@ namespace SimpleFuzzy.Service
                     funcNode.InnerText = "Нет термов";
                 }
                 linguisticNode.AppendChild(funcNode);
+
+                if (!linguisticVariable.IsInput && linguisticVariable.ListRules != null)
+                {
+                    XmlElement setruleNode = parentNode.OwnerDocument.CreateElement("ListRules");
+
+                    XmlElement inputVarablesNode = parentNode.OwnerDocument.CreateElement("inputVariables");
+                    foreach (var lingvistic in linguisticVariable.ListRules.inputVariables)
+                    {
+                        XmlElement inputVar = parentNode.OwnerDocument.CreateElement("inputVarName");
+                        inputVar.InnerText = lingvistic.Name;
+                        inputVarablesNode.AppendChild(inputVar);
+                    }
+                    setruleNode.AppendChild(inputVarablesNode);
+
+
+                    linguisticNode.AppendChild(setruleNode);
+                    foreach (var rule in linguisticVariable.ListRules.rules) {
+                        XmlElement ruleNode = parentNode.OwnerDocument.CreateElement("Rule");
+                        setruleNode.AppendChild(ruleNode);
+
+                        XmlElement relevanceNode = parentNode.OwnerDocument.CreateElement("relevance");
+                        relevanceNode.InnerText = rule.relevance.ToString();
+                        ruleNode.AppendChild(relevanceNode);
+
+                        XmlElement IsActiveNode = parentNode.OwnerDocument.CreateElement("IsActive");
+                        IsActiveNode.InnerText = rule.IsActive.ToString();
+                        ruleNode.AppendChild(IsActiveNode);
+
+                        XmlElement IsDublicateNode = parentNode.OwnerDocument.CreateElement("IsDublicate");
+                        IsDublicateNode.InnerText = rule.IsDublicate.ToString();
+                        ruleNode.AppendChild(IsDublicateNode);
+
+                        XmlElement termsNode = parentNode.OwnerDocument.CreateElement("terms");
+                        if (!rule.isEmpty())
+                        {
+                            foreach (var function in rule.GiveList())
+                            {
+                                XmlElement functionNode = parentNode.OwnerDocument.CreateElement("Oneterm");
+                                if (function != null)
+                                {
+                                    functionNode.InnerText = function.Name + " " + function.GetType().FullName + " " +
+                                        function.GetType().Assembly.Location.Replace(Directory.GetCurrentDirectory(), "");
+                                    termsNode.AppendChild(functionNode);
+                                }
+                                else
+                                {
+                                    functionNode.InnerText = "Нет терма";
+                                    termsNode.AppendChild(functionNode);
+                                }
+                            }
+                            ruleNode.AppendChild(termsNode);
+                        }
+                        else
+                        {
+                            termsNode.InnerText = "Нет термов";
+                            ruleNode.AppendChild(termsNode);
+                        }
+                    }
+                }
             }
         }
     }

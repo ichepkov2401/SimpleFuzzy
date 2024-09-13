@@ -1,4 +1,4 @@
-﻿using SimpleFuzzy.Abstract;
+using SimpleFuzzy.Abstract;
 using SimpleFuzzy.Model;
 
 namespace SimpleFuzzy.View
@@ -8,6 +8,7 @@ namespace SimpleFuzzy.View
         public IAssemblyLoaderService moduleLoaderService;
         public IRepositoryService repositoryService;
         public IProjectListService projectListService;
+        private IDefazificationService defazificationService;
         Dictionary<string, IModulable> modules = new Dictionary<string, IModulable>();
         Dictionary<ListViewItem, string> LoadedAssembies = new Dictionary<ListViewItem, string>();
         public LoaderForm()
@@ -22,6 +23,7 @@ namespace SimpleFuzzy.View
             moduleLoaderService = AutofacIntegration.GetInstance<IAssemblyLoaderService>();
             repositoryService = AutofacIntegration.GetInstance<IRepositoryService>();
             projectListService = AutofacIntegration.GetInstance<IProjectListService>();
+            defazificationService = AutofacIntegration.GetInstance<IDefazificationService>();
             RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
             TreeViewShow();
 
@@ -72,15 +74,17 @@ namespace SimpleFuzzy.View
                         throw new FileLoadException("Загружаемый dll файл уже есть в домене приложения");
                     }
                 }
-                moduleLoaderService.AssemblyLoader(filePath);
+                string newPath = Directory.GetCurrentDirectory() + "\\Projects\\" +
+                    projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1];
+                File.Copy(filePath, newPath);
+                moduleLoaderService.AssemblyLoader(newPath);
                 foreach (var assemblyLoadContext in repositoryService.GetCollection<AssemblyContextModel>())
                 {
-                    if (assemblyLoadContext.AssemblyName == filePath)
+                    if (assemblyLoadContext.AssemblyName == newPath)
                     {
                         messageTextBox.Text = assemblyLoadContext.AssemblyName;
                     }
                 }
-                File.Copy(filePath, Directory.GetCurrentDirectory() + "\\Projects\\" + projectListService.CurrentProjectName + "\\" + filePath.Split('\\')[^1]);
                 RefreshDllList(repositoryService.GetCollection<AssemblyContextModel>());
                 TreeViewShow();
             }
@@ -214,13 +218,16 @@ namespace SimpleFuzzy.View
         {
             foreach (var variable in simulator.GetLinguisticVariables())
             {
-                repositoryService.GetCollection<LinguisticVariable>().Add(new LinguisticVariable(
+                var list = repositoryService.GetCollection<LinguisticVariable>();
+                list.Add(new LinguisticVariable(
                     variable.Name,
                     variable.IsInput,
                     false,
                     repositoryService.GetCollection<IObjectSet>().FirstOrDefault(t => t.GetType() == variable.BaseSet),
                     new List<(IMembershipFunction, Color)>()));
+                list[^1].ListRules = new SetRule(list[^1]);
             }
+            simulator.SetController(defazificationService.DefazificationSimulator);
         }
 
         private void UnloadSimulationVariable(ISimulator simulator)

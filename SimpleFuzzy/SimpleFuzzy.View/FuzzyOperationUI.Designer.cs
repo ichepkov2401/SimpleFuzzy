@@ -149,17 +149,17 @@
             // 
             // pNumericUpDown
             // 
-            pNumericUpDown.DecimalPlaces = 2;
-            pNumericUpDown.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            pNumericUpDown.Location = new Point(122, 115);
-            pNumericUpDown.Margin = new Padding(3, 2, 3, 2);
-            pNumericUpDown.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
-            pNumericUpDown.Name = "pNumericUpDown";
-            pNumericUpDown.Size = new Size(131, 23);
-            pNumericUpDown.TabIndex = 14;
-            pNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            pNumericUpDown.Visible = false;
-            pNumericUpDown.ValueChanged += pNumericUpDown_ValueChanged;
+pNumericUpDown.DecimalPlaces = 2;
+pNumericUpDown.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+pNumericUpDown.Location = new Point(122, 115);
+pNumericUpDown.Margin = new Padding(3, 2, 3, 2);
+pNumericUpDown.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+pNumericUpDown.Name = "pNumericUpDown";
+pNumericUpDown.Size = new Size(131, 23);
+pNumericUpDown.TabIndex = 14;
+pNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
+pNumericUpDown.Visible = false;
+pNumericUpDown.ValueChanged += pNumericUpDown_ValueChanged;
             // 
             // FuzzyOperationUI
             // 

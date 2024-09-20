@@ -40,7 +40,7 @@ namespace SimpleFuzzy.View
             }
             else
             {
-                MessageBox.Show("Неверное имя или путь к файлу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо ввести имя проекта", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             

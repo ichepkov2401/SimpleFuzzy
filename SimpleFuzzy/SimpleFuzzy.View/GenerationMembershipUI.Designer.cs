@@ -63,9 +63,9 @@ namespace SimpleFuzzy.View
             label1.AutoSize = true;
             label1.Location = new Point(7, 32);
             label1.Name = "label1";
-            label1.Size = new Size(84, 30);
+            label1.Size = new Size(101, 30);
             label1.TabIndex = 4;
-            label1.Text = "Имя базового\r\nмножества";
+            label1.Text = "Имя функции\r\nпринадлежности";
             // 
             // labelBaseSet
             // 

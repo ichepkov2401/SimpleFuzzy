@@ -59,19 +59,19 @@ namespace SimpleFuzzy.View
                 for (int i = 0; i < newInput.Count; i++) 
                 {
                     PictureBox pictureBox = new PictureBox();
-                    pictureBox.Size = new Size(287, 193);
-                    pictureBox.Location = new Point(15, MethodsOfInference.Location.Y + MethodsOfInference.Size.Height + 10 + i * 250);
+                    pictureBox.Size = new Size(500, 150);
+                    pictureBox.Location = new Point(15, MethodsOfInference.Location.Y + MethodsOfInference.Size.Height + 5 + (i * 200));
                     pictureBox.Controls.Add(DrawInput(newInput[i]));
                     Controls.Add(pictureBox);
                     TrackBar trackBar = new TrackBar();
                     trackBar.Size = new Size(148, 45);
-                    trackBar.Location = new Point(15, pictureBox.Location.Y + pictureBox.Size.Height + 10 + i * 250);
+                    trackBar.Location = new Point(15, pictureBox.Location.Y + pictureBox.Size.Height + 5);
                     trackBar.ValueChanged += InputChanged;
                     trackBar.Maximum = newInput[i].BaseSet.Count - 1;
                     Controls.Add(trackBar);
                     Label label = new Label();
                     label.Text = newInput[i].Name;
-                    label.Location = new Point(trackBar.Location.X + trackBar.Size.Width + 10, trackBar.Location.Y + 10 + i * 250);
+                    label.Location = new Point(trackBar.Location.X + trackBar.Size.Width + 10, trackBar.Location.Y + 5);
                     Controls.Add(label);
                     inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
                 }

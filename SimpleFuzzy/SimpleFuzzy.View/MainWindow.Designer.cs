@@ -183,7 +183,6 @@ namespace SimpleFuzzy.View
             // timer1
             // 
             timer1.Interval = 1000;
-            //timer1.Tick += timer1_Tick;
             // 
             // Left
             // 
@@ -217,17 +216,16 @@ namespace SimpleFuzzy.View
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1122, 703);
+            ClientSize = new Size(1122, 753);
             Controls.Add(label1);
             Controls.Add(Right);
             Controls.Add(Left);
             Controls.Add(menuStrip2);
             Controls.Add(menuStrip1);
             Controls.Add(logoBox);
-            Location = new Point(0, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
-            MinimumSize = new Size(1000, 750);
+            MinimumSize = new Size(1140, 800);
             Name = "MainWindow";
             Padding = new Padding(0, 60, 0, 0);
             ShowIcon = false;

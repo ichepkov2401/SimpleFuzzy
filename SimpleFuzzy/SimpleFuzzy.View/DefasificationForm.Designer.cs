@@ -51,9 +51,9 @@
             // 
             OutputVariables.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             OutputVariables.FormattingEnabled = true;
-            OutputVariables.Location = new Point(352, 23);
+            OutputVariables.Location = new Point(533, 6);
             OutputVariables.Name = "OutputVariables";
-            OutputVariables.Size = new Size(396, 28);
+            OutputVariables.Size = new Size(573, 28);
             OutputVariables.TabIndex = 0;
             OutputVariables.SelectedIndexChanged += OutputVariables_SelectedIndexChanged;
             // 
@@ -141,9 +141,9 @@
             // 
             MethodsOfInference.Controls.Add(MaxProd);
             MethodsOfInference.Controls.Add(MaxMin);
-            MethodsOfInference.Location = new Point(7, 179);
+            MethodsOfInference.Location = new Point(3, 6);
             MethodsOfInference.Name = "MethodsOfInference";
-            MethodsOfInference.Size = new Size(171, 77);
+            MethodsOfInference.Size = new Size(180, 151);
             MethodsOfInference.TabIndex = 8;
             MethodsOfInference.TabStop = false;
             MethodsOfInference.Text = "Методы инференции";
@@ -155,7 +155,7 @@
             MethodsOfDefasification.Controls.Add(MetodLeftLineDef);
             MethodsOfDefasification.Controls.Add(MethodRightLineDef);
             MethodsOfDefasification.Controls.Add(MethodSenterGravity);
-            MethodsOfDefasification.Location = new Point(7, 23);
+            MethodsOfDefasification.Location = new Point(189, 6);
             MethodsOfDefasification.Name = "MethodsOfDefasification";
             MethodsOfDefasification.Size = new Size(338, 151);
             MethodsOfDefasification.TabIndex = 9;
@@ -165,29 +165,29 @@
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            pictureBox1.Location = new Point(352, 60);
+            pictureBox1.Location = new Point(533, 43);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(397, 308);
+            pictureBox1.Size = new Size(573, 275);
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
             // 
             // textBox1
             // 
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(352, 376);
+            textBox1.Location = new Point(533, 326);
             textBox1.Margin = new Padding(3, 4, 3, 4);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(396, 27);
+            textBox1.Size = new Size(573, 27);
             textBox1.TabIndex = 11;
             // 
             // pictureBox2
             // 
             pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            pictureBox2.Location = new Point(352, 415);
+            pictureBox2.Location = new Point(533, 361);
             pictureBox2.Margin = new Padding(3, 4, 3, 4);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(397, 316);
+            pictureBox2.Size = new Size(573, 275);
             pictureBox2.TabIndex = 12;
             pictureBox2.TabStop = false;
             // 
@@ -201,8 +201,9 @@
             Controls.Add(MethodsOfDefasification);
             Controls.Add(MethodsOfInference);
             Controls.Add(OutputVariables);
+            MinimumSize = new Size(822, 650);
             Name = "DefasificationForm";
-            Size = new Size(760, 738);
+            Size = new Size(1113, 650);
             MethodsOfInference.ResumeLayout(false);
             MethodsOfInference.PerformLayout();
             MethodsOfDefasification.ResumeLayout(false);

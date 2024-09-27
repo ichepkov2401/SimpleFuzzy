@@ -25,15 +25,15 @@ namespace SimpleFuzzy.View
             {
 
                 try { projectList.AddProject(textBox1.Text, textBox2.Text + $"\\{textBox1.Text}"); }
-catch (Exception ex)
-{
-    MessageBox.Show($"{ex.Message}", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
-    return;
-}
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
             else
             {
-                MessageBox.Show("Неверное имя файла или путь к нему!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Имя проекта не может быть пустым", "Ошибка создания", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             

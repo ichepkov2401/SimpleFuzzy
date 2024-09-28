@@ -39,11 +39,13 @@ namespace SimpleFuzzy.View
         {
             foreach (var variable in inputs)
             {
-                Controls.Remove(variable.Item2);
-                Controls.Remove(variable.Item3);
-                Controls.Remove(variable.Item4);
+                graphicsPanel.Controls.Remove(variable.Item2);
+                graphicsPanel.Controls.Remove(variable.Item3);
+                graphicsPanel.Controls.Remove(variable.Item4);
             }
             inputs.Clear();
+            graphicsPanel.Controls.Clear();
+
             output = repositoryService.GetCollection<LinguisticVariable>()
                 .FirstOrDefault(t => t.Name == (string)OutputVariables.SelectedItem);
             pictureBox1.Controls.Clear();
@@ -56,25 +58,28 @@ namespace SimpleFuzzy.View
                 outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
                 pictureBox1.Controls.Add(DrawInput(output));
                 var newInput = output.ListRules.inputVariables;
+                int totalHeight = 0;
                 for (int i = 0; i < newInput.Count; i++) 
                 {
                     PictureBox pictureBox = new PictureBox();
-                    pictureBox.Size = new Size(500, 150);
-                    pictureBox.Location = new Point(15, MethodsOfInference.Location.Y + MethodsOfInference.Size.Height + 5 + (i * 200));
+                    pictureBox.Size = new Size(400, 250);
+                    pictureBox.Location = new Point(50, 10 + (i * 300));
                     pictureBox.Controls.Add(DrawInput(newInput[i]));
-                    Controls.Add(pictureBox);
+                    graphicsPanel.Controls.Add(pictureBox);
                     TrackBar trackBar = new TrackBar();
                     trackBar.Size = new Size(148, 45);
-                    trackBar.Location = new Point(15, pictureBox.Location.Y + pictureBox.Size.Height + 5);
+                    trackBar.Location = new Point(pictureBox.Location.X + pictureBox.Width/2 - 150, pictureBox.Location.Y + pictureBox.Size.Height + 5);
                     trackBar.ValueChanged += InputChanged;
                     trackBar.Maximum = newInput[i].BaseSet.Count - 1;
-                    Controls.Add(trackBar);
+                    graphicsPanel.Controls.Add(trackBar);
                     Label label = new Label();
                     label.Text = newInput[i].Name;
                     label.Location = new Point(trackBar.Location.X + trackBar.Size.Width + 10, trackBar.Location.Y + 5);
-                    Controls.Add(label);
+                    graphicsPanel.Controls.Add(label);
                     inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
+                    totalHeight = trackBar.Location.Y + trackBar.Height + 20;
                 }
+                graphicsPanel.AutoScrollMinSize = new Size(0, totalHeight);
                 textBox1.Visible = true;
                 if (newInput.Count != 1)
                     pictureBox2.Visible = false;

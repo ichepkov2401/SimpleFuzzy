@@ -41,6 +41,7 @@
             pictureBox1 = new PictureBox();
             textBox1 = new TextBox();
             pictureBox2 = new PictureBox();
+            graphicsPanel = new Panel();
             MethodsOfInference.SuspendLayout();
             MethodsOfDefasification.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -191,10 +192,20 @@
             pictureBox2.TabIndex = 12;
             pictureBox2.TabStop = false;
             // 
+            // graphicsPanel
+            // 
+            graphicsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            graphicsPanel.AutoScroll = true;
+            graphicsPanel.Location = new Point(3, 163);
+            graphicsPanel.Name = "graphicsPanel";
+            graphicsPanel.Size = new Size(522, 473);
+            graphicsPanel.TabIndex = 0;
+            // 
             // DefasificationForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(graphicsPanel);
             Controls.Add(pictureBox2);
             Controls.Add(textBox1);
             Controls.Add(pictureBox1);
@@ -216,6 +227,7 @@
 
         #endregion
 
+        private Panel graphicsPanel;
         private ComboBox OutputVariables;
         private RadioButton MaxProd;
         private RadioButton MaxMin;

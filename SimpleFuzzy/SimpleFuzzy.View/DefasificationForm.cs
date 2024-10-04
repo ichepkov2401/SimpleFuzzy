@@ -48,39 +48,52 @@ namespace SimpleFuzzy.View
 
             output = repositoryService.GetCollection<LinguisticVariable>()
                 .FirstOrDefault(t => t.Name == (string)OutputVariables.SelectedItem);
+
             pictureBox1.Controls.Clear();
             textBox1.Text = "";
             textBox1.Visible = false;
             pictureBox2.Visible = false;
+
             if (output.ListRules != null)
             {
                 textBox1.Visible = true;
                 outputLine = new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) };
-                pictureBox1.Controls.Add(DrawInput(output));
+                var plotView = DrawInput(output);
+                DisableZooming(plotView);
+                pictureBox1.Controls.Add(plotView);
+
                 var newInput = output.ListRules.inputVariables;
                 int totalHeight = 0;
-                for (int i = 0; i < newInput.Count; i++) 
+
+                for (int i = 0; i < newInput.Count; i++)
                 {
                     PictureBox pictureBox = new PictureBox();
                     pictureBox.Size = new Size(400, 250);
                     pictureBox.Location = new Point(50, 10 + (i * 300));
-                    pictureBox.Controls.Add(DrawInput(newInput[i]));
+                    var inputPlotView = DrawInput(newInput[i]);
+                    DisableZooming(inputPlotView);
+                    pictureBox.Controls.Add(inputPlotView);
                     graphicsPanel.Controls.Add(pictureBox);
+
                     TrackBar trackBar = new TrackBar();
                     trackBar.Size = new Size(148, 45);
-                    trackBar.Location = new Point(pictureBox.Location.X + pictureBox.Width/2 - 150, pictureBox.Location.Y + pictureBox.Size.Height + 5);
+                    trackBar.Location = new Point(pictureBox.Location.X + pictureBox.Width / 2 - 150, pictureBox.Location.Y + pictureBox.Size.Height + 5);
                     trackBar.ValueChanged += InputChanged;
                     trackBar.Maximum = newInput[i].BaseSet.Count - 1;
                     graphicsPanel.Controls.Add(trackBar);
+
                     Label label = new Label();
                     label.Text = newInput[i].Name;
                     label.Location = new Point(trackBar.Location.X + trackBar.Size.Width + 10, trackBar.Location.Y + 5);
                     graphicsPanel.Controls.Add(label);
+
                     inputs.Add((newInput[i], pictureBox, trackBar, label, new LineSeries() { Color = OxyColor.FromRgb(0, 0, 0) }));
                     totalHeight = trackBar.Location.Y + trackBar.Height + 20;
                 }
+
                 graphicsPanel.AutoScrollMinSize = new Size(0, totalHeight);
                 textBox1.Visible = true;
+
                 if (newInput.Count != 1)
                     pictureBox2.Visible = false;
                 else
@@ -89,13 +102,24 @@ namespace SimpleFuzzy.View
                     List<ActiveRule> activeRules;
                     List<PointF> points = new List<PointF>();
                     for (int i = 0; i < newInput[0].BaseSet.Count; i++)
-                        points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()),
-                            float.Parse(defazificationService.Defazification(output,
-                            new List<object> { newInput[0].BaseSet[i] },
-                            Method, Inference, out activeRules).ToString())));
+                        points.Add(new PointF(float.Parse(newInput[0].BaseSet[i].ToString()), float.Parse(defazificationService.Defazification(output, new List<object> { newInput[0].BaseSet[i] }, Method, Inference, out activeRules).ToString())));
+
+                    pictureBox2.Controls.Clear();
                     DrawOutput(points);
+
+                    if (pictureBox2.Controls.Count > 0 && pictureBox2.Controls[0] is PlotView outputPlotView)
+                    {
+                        DisableZooming(outputPlotView);
+                    }
                 }
             }
+        }
+
+        private void DisableZooming(PlotView plotView)
+        {
+            plotView.Controller = new PlotController();
+            plotView.Controller.UnbindMouseDown(OxyMouseButton.Right);
+            plotView.Controller.UnbindMouseWheel();
         }
 
         private PlotView DrawInput(LinguisticVariable variable)

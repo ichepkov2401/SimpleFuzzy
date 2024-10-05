@@ -37,22 +37,24 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.Transparent;
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(button2);
             groupBox1.Controls.Add(button1);
             groupBox1.Location = new Point(5, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(541, 87);
+            groupBox1.Size = new Size(590, 87);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Подтверждение удаления";
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Location = new Point(33, 23);
+            label1.Location = new Point(58, 23);
             label1.Name = "label1";
             label1.Size = new Size(465, 20);
             label1.TabIndex = 2;
@@ -60,7 +62,8 @@
             // 
             // button2
             // 
-            button2.Location = new Point(354, 46);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.Location = new Point(403, 46);
             button2.Name = "button2";
             button2.Size = new Size(144, 29);
             button2.TabIndex = 1;
@@ -82,8 +85,9 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);
+            MinimumSize = new Size(549, 98);
             Name = "ConfirmDelete";
-            Size = new Size(549, 98);
+            Size = new Size(598, 98);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

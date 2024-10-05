@@ -115,17 +115,31 @@ namespace SimpleFuzzy.Models.SimulatorCrane
                 }
             }
 
-            // Добавление подписей к текстовым полям
-            AddLabel("Масса маятника (кг):", numMassPendulum);
-            AddLabel("Масса каретки (кг):", numMassCart);
-            AddLabel("Длина маятника (м):", numLengthPendulum);
-            AddLabel("Коэф. торможения каретки:", numDampingCart);
-            AddLabel("Коэф. затухания колебаний:", numDampingPendulum);
-            AddLabel("Начальная позиция:", numInitialPosition);
-            AddLabel("Начальный угол:", numInitialAngle);
-            AddLabel("Размер балки (м):", numBeamSize);
-            AddLabel("Передвижение каретки:", forceTrackBar);
-            AddLabel("Позиция платформы:", numPlatformPosition);
+
+            void AddAdaptiveLabel(string text, Control control)
+            {
+                Label label = new Label();
+                label.Text = text;
+                label.AutoSize = true;
+                label.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+                label.Dock = DockStyle.None;
+
+                label.Location = new Point(control.Left, control.Top - 20);
+
+                this.Controls.Add(label);
+            }
+
+            AddAdaptiveLabel("Масса маятника (кг):", numMassPendulum);
+            AddAdaptiveLabel("Масса каретки (кг):", numMassCart);
+            AddAdaptiveLabel("Длина маятника (м):", numLengthPendulum);
+            AddAdaptiveLabel("Коэф. торможения каретки:", numDampingCart);
+            AddAdaptiveLabel("Коэф. затухания колебаний:", numDampingPendulum);
+            AddAdaptiveLabel("Начальная позиция:", numInitialPosition);
+            AddAdaptiveLabel("Начальный угол:", numInitialAngle);
+            AddAdaptiveLabel("Размер балки (м):", numBeamSize);
+            AddAdaptiveLabel("Передвижение каретки:", forceTrackBar);
+            AddAdaptiveLabel("Позиция платформы:", numPlatformPosition);
+
 
             // Установка начальных значений
             SetInitialValues();

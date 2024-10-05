@@ -50,8 +50,9 @@ namespace SimpleFuzzy.View
             // 
             // windowHeaderLabel
             // 
+            windowHeaderLabel.Anchor = AnchorStyles.Top;
             windowHeaderLabel.AutoSize = true;
-            windowHeaderLabel.Location = new Point(384, 11);
+            windowHeaderLabel.Location = new Point(286, 14);
             windowHeaderLabel.Name = "windowHeaderLabel";
             windowHeaderLabel.Size = new Size(144, 20);
             windowHeaderLabel.TabIndex = 2;
@@ -70,7 +71,7 @@ namespace SimpleFuzzy.View
             // inputVariablesComboBox
             // 
             inputVariablesComboBox.FormattingEnabled = true;
-            inputVariablesComboBox.Location = new Point(181, 95);
+            inputVariablesComboBox.Location = new Point(181, 96);
             inputVariablesComboBox.Name = "inputVariablesComboBox";
             inputVariablesComboBox.Size = new Size(194, 28);
             inputVariablesComboBox.TabIndex = 4;
@@ -79,7 +80,7 @@ namespace SimpleFuzzy.View
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(14, 95);
+            label1.Location = new Point(3, 99);
             label1.Name = "label1";
             label1.Size = new Size(164, 20);
             label1.TabIndex = 5;
@@ -89,7 +90,7 @@ namespace SimpleFuzzy.View
             // 
             dataTable.AllowUserToResizeColumns = false;
             dataTable.AllowUserToResizeRows = false;
-            dataTable.BackgroundColor = SystemColors.ControlLight;
+            dataTable.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -107,14 +108,13 @@ namespace SimpleFuzzy.View
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataTable.DefaultCellStyle = dataGridViewCellStyle2;
-            dataTable.Dock = DockStyle.Bottom;
             dataTable.EnableHeadersVisualStyles = false;
             dataTable.Location = new Point(0, 146);
             dataTable.Name = "dataTable";
             dataTable.RowHeadersWidth = 51;
             dataTable.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataTable.RowTemplate.Height = 29;
-            dataTable.Size = new Size(941, 345);
+            dataTable.Size = new Size(760, 338);
             dataTable.TabIndex = 7;
             dataTable.CellBeginEdit += dataTable_CellBeginEdit;
             dataTable.CellValueChanged += dataTable_CellValueChanged;
@@ -134,7 +134,7 @@ namespace SimpleFuzzy.View
             Controls.Add(outputVariableLabel);
             Controls.Add(outputVariableComboBox);
             Name = "InferenceForm";
-            Size = new Size(941, 491);
+            Size = new Size(760, 484);
             ((System.ComponentModel.ISupportInitialize)dataTable).EndInit();
             ResumeLayout(false);
             PerformLayout();

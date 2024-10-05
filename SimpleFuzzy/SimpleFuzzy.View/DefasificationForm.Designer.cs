@@ -194,7 +194,7 @@
             // 
             // graphicsPanel
             // 
-            graphicsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            graphicsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             graphicsPanel.AutoScroll = true;
             graphicsPanel.Location = new Point(3, 163);
             graphicsPanel.Name = "graphicsPanel";

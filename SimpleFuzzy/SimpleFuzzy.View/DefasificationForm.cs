@@ -245,7 +245,7 @@ namespace SimpleFuzzy.View
                 for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
                     points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
                         float.Parse(defazificationService.Defazification(output,
-                        new List<object> { inputs[0].Item1.BaseSet[i] },
+                        inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]),
                         Method, Inference, out activeRules).ToString())));
                 DrawOutput(points);
             }
@@ -272,7 +272,7 @@ namespace SimpleFuzzy.View
                     for (int i = 0; i < inputs[0].Item1.BaseSet.Count; i++)
                         points.Add(new PointF(float.Parse(inputs[0].Item1.BaseSet[i].ToString()),
                             float.Parse(defazificationService.Defazification(output,
-                            new List<object> { inputs[0].Item1.BaseSet[i] },
+                            inputs.ConvertAll(x => x.Item1.BaseSet[x.Item3.Value]),
                             Method, Inference, out activeRules).ToString())));
                     DrawOutput(points);
                 }

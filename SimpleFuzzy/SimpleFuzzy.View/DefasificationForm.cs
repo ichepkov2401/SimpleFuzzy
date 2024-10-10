@@ -202,16 +202,37 @@ namespace SimpleFuzzy.View
         {
             var pic = pictureBox1.Controls[0] as PlotView;
             Color color = output.GetColor(function);
-            AreaSeries areaSeries = new AreaSeries() {  
-            Fill = OxyColor.FromArgb(128, color.R, color.G, color.B), Color = OxyColor.FromArgb(128, color.R, color.G, color.B) };
-            for (int i = 0; i < output.BaseSet.Count; i++)
+
+            AreaSeries areaSeries = new AreaSeries()
             {
-                var input = output.BaseSet[i];
+                Fill = OxyColor.FromArgb(128, color.R, color.G, color.B),
+                Color = OxyColor.FromArgb(128, color.R, color.G, color.B),
+                StrokeThickness = 1
+            };
+
+            double left = Convert.ToDouble(output.BaseSet[0]);
+            double right = Convert.ToDouble(output.BaseSet[output.BaseSet.Count - 1]);
+
+            areaSeries.Points.Add(new DataPoint(left, 0));
+
+            for (double x = left; x <= right; x += 0.1)
+            {
+                double yValue;
+
                 if (Inference == Rule.Inference.Prod)
-                    areaSeries.Points.Add(new DataPoint(double.Parse(input.ToString()), function.MembershipFunction(input) * active));
+                {
+                    yValue = function.MembershipFunction(x) * active;
+                }
                 else
-                    areaSeries.Points.Add(new DataPoint(double.Parse(input.ToString()), Math.Min(function.MembershipFunction(input), active)));
+                {
+                    yValue = Math.Min(function.MembershipFunction(x), active);
+                }
+
+                areaSeries.Points.Add(new DataPoint(x, yValue));
             }
+
+            areaSeries.Points.Add(new DataPoint(right, 0));
+
             pic.Model.Series.Add(areaSeries);
             allArea.Add(areaSeries);
             pic.InvalidatePlot(true);
